@@ -1,0 +1,55 @@
+/*
+	author:	danny.xu
+	date:	2011-11-18 
+	description:	da通用样式库
+*/
+
+/* 阴影 */
+.daShadow {
+  -moz-box-shadow: 0px 2px 10px #999;	
+  -webkit-box-shadow: 0px 2px 10px #999;
+  box-shadow: 0px 2px 10px #999;
+  filter:
+  progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=0, Color='#cccccc') 
+  progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=90, Color='#cccccc') 
+  progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=180, Color='#cccccc') 
+  progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=270, Color='#cccccc');
+}
+
+/*
+	author:	danny.xu
+	date:	2011-2-12
+	description:	工作计划日历插件 css样式文件
+*/
+.daDate{ border:1px solid #333; background:#fff; overflow:hidden; font: 12px/1.5 arial, tahoma, helvetica, "\5b8b\4f53", sans-serif; }
+.daDate .box{ float:left; border:0px solid #f00;background:#f0f0f0; overflow:hidden; }
+.daDate table{ width:100%; border:0px solid #f00;}
+
+.daDate .trHead{ }
+.daDate .trHead td{ border:0px; text-align:center; font-size:12px; font-weight:bold; color:#222;}
+.daDate .trHead td.weekend{ color:#999; font-weight:bold;}
+
+.daDate .trDate{ background:#fff; }
+.daDate .trDate td{ width:25px; height:22px; border:1px solid #ddd; vertical-align:middle; text-align:center; cursor:pointer;}
+.daDate .trDate td.weekend{ color:#666; background: #f5f5f5;}
+.daDate .trDate td.no{ border:0px;}
+.daDate .trDate td.today{ background: #ffffcc; border:1px solid #ffcc66}
+.daDate .trDate td.focus{ background:#666; color:#f7f7f7; border:1px solid #222;/*background: #f5f5f5; border:1px solid #555;*/}
+
+.daDate .headBar{ position:relative; height:25px; padding:2px; border-bottom:1px solid #ddd; border-right:1px solid #ddd; background:#eee; text-align:center; }
+.daDate .headBar a.bt{ display:inline-block; height:25px; line-height:25px; margin:0px 1px; text-align:center; text-decoration:none; background:url(images/daDateBt.png) no-repeat; }
+.daDate .headBar a.bt:hover{ background-position:0px -48px; color:#000; }
+
+.daDate .headBar a.today{ width:0;background-position: -16px -32px; }
+.daDate .headBar a.today:hover{ background-position: -16px -48px; }
+.daDate .headBar a.prev{position:absolute; left:0px; width:25px; background-position: 0px 0px; }
+.daDate .headBar a.prev:hover{ background-position: 0px -25px; }
+.daDate .headBar a.next{position:absolute; right:0px; width:25px; background-position: -25px 0px; }
+.daDate .headBar a.next:hover{ background-position: -25px -25px; }
+
+.daDate .headBar select { vertical-align:top; margin:2px 5px;}
+.daDate .headBar span.barTitle{line-height:25px; font-size:12px; font-weight:bold; color:#333; vertical-align:top; }
+
+.daDate .footBar{ clear:both; margin-top:2px;padding:3px;border-top:1px solid #ddd; text-align:right; }
+.daDate .footBar a.bt{display:inline-block;padding:2px 5px; margin:2px; border:1px solid #ddd; background:#eee; color:#222; font-weight:bold; text-decoration:none; }
+.daDate .footBar a.bt:hover{ background:#666; color:#f7f7f7; border:1px solid #222; }
