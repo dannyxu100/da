@@ -13,7 +13,7 @@
 			
 		if( haszero = 0 <= fmt.indexOf("0") ) fmt = fmt.replace("0", "");
 		
-		res = parseFloat(this);
+		res = parseFloat(this,10);
 		if ( 0 == this && haszero ) {
 			return "&nbsp;";
 		};
@@ -32,7 +32,7 @@
 		else {											//"." 符号和"," 符号都不存在
 			idx = 0;
 		}
-		res = (Number(res)).toFixed(parseInt(idx));		//按保留小数位数，四舍五入
+		res = (Number(res)).toFixed(parseInt(idx,10));		//按保留小数位数，四舍五入
 		
 		if (hasflag) 
 		{
@@ -96,6 +96,17 @@
 		return this.replace(/\s/g, "");
 	};
 
+	/**编码
+	*/
+	String.prototype.toHex = function(){
+		return da.toHex(this);
+	};
+	
+	/**解码
+	*/
+	String.prototype.toStr = function(){
+		return  da.toStr(this);
+	};
 	/***************** Date类扩展 *************************************/
 	/**格式化
 	*@param {String} fmt 显示模板
@@ -291,7 +302,7 @@
 		da.fnStruct = da.prototype = {
 			version: "DA Library1.3  \n\nauthor: danny.xu\n\ndate: 2011-5-13 \n\nThank you!!!",
 			
-			dom: [],					//操作对象数组
+			dom: [],						//操作对象数组
 			length:	0,					//操作对象个数
 			selecter: "",				//为Sizzle.js保留的选择器字符串
 			
@@ -568,6 +579,7 @@
 //		return retArray.concat( retArray );
 		
 	};
+	
 	
 	//扩展函数（对象重载、合并函数）
 	/*
@@ -6575,64 +6587,6 @@ da.extend({
 		return curWin;
 	},
 	
-	/**启动闭包封装的setInterval 或 setTimeout（可以通过call的嵌入this上下文，this默认为da类 ）
-	* delay 执行延时( 默认启动setTimeout，添加“_loop”后缀启动setInterval )
-	* fn	自定义回调函数
-	* params 回调传入参数
-	*/
-	timer: function ( /*delay, fn, params*/ ){
-		if( 2 > arguments.length ) return;
-
-		var context = this,
-				arrTmp = arguments[0].toString().split("_"),
-				delay = parseInt(arrTmp[0]) || 13,
-				fn = arguments[1],
-				params = [];
-		
-		if( !da.isFunction( fn ) ) return;
-		
-		for(var i=2,len=arguments.length; i< len; i++ ){
-			params[i-2] = arguments[i];
-		}
-		
-		if( 2 > arrTmp.length ){
-			return setTimeout(function(){
-				fn.apply( context, params );
-			}, delay);
-		}
-		else{
-			return setInterval(function(){
-				fn.apply( context, params );
-			}, delay);
-		}
-		
-	},
-	
-	/**
-	*/
-	clearTimer: function( obj ){
-		if( obj ) clearTimeout( obj );
-	},
-	
-	/**启动闭包封装的setInterval（可以通过call的嵌入this上下文，this默认为da类 ）
-	* delay 执行延时
-	* fn	自定义回调函数s
-	* params 回调传入参数
-	*/
-	keep: function( /*delay, fn, params*/ ){
-		if( 2 > arguments.length ) return;
-		
-		arguments[0] = arguments[0] + "_loop";
-		return da.timer.apply( this, arguments );
-		
-	},
-	
-	/**
-	*/
-	clearKeep: function( obj ){
-		if( obj ) clearInterval( obj );
-	},
-	
 	/**将sqlserver数据库日期格式转为Date格式
 	* params {String} sqlDate 后台直接返回的数据库日期格式字符串
 	* params {String} sFormat 日期格式化对照字符串
@@ -6653,7 +6607,7 @@ da.extend({
 	*/
 	addDate: function( dateObj, nValue, type ){
 		type = type || "d";
-		nValue = parseInt(nValue);
+		nValue = parseInt(nValue,10);
 		if( !nValue ) return dateObj;
 		
 		if( "string" === typeof dateObj ) dateObj = new Date(dateObj);
@@ -6727,6 +6681,8 @@ da.extend({
 	/**日期格式化
 	*/
 	fmtDate: function( sdate, fmt ){
+		if( "" === da.isNull(sdate,"")) return sdate;
+	
 		if( sdate instanceof Date ){
 			sdate = sdate.format("yyyy-mm-dd hh:nn:ss i");
 		}
@@ -6740,7 +6696,7 @@ da.extend({
 		d = sdate.split(/[-\.\/T\s:]|\+08:00/g);						//通过split()函数 分隔出 [年，月，日，时，分，秒，毫秒] 数组
 																		//可能出现的分隔符有："-", ".", "/", "T", " ", ":", "+08:00"
 		for(var i=0,len=d.length; i<len; i++){							//矫正数据格式
-			d[i] = parseInt( d[i] || 0 );
+			d[i] = parseInt( d[i] || 0,10 );
 		}
 																		
 		var date = new Date( d[0], d[1]-1, d[2], d[3]||0, d[4]||0, d[5]||0, d[6]||0 );
@@ -6765,44 +6721,44 @@ da.extend({
 
 			if( "undefined" != typeof d[0] && d[0]!=d2[0] ){										//不同年
 				switch( d2[0]-d[0] ){
-					case 1: return "<span style='color:#900'>去年</span>" + date.format( "m/ d" );
-					case 2: return "<span style='color:#900'>前年</span>" + date.format( "m/ d" );
+					case 1: return "<span style='color:#900'>去年</span>" + date.format( "m月d号" );
+					case 2: return "<span style='color:#900'>前年</span>" + date.format( "m月d号" );
 					default: return fmt ? date.format( fmt ) : date;
 				}
 			}
 			else if( "undefined" != typeof d[1] && d[1]!=d2[1] ){									//同年,不同月
 				switch( Math.abs(d2[1]-d[1]) ){
 					case 1: 
-						return "<span style='color:#900'>上个月</span>" + date.format( " d号" );
+						return "<span style='color:#900'>上个月</span>" + date.format( "d号" );
 					case 2: 
-						return "<span style='color:#900'>两个月前</span>" + date.format( " d号" );
+						return "<span style='color:#900'>两个月前</span>" + date.format( "d号" );
 					case 3: 
-						return "<span style='color:#900'>三个月前</span>" + date.format( " d号" );
-					default: return date.format( "m月 d号" );
+						return "<span style='color:#900'>三个月前</span>" + date.format( "d号" );
+					default: return date.format( "m月d号" );
 				}
 			}
 			else if( "undefined" != typeof d[2] && d[2]!=d2[2] ){									//同年,同月,不同日
 				switch( Math.abs(d2[2]-d[2]) ){
 					case 1:
-						return "<span style='color:#900'>昨天</span>" + date.format( " h时 n分" );
+						return "<span style='color:#900'>昨天</span>" + date.format( "h时n分" );
 					case 2:
-						return "<span style='color:#900'>前天</span>" + date.format( " h时 n分" );
+						return "<span style='color:#900'>前天</span>" + date.format( "h时n分" );
 					case 3:
-						return "<span style='color:#900'>三天前</span>" + date.format( " h时 n分" );
+						return "<span style='color:#900'>三天前</span>" + date.format( "h时n分" );
 					default:
-						return "<span style='color:#900'>当月</span>" + date.format( " d号" );
+						return "<span style='color:#900'>当月</span>" + date.format( "d号" );
 				}
 			}
 			else if( "undefined" != typeof d[3] && d[3]!=d2[3] ){									//同年,同月,同日,不同小时
 				switch( Math.abs(d2[3]-d[3]) ){
 					case 1:
-						return "<span style='color:#900'>前1小时</span>" + date.format( " n分" );
+						return "<span style='color:#900'>前1小时</span>" + date.format( "n分" );
 					case 2:
-						return "<span style='color:#900'>前2小时</span>" + date.format( " n分" );
+						return "<span style='color:#900'>前2小时</span>" + date.format( "n分" );
 					case 3:
-						return "<span style='color:#900'>前3小时</span>" + date.format( " n分" );
+						return "<span style='color:#900'>前3小时</span>" + date.format( "n分" );
 					default:
-						return "<span style='color:#900'>今天</span>" + date.format( " h时 n分" );
+						return "<span style='color:#900'>今天</span>" + date.format( "h时n分" );
 				}
 			}
 			else if( "undefined" != typeof d[4] && d[4]!=d2[4] ){									//同年,同月,同日,同小时,不同分钟
@@ -6816,44 +6772,44 @@ da.extend({
 
 			if( "undefined" != typeof d[0] && d[0]!=d2[0] ){										//不同年
 				switch( d2[0]-d[0] ){
-					case 1: return "<span style='color:#900'>明年</span>" + date.format( "m/ d" );
-					case 2: return "<span style='color:#900'>后年</span>" + date.format( "m/ d" );
+					case 1: return "<span style='color:#900'>明年</span>" + date.format( "m月d号" );
+					case 2: return "<span style='color:#900'>后年</span>" + date.format( "m月d号" );
 					default: return fmt ? date.format( fmt ) : date;
 				}
 			}
 			else if( "undefined" != typeof d[1] && d[1]!=d2[1] ){									//同年,不同月
 				switch( Math.abs(d2[1]-d[1]) ){
 					case 1: 
-						return "<span style='color:#900'>下个月</span>" + date.format( " d号" );
+						return "<span style='color:#900'>下个月</span>" + date.format( "d号" );
 					case 2: 
-						return "<span style='color:#900'>两个月后</span>" + date.format( " d号" );
+						return "<span style='color:#900'>两个月后</span>" + date.format( "d号" );
 					case 3: 
-						return "<span style='color:#900'>三个月后</span>" + date.format( " d号" );
-					default: return date.format( "m月 d号" );
+						return "<span style='color:#900'>三个月后</span>" + date.format( "d号" );
+					default: return date.format( "m月d号" );
 				}
 			}
 			else if( "undefined" != typeof d[2] && d[2]!=d2[2] ){									//同年,同月,不同日
 				switch( Math.abs(d2[2]-d[2]) ){
 					case 1:
-						return "<span style='color:#900'>明天</span>" + date.format( " h时 n分" );
+						return "<span style='color:#900'>明天</span>" + date.format( "h时n分" );
 					case 2:
-						return "<span style='color:#900'>后天</span>" + date.format( " h时 n分" );
+						return "<span style='color:#900'>后天</span>" + date.format( "h时n分" );
 					case 3:
-						return "<span style='color:#900'>三天后</span>" + date.format( " h时 n分" );
+						return "<span style='color:#900'>三天后</span>" + date.format( "h时n分" );
 					default:
-						return "<span style='color:#900'>当月</span>" + date.format( " d号" );
+						return "<span style='color:#900'>当月</span>" + date.format( "d号" );
 				}
 			}
 			else if( "undefined" != typeof d[3] && d[3]!=d2[3] ){									//同年,同月,同日,不同小时
 				switch( Math.abs(d2[3]-d[3]) ){
 					case 1:
-						return "<span style='color:#900'>1小时后</span>" + date.format( " n分" );
+						return "<span style='color:#900'>1小时后</span>" + date.format( "n分" );
 					case 2:
-						return "<span style='color:#900'>2小时后</span>" + date.format( " n分" );
+						return "<span style='color:#900'>2小时后</span>" + date.format( "n分" );
 					case 3:
-						return "<span style='color:#900'>3小时后</span>" + date.format( " n分" );
+						return "<span style='color:#900'>3小时后</span>" + date.format( "n分" );
 					default:
-						return "<span style='color:#900'>今天</span>" + date.format( " h时 n分" );
+						return "<span style='color:#900'>今天</span>" + date.format( " h时n分" );
 				}
 			}
 			else if( "undefined" != typeof d[4] && d[4]!=d2[4] ){									//同年,同月,同日,同小时,不同分钟
@@ -7002,8 +6958,130 @@ var $flds = [];			//为兼容过去的 ebs函数库用法定义的一些全局�
 	$v = [];
 
 da.extend({
+	/**格式化数据
+	*/
+	fmtData: function( val, fmt ){
+		if( !fmt ) return val;
+		
+		var val_format = val;
+		
+		if( "money" == fmt ){																//货币型
+			val_format = "<span style='color:#900'>￥</span>" + da.fmtFloat(val_format, "#,##");
+		}
+		else if( /[#\.\,]/.test(fmt) ){														//数值型
+			val_format = da.fmtFloat( val_format, fmt );
+		}
+		else{																				//日期型
+			val_format = da.fmtDate( val_format, fmt );
+		}
+
+		return val_format;
+	},
+	
+	/**给控件赋值
+	* 如: da.setValue( "#p_name", "AH100" );
+	*/
+	setValue: function( obj, val ){
+		var daObj = da(obj);
+		
+		if ( "string" === typeof obj && 0 >= daObj.dom.length ){			//需要通过name来定位，如:checkbox、radio
+			var arr = obj.split(",");
+			for( var i=0,len=arr.length; i<len; i++ ){
+				arr[i] = "input[name="+ arr[i].trim() +"]";
+			}
+			daObj = da( arr.join(",") );
+		};
+		
+		var tag, fmt, val2;
+		
+		daObj.each(function(i){
+			tag = this.tagName.toLowerCase();			//元素类型
+			
+			switch( tag ){
+				case "input":{
+					var type = this.type.toLowerCase();				//input中的控件类型
+					switch(type){
+						case "checkbox":							//复选控件
+						case "radio":{								//单选控件
+							val2 = da.isNull(this.value, "");
+							
+							if ( val2 == "" || val2 == "on" ) {				//特殊值互等 "" == "on" == 0
+								this.setAttribute( "checked", val == "0" );
+							}
+							else {
+								this.setAttribute( "checked", val == da.isNull(this.value, "") );
+							};
+							break;
+						}
+						case "text":								//单行输入框
+						default:{
+							fmt = da.isNull( this.getAttribute("fmt"), "" );
+							
+							if( "" !== fmt ){
+								val2 = da.fmtData( val, fmt );
+							}
+							
+							val2 = da.isNull( val2, this.value );
+							this.value = val2;
+							break;
+						}
+					}
+					break;
+				}
+				case "textarea":{									//文本域
+					fmt = da.isNull( this.getAttribute("fmt"), "" );
+					
+					if( "" !== fmt ){
+						val2 = da.fmtData( val, fmt );
+					}
+					
+					val2 = da.isNull( val2, this.value );
+					this.value = val2;
+					break;
+				}
+				case "select":{
+					if( da.isNull(val) ) return;
+				
+					var isFinded = false;
+					for ( var i=0,len=this.options.length; i < len; i++ ) {
+						if (this.options[i].value == val1) {
+							this.options[i].selected = true ;
+							isFinded = true;
+						}
+						else if( this.options[i].selected ) {
+							this.options[i].selected = false ;
+						}
+					}
+					
+					if ( !isFinded ){
+						if ( val != "" ){
+							var obj = pobj001.document.createElement("OPTION");
+							this.options.add(obj);
+							obj.innerText = val;
+							obj.value = val;
+							obj.selected = true;
+						}
+					}
+					break;
+				}
+				case "img":
+					this.src = val;
+					break;
+			}
+		});
+	},
+	
+	/**数据交互
+	*/
 	getData: function( url, data, fnLoaded, fnError ) {
 		if( !url ) return;
+		
+		if (url.toLowerCase().indexOf(".asp") < 0) {					//修正url参数
+			url = "/sys/aspx/execsqllist.aspx?sqlname=" + url;
+		}
+		if (url.indexOf("?") < 0) {
+			url += "?";
+		}
 		
 		var isPost = da.isPlainObj(data),
 			isScript = /\.js/.test(url.toLowerCase());
@@ -7069,8 +7147,85 @@ da.extend({
 				}
 			}
 		});
+	},
+
+	dataList: function( pid, url, data, fnField, fnLoaded, fnError ){
+		if( "string" === typeof pid && 0 !== pid.indexOf("#") )		//修正id未加"#"
+			pid = "#" + pid;
+		
+		var parent = da( pid );
+		if( 0 >= parent.dom.length ) return;
+		parent = parent.dom[0];
+		
+		var tmpHTML = parent.innerHTML.replace(/[\r\t\n]/g, ""),
+			fmtMap = {};
+			
+		var name="", fmt="", txt="", key, obj;
+		da("td[fmt]", pid).each(function( idx ){
+			obj = da( this );
+			name = obj.attr("name");
+			txt = obj.text();
+			fmt = obj.attr("fmt");
+			
+			key = name || txt.replace(/\{|\}/g, "");
+			if( key ){
+				context.fmtMap[key] = fmt;
+			}
+			// if ((s1 == "sum") || (s1 == "avg") || (s1 == "min") || (s1 == "max") || (s1 == "count")) {
+				// s1 = obj1.html().replace("{", "").replace("}", "") ;
+			// }
+			
+			// if ((_isnull(s1, "") != "") && (_isnull(s2, "") != "")) {
+				// _tb_fmt_flds.push(s1);
+				// _tb_fmt_fmts.push(s2);
+			// }
+		});
+	
+		da.getData( url, data, 
+		function( iseof, data, dsname, idx){
+			if( !dsname ){
+				tmpHTML = tmpHTML.replace(/\{[^\}]+\}/g, function( res, i, target ){
+					fldname = res.replace( /\{|_org|_raw|\}/g, "" );
+					fldvalue =  (data[fldname] || "");
+					
+					var fmt = fmtMap[fldname],
+						val_format = fldvalue,
+						val_tohex = da.toHex(fldvalue);
+					
+					if( fnField ) {
+						val_format = fnField( fldname, fldvalue, data );				//字段值，用户格式化处理
+					}
+					
+					val_format = da.fmtData( val_format, fmt );
+					
+					if( 0 <= res.indexOf("_org") ){									//返回原数据
+						return fldvalue;
+					}
+					else if( 0 <= res.indexOf("_raw") ){							//返回编码数据
+						return val_tohex;
+					}
+					else{															//返回格式化数据
+						return val_format;
+					}
+				});
+				
+				fnLoaded && fnLoaded( data );
+			}
+		},
+		function( msg, code, content ){
+			fnError && fnError( msg, code, content );
+		});
 	}
+	
 });
+
+/*********为兼容过去的 ebs函数库用法定义的一些全局函数。*********/
+var $value = da.setValue,
+	$value2 = da.setValue,
+	runsql = da.getData,
+	runsql4text = da.getData,
+	runsql4xml = da.getData;
+
 
 /***************** 开发工具 *****************/
 da.extend({
@@ -7344,3 +7499,92 @@ da.extend({
 		}
 	}
 });
+
+
+
+/***************** Timer *******************/
+(function(da){
+	da.extend({
+		queueHandle: [],
+		timer_queueHandle: null,
+		
+		startHandle: function(){
+			var context = this;
+			
+			da.timer_queueHandle = setInterval(function(){
+				if( 0 >= da.queueHandle.length ) da.stopHandle();
+				
+				var timeNow = new Date().getTime(),
+					item;
+				
+				for(var i=0,len=da.queueHandle.length; i<len; i++){			//循环timer队列
+					item = da.queueHandle[i];
+
+					if( item && item.delay <= (timeNow - item.prevTime ) ){
+						item.handle.apply( context, item.params );
+						
+						if( "timer" === item.type ){
+							da.queueHandle.splice(i, 1);
+						}
+						else if( "keep" === item.type ){
+							item.prevTime = new Date().getTime();
+						}
+					}
+				}
+			});
+		},
+		
+		stopHandle: function(){
+			da.queueHandle = [];
+			if( da.timer_queueHandle ) clearInterval( da.timer_queueHandle );
+		},
+		
+		/**启动闭包封装的setInterval 或 setTimeout（可以通过call的嵌入this上下文，this默认为da类 ）
+		* delay 执行延时( 默认启动setTimeout，添加“_loop”后缀启动setInterval )
+		* fn 自定义回调函数
+		* params 回调传入参数
+		*/
+		timer: function( /*delay, fn, params*/ ){
+			if( 2 > arguments.length ) return;
+			if( !da.isFunction( arguments[1] ) ) return;
+			
+			var arrTmp = arguments[0].toString().split("_");
+			
+			var item = {
+				type: (arrTmp[1] && "loop" == arrTmp[1]) ? "keep" : "timer",		//类型
+				delay: parseInt(arrTmp[0],10) || 13,								//周期
+				prevTime: new Date().getTime(),										//上一次执行时间
+				handle: arguments[1],												//自定义处理函数
+				params: [].slice.call( arguments, 2 )								//剔除前两个个参数
+			};
+
+			da.queueHandle.push( item );
+			da.startHandle();
+			
+			return da.queueHandle.length -1;
+		},
+		
+		/**启动闭包封装的setInterval（可以通过call的嵌入this上下文，this默认为da类 ）
+		* delay 执行延时
+		* fn	自定义回调函数s
+		* params 回调传入参数
+		*/
+		keep: function( /*delay, fn, params*/ ){
+			arguments[0] += "_loop";
+			return da.timer.apply( this, arguments );
+		},
+		
+		clearTimer: function( idx ){
+			da.queueHandle.splice(idx, 1);
+		},
+
+		clearKeep: function( idx ){
+			da.queueHandle.splice(idx, 1);
+		}
+
+	});
+	
+
+})(da);
+
+
