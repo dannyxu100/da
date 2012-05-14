@@ -63,13 +63,14 @@ var daDate = (function(){
 	daDate.fnStruct = daDate.prototype = {
 		version: "daDate( 3.1.1 ); author:danny.xu; date:2012-5-12",
 
-		id: 0,						//唯一序列号
+		id: 0,							//唯一序列号
 		parentObj: null,				//日历容器DOM对象
 		targetObj: null,				//时间选择器目标对象
-		cntObj: null,				//时间选择器容器对象
+		cntObj: null,					//时间选择器容器对象
 		tableObj: null,					//日历table对象
 		
 		headObj: null,					//日历顶端的工具条
+		footObj: null,					//日历底端的工具条
 		
 		setting: {
 			id: "",
@@ -86,14 +87,17 @@ var daDate = (function(){
 			width: 220,
 			// height: 250,
 			
-			selectYearMonth: true,					//年份、月份可下拉选择
+			selectYearMonth: true,				//年份、月份可下拉选择
+			selectTime: false,					//时分秒可下拉选择
+			showFootBar: false,					//
 			
-			css: {												//风格样式
+			css: {								//风格样式
 				daDate: " daDate",
 				box: "box",
 				shadow: "daShadow",
 				head: "trHead",
 				date: "trDate",
+				select: "select",
 				focus: "focus",
 				
 				headBar: "headBar",
@@ -132,6 +136,8 @@ var daDate = (function(){
 		arrTdHead: null,									//日历星期头
 		arrTd: null,										//日历单元格
 		
+		selectTd: null,										//选中的单元格
+		
 		
 		/**初始化函数
 		*/
@@ -168,12 +174,21 @@ var daDate = (function(){
 					
 			this.headObj = {
 				barObj: null,
-				btToday: null,
 				btPrev: null,
 				btNext: null,
 				spanTitle: null,
 				sltYear: null,
 				sltMonth: null
+			};
+			
+			this.footObj = {
+				barObj: null,
+				sltHour: null,
+				sltMinute: null,
+				sltSecond: null,
+				btToday: null,
+				btDone: null,
+				btClear: null
 			};
 			
 			this.year = da.firstValue( setting.year, this.today.year );					//默认加载当前年月的日历
@@ -316,8 +331,13 @@ var daDate = (function(){
 		create: function(){
 			this.createCnt();
 			this.createBox();
-			this.createFootBar();
 			
+			if( this.setting.selectTime )
+				this.setting.showFootBar = true;
+				
+			if( this.setting.showFootBar ){
+				this.createFootBar();
+			}
 		},
 		
 		/**创建容器面板（时间选择器）
@@ -521,22 +541,58 @@ var daDate = (function(){
 		},
 		
 		createFootBar: function(){
-			var footObj = doc.createElement( "div" );
-			footObj.className = this.setting.css.footBar;
+			var footObj = this.footObj,
+				div = doc.createElement( "div" );
 			
-			var btToday = doc.createElement( "a" );
-			btToday.className = this.setting.css.barBt;
-			btToday.href = "javascript:void(0);";
-			btToday.innerHTML = "今天";
-			footObj.insertBefore( btToday );
+			footObj.barObj = doc.createElement( "div" );
+			footObj.barObj.className = this.setting.css.footBar;
 			
-			btToday = doc.createElement( "a" );
-			btToday.className = this.setting.css.barBt;
-			btToday.href = "javascript:void(0);";
-			btToday.innerHTML = "确定";
-			footObj.insertBefore( btToday );
+			if( this.setting.selectTime ){
+				var option, option2;
+
+				footObj.sltHour = doc.createElement( "select" );
+				footObj.sltHour.style.width = "50px";
+				for(var i=0; i<24; i++){
+					option = doc.createElement("option");
+					option.innerHTML = i+"时";
+					option.value = i;
+					footObj.sltHour.insertBefore( option );
+				}
+				div.insertBefore( footObj.sltHour );
+				
+				footObj.sltMinute = doc.createElement( "select" ),
+				footObj.sltSecond = doc.createElement( "select" );
+				footObj.sltMinute.style.width = "50px";
+				footObj.sltSecond.style.width = "50px";
+				for(var i=0; i<60; i++){
+					option = doc.createElement("option");
+					option.innerHTML = i+"分";
+					option.value = i;
+					footObj.sltMinute.insertBefore( option );
+					
+					option2 = doc.createElement("option");
+					option2.innerHTML = i+"秒";
+					option2.value = i;
+					footObj.sltSecond.insertBefore( option2 );
+				}
+				div.insertBefore( footObj.sltMinute );
+				div.insertBefore( footObj.sltSecond );
+			}
+			footObj.barObj.insertBefore( div );
 			
-			this.cntObj.insertBefore( footObj );
+			footObj.btToday = doc.createElement( "a" );
+			footObj.btToday.className = this.setting.css.barBt;
+			footObj.btToday.href = "javascript:void(0);";
+			footObj.btToday.innerHTML = "今天";
+			footObj.barObj.insertBefore( footObj.btToday );
+			
+			footObj.btDone = doc.createElement( "a" );
+			footObj.btDone.className = this.setting.css.barBt;
+			footObj.btDone.href = "javascript:void(0);";
+			footObj.btDone.innerHTML = "确定";
+			footObj.barObj.insertBefore( footObj.btDone );
+			
+			this.cntObj.insertBefore( footObj.barObj );
 		},
 		
 		/**事件绑定函数
@@ -548,11 +604,11 @@ var daDate = (function(){
 				dateTmp = null,
 				tableObjTmp = null;
 			
-			da( this.targetObj ).bind( "focus", function(){							//日期选中 绑定自定义事件函数
+			da( this.targetObj ).bind( "focus.daDate", function(evt){				//日期选中 绑定自定义事件函数
 				context.show();
 			});
 			
-			da( this.arrTdHead ).bind( "click", function(){						//日历头 绑定自定义事件函数
+			da( this.arrTdHead ).bind( "click.daDate", function(){						//日历头 绑定自定义事件函数
 				var res = true;
 				if( null != context.setting.clickHead )
 					res = context.setting.clickHead.call( context );
@@ -562,33 +618,25 @@ var daDate = (function(){
 				}
 			});
 			
-			da( this.arrTd ).bind( "click", function(){							//日期选中 绑定自定义事件函数
+			da( this.arrTd ).bind( "click.daDate", function(){							//日期选中 绑定自定义事件函数
+				if( null != context.selectTd )
+					da( context.selectTd ).removeClass( context.setting.css.select );
+			
+				context.selectTd = this;
+				da( context.selectTd ).addClass( context.setting.css.select );
+			
 				var res = true;
 				if( null != context.setting.click )
-					res = context.setting.click.call( context, context.getData(this) );
+					res = context.setting.click.call( context, context.getData(context.selectTd) );
 				
 				if( false !== res ){
 					if( context.targetObj ){
-						context.setValue( context.getData(this) );
+						context.setValue();
 					}
 				}
 			});
 			
-			
-			da( this.headObj.btToday ).bind( "click", function( evt ){			//“今天”按钮自定义事件函数
-				var res = true;
-				if( null != context.setting.clickToday )
-					res = context.setting.clickToday.call( context );
-				
-				if( false !== res ){
-					context.setting.year = null;
-					context.setting.month = null;
-					context.refresh();
-				}
-				
-			});
-			
-			da( this.headObj.btPrev ).bind( "click", function( evt ){			//“上一月”按钮自定义事件函数
+			da( this.headObj.btPrev ).bind( "click.daDate", function( evt ){			//“上一月”按钮自定义事件函数
 				var res = true;
 				if( null != context.setting.clickPrev ) 
 					res = context.setting.clickPrev.call( context );
@@ -603,7 +651,7 @@ var daDate = (function(){
 				}
 			});
 			
-			da( this.headObj.btNext ).bind( "click", function( evt ){			//“下一月”按钮自定义事件函数
+			da( this.headObj.btNext ).bind( "click.daDate", function( evt ){			//“下一月”按钮自定义事件函数
 				var res = true;
 				if( null != context.setting.clickNext ) 
 					res = context.setting.clickNext.call( context );
@@ -620,7 +668,7 @@ var daDate = (function(){
 			});
 
 			if( this.setting.selectYearMonth ){
-				da( this.headObj.sltYear ).bind( "change", function( evt ){			//“年份”按钮自定义事件函数
+				da( this.headObj.sltYear ).bind( "change.daDate", function( evt ){			//“年份”按钮自定义事件函数
 					var res = true;
 					if( null != context.setting.changeYear ) 
 						res = context.setting.changeYear.call( context );
@@ -632,7 +680,7 @@ var daDate = (function(){
 					}
 				});
 				
-				da( this.headObj.sltMonth ).bind( "change", function( evt ){		//“月份”按钮自定义事件函数
+				da( this.headObj.sltMonth ).bind( "change.daDate", function( evt ){			//“月份”按钮自定义事件函数
 					var res = true;
 					if( null != context.setting.changeMonth ) 
 						res = context.setting.changeMonth.call( context );
@@ -644,18 +692,59 @@ var daDate = (function(){
 					}
 				});
 			}
+
+			if( this.setting.showFootBar ){
+				da( this.footObj.btToday ).bind( "click.daDate", function( evt ){			//“今天”按钮自定义事件函数
+					var res = true;
+					if( null != context.setting.clickToday )
+						res = context.setting.clickToday.call( context );
+					
+					if( false !== res ){
+						context.setting.year = null;
+						context.setting.month = null;
+						context.refresh();
+					}
+				});
 				
+				da( this.footObj.btDone ).bind( "click.daDate", function( evt ){			//“确认”按钮自定义事件函数
+					var res = true;
+					if( null != context.setting.click )
+						res = context.setting.click.call( context, context.getData(this) );
+					
+					if( false !== res ){
+						if( context.targetObj ){
+							context.setValue();
+						}
+					}
+				});
+			}
+			
 			//鼠标焦点高亮事件(托管给cntObj对象,不用重复绑定大量事件，提高性能)
-			da( this.cntObj ).bind( "mouseover", function( evt ){								//鼠标移上高亮
+			da( this.cntObj ).bind( "mouseover.daDate", function( evt ){					//鼠标移上高亮
 				if( "TD" == evt.target.tagName && !da( evt.target ).is(".no") ){
 					da( evt.target ).addClass( context.setting.css.focus );
 				}
-			}).bind( "mouseout", function( evt ){												//鼠标移出解除高亮
+			}).bind( "mouseout.daDate", function( evt ){									//鼠标移出解除高亮
 				if( "TD" == evt.target.tagName && !da( evt.target ).is(".no") ){
 					da( evt.target ).removeClass( context.setting.css.focus );
 				}
 			});
 			
+			da(doc).bind("mousedown.daDate",function( evt ){								//焦点移开隐藏日期选择器
+				var pos = da(context.cntObj).offset(),
+					range = {
+						left: pos.left,
+						top: pos.top,
+						right: pos.left + da(context.cntObj).width(),
+						bottom: pos.top + da(context.cntObj).height()
+					};
+				
+				if(!( range.left <= evt.pageX && evt.pageX <= range.right 
+				&& range.top <= evt.pageY && evt.pageY <= range.bottom )){
+					context.hide();
+				}
+			
+			});
 			
 		},
 		
@@ -687,7 +776,7 @@ var daDate = (function(){
 		getData: function( tdObj ){
 			var idxBox = tdObj.getAttribute( "idxBox" ),
 				idxDay = tdObj.getAttribute( "idxDay" );
-				
+			
 			return this.arrDays[ idxBox ][idxDay] || null;
 		},
 			
@@ -787,9 +876,14 @@ var daDate = (function(){
 		
 		/**给目标对象设置选中日期值
 		*/
-		setValue: function( data ){
-			var fmt = this.targetObj.getAttribute("fmt");
+		setValue: function(){
+			var data = this.getData(this.selectTd),
+				fmt = this.targetObj.getAttribute("fmt");
+			
+			data.date.setHours( this.footObj.sltHour.value, this.footObj.sltMinute.value, this.footObj.sltSecond.value );
+			
 			this.targetObj.value = fmt ? da.fmtDate( data.date, fmt ) : data.date;
+			this.hide();
 		},
 		
 		//显示列表
