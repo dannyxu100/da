@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<link href="daBar.css"  rel="stylesheet"/>
+		<script src="da.js"></script>
+		<script src="daDrag_min.js"></script>
+		<script src="daBar_min.js"></script>
+		
+		
+		<script langruage="javascript">
+				da(function(){
+					
+						
+						daBar({
+							parent: "bar",
+							width:	"200px",
+							value: 165,
+							max: 500,
+							unit: "￥",
+							style: 4,
+							drag: function( evt, percent, val ){
+									da("id:nowPercent").dom[0].value = percent +"%";
+									da("id:nowvalue").dom[0].value = val;
+									bar1.value( percent +"%" );
+									bar2.value( percent +"%" );
+									bar3.value( percent +"%" );
+									bar4.value( val );
+									bar0.value( this.value() );
+							}
+						});
+					
+						var bar1 = daBar({
+							parent: "bar1",
+							width:	"200px",
+							max: 100,
+							value: "75%",
+							unit: "元",
+							style: 3,
+							color: "#F2F5ED,#4AC0F2"
+						});
+						var bar2 = daBar({
+							parent: "bar2",
+							width:	"600px",
+							max: 97432,
+							value: "75%",
+							unit: "人",
+							style: 2,
+							color: "#F2F5ED,#FF5B00"
+						});
+						var bar3 = daBar({
+							parent: "bar3",
+							width:	"350px",
+							max: 100,
+							value: "75%",
+							unit: "份",
+							style: 1,
+							color: "#F2F5ED,#84002E"
+						});
+						var bar4 = daBar({
+							width:	"100px",
+							max: 700,
+							style: 0
+						});
+						
+						var bar0 = daBar({
+							width:	"200px",
+							max: 1000,
+							color: "#565656,#f0f0f0"
+						});
+				});
+				
+		</script>
+		
+	</head>
+	
+	
+	<body>
+			
+			<h3>多功能进度条daBar</h3>
+			
+			当前进度： 
+			百分比  <input id="nowPercent" value="0"  style="width:50px;" />
+			数值  <input id="nowvalue" value="0"  style="width:50px;" />
+			<br/><br/><br/><br/>
+			
+			
+			<table>
+				<tr>
+						<td id="bar1"></td>	
+						<td></td>	
+				</tr>	
+				<tr>
+						<td id="bar2"></td>	
+						<td></td>	
+				</tr>	
+				<tr>
+						<td id="bar3"></td>	
+						<td></td>	
+				</tr>	
+				<tr>
+						<td id="bar"></td>	
+						<td></td>	
+				</tr>	
+			
+			</table>
+	</body>
+
+</html>
