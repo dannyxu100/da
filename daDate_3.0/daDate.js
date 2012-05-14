@@ -21,36 +21,39 @@ function fillZero( str, len, isRight ){
 	date: 2012-5-12
 	description: daDate 3.1.1 工作计划日历插件
 */
-( function( win ){
-	var doc = win.document;
+(function( win ){
+var doc = win.document;
 
-	/********** 日历属性结构体 ***********/
-	function dayElement( sYear, sMonth, sDay, week, lYear, lMonth, lDay, isLeap, cYear, cMonth, cDay ){
-		this.isToday = false;			//是否是当日
-		this.color = '';				//日历背景色
+/********** 日历属性结构体 ***********/
+function dayElement( sYear, sMonth, sDay, week, lYear, lMonth, lDay, isLeap, cYear, cMonth, cDay ){
+	this.isToday = false;			//是否是当日
+	this.color = '';				//日历背景色
+	
+	this.sYear = sYear;				//国历年
+	this.sMonth = sMonth;			//国历月
+	this.sDay = sDay;				//国历日
+	this.week = week;				//国历星期
+
+	this.date = new Date( sYear, sMonth, sDay );
+	
+	this.lYear = lYear;				//农历年
+	this.lMonth = lMonth;			//农历月
+	this.lDay = lDay;					//农历日
+	this.isLeap = isLeap;			//是否闰月
+
+	this.cYear = cYear;				//干支年
+	this.cMonth = cMonth;			//干支月
+	this.cDay = cDay;				//干支日
+	
+	this.lunarFestival = ''; 	//农历节日
+	this.solarFestival = ''; 	//国历节日
+	this.solarTerms = ''; 		//节气
 		
-		this.sYear = sYear;				//国历年
-		this.sMonth = sMonth;			//国历月
-		this.sDay = sDay;				//国历日
-		this.week = week;				//国历星期
+};
 
-		this.date = new Date( sYear, sMonth, sDay );
-		
-		this.lYear = lYear;				//农历年
-		this.lMonth = lMonth;			//农历月
-		this.lDay = lDay;					//农历日
-		this.isLeap = isLeap;			//是否闰月
-
-		this.cYear = cYear;				//干支年
-		this.cMonth = cMonth;			//干支月
-		this.cDay = cDay;				//干支日
-		
-		this.lunarFestival = ''; 	//农历节日
-		this.solarFestival = ''; 	//国历节日
-		this.solarTerms = ''; 		//节气
-			
-	};
-
+	
+var daDate = (function(){
+	
 	/**构造函数
 	*/
 	var daDate = function( setting ){
@@ -827,11 +830,12 @@ function fillZero( str, len, isRight ){
 	//对象继承da类属性
 	daDate.fnStruct.init.prototype = daDate.prototype;
 	
-	
-	//全局变量
-	win.daDate = daDate;
-	
+	return daDate;
+})();
 
+//全局变量
+win.daDate = daDate;
+	
 } )( window );
 
 
