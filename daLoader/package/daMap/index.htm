@@ -1,0 +1,479 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" >
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+<head>
+    <title>daMap 地图应用</title>
+    <link href="daMap.css" rel="stylesheet"/>
+    
+  	<script type="text/javascript" src="js/da.js"></script>
+  	<script type="text/javascript" src="js/daFx.js"></script>
+  	<script type="text/javascript" src="js/daDrag.js"></script>
+  	<script type="text/javascript" src="js/daKey.js"></script>
+  	<script type="text/javascript" src="js/daWheel.js"></script>
+  	
+  	
+    <link href="js/daTip/daTip.css" rel="stylesheet"/>
+  	<script type="text/javascript" src="js/daTip/daTip.js"></script>
+  	
+    <link href="js/daLoading/daLoading.css" rel="stylesheet"/>
+  	<script type="text/javascript" src="js/daLoading/daLoading.js"></script>
+  	
+  	<script type="text/javascript" src="daMap.js"></script>
+  	
+		<style>
+			.userMarker{ width:32px;height:32px;background:url(/myImages/user.png) no-repeat;cursor:hand;}
+			.userRed{ width:32px;height:32px;background:url(/myImages/red.png) no-repeat;cursor:hand;}
+			.userWifi{ width:32px;height:32px;background:url(/myImages/wifi.png) no-repeat;cursor:hand;}
+			
+			
+			
+		</style>
+</head>
+
+<body>
+
+
+	<div id="mymap" style="width:100%; height:600px;border:1px solid #333;overflow:hidden;"></div>
+	
+	
+  <div id="123" class="daMapMarkerTitle" style="font-size:22px;" >
+    地图测试<input type="text" value="图层1000" />
+  </div>
+	
+	<input class="typeface-js" style="font-family: Helvetiker" type="button" value="测试定位" onclick="location1()"/>&nbsp;&nbsp;
+	<input type="button" value="图层100" onclick="showLayer1()"/>&nbsp;&nbsp;
+	<input type="button" value="图层500" onclick="showLayer2()"/>&nbsp;&nbsp;
+	<input type="button" value="图层1000" onclick="showLayer3()"/>&nbsp;&nbsp;
+	<input type="button" value="最简100" onclick="showLayer4()"/>
+	
+	<script type="text/javascript">
+		
+		
+		/**定位测试 
+		*/
+		var _longitude, _latitude, _title, isStar=true;
+		
+		/**初始化地图
+		*/
+		var map1 = daMap({
+//			debug: true,
+			parent: "mymap",
+			initLevel: 2,
+			maxLevel: 8,
+			url: [ ["/map/sichuan_star/", "jpg"], ["/map/sichuan_png/", "png"] ],//
+			changeURL: function( url, urlImg, setting ){
+				if( isStar ){
+					isStar = false;
+					return [ ["/map/sichuan/", "png"] ];
+					
+				}
+				else{
+					isStar = true;
+					return [ ["/map/sichuan_star/", "jpg"], ["/map/sichuan_png/", "png"] ];
+					
+				}
+			},
+			imageType: "png",
+			range: [ 100, 30, 110, 40 ],
+			center: [ 106.2524414, 34.3286132 ]
+			
+		});
+		
+		var layer1, layer2, layer3, layer4;
+		
+		function location1(){
+			map1.toCenterByCoord( _longitude, _latitude );
+			da.out( _title );
+		}
+		
+		
+////		map1.appendLayer({
+////			type: "user",
+////			code: "0001"
+////		});
+//		
+//		map1.appendLayer( layer1 );
+//		map1.appendLayer( layer2 );
+//		map1.appendLayer( layer3 );
+//
+//		map1.loadLayer();
+		function showLayer4(){
+			if( layer4 ) {
+				layer4.hide();
+				return;
+			}
+			
+			layer4 = daMapLayer({ code:"layer003", minLevel:2, isMerge:true });
+
+			for(var i=0; i<100; i++){
+				_longitude = da.random(100000000,110000000)/1000000;
+				_latitude = da.random(30000000,40000000)/1000000;
+				_title = "成都汉默0000"+i;
+				
+				layer4.appendMarker({
+					longitude: _longitude, 
+					latitude: _latitude,
+					title: _title
+					
+				});
+				
+			}
+			
+			map1.appendLayer( layer4 );
+			layer4.draw();
+		}
+
+		function showLayer3(){
+			if( layer3 ) {
+				layer3.hide();
+				return;
+			}
+			
+			layer3 = daMapLayer({ code:"layer003", minLevel:2, isMerge:true });
+			map1.appendLayer( layer3 );
+
+			for(var i=0; i<1000; i++){
+				_longitude = da.random(100000000,110000000)/1000000;
+				_latitude = da.random(30000000,40000000)/1000000;
+				_title = "成都汉默0000"+i;
+				
+				layer3.appendMarker({
+					
+					longitude: _longitude, 
+					latitude: _latitude,
+					
+					css: "userMarker",
+					width:16,
+					height:16,
+					hotspot: {
+						left: 8,
+						top: 16
+					},
+					
+					title: _title,
+//					titleColor: randomColor(),
+					
+					loaded: function( evt, markerObj, setting ){
+	//					da.out(["loaded", setting.longitude,setting.latitude]);
+					},
+					click: function( evt, markerObj, setting ){
+						da.out(["click", setting.longitude,setting.latitude]);
+					},
+					dblclick: function( evt, markerObj, setting ){
+						da.out(["dblclick", setting.longitude,setting.latitude]);
+					},
+					mouseover: function( evt, markerObj, setting ){
+	//					da.out(["over", setting.longitude,setting.latitude]);
+	//						daTip({
+	//							target: this,
+	//							html: "经度："+ setting.longitude +", 纬度："+ setting.latitude,
+	//							close: false
+	//						});
+					},
+					mouseout: function( evt, markerObj, setting ){
+	//					da.out(["out", setting.longitude,setting.latitude]);
+	//						daTip.hide();
+					}
+				});
+			}
+			
+			layer3.draw();
+		}
+		
+		
+		function showLayer2(){
+			if( layer2 ){
+				layer2.hide();
+				return;
+			}
+			
+			layer2 = daMapLayer({ code:"layer002", minLevel:2, isMerge:true });
+			map1.appendLayer( layer2 );
+			
+			for(var i=0; i<500; i++){
+				_longitude = da.random(100000000,110000000)/1000000;
+				_latitude = da.random(30000000,40000000)/1000000;
+				_title = "成都汉默地理资讯科技有限公司0000"+i;
+				
+				var marker1 = daMapMarker({
+					
+					longitude: _longitude, 
+					latitude: _latitude,
+					
+					type: "wifi",
+					
+					css: "userWifi",
+					title: _title,
+//					titleColor: randomColor(),
+					
+					data: { idx: i, color: randomColor() },
+					
+					loaded: function( evt, markerObj, setting ){
+	//					da.out(["loaded", setting.longitude, setting.latitude]);
+					},
+					click: function( evt, markerObj, setting ){
+//						da.out(["click", setting.longitude, setting.latitude]);
+						daTip.hide("tip");
+						daTip({
+								target: this,
+								parent: markerObj.daParentObj.dom[0],
+								group: "pop",
+								html: '<div style="width:150px;height:100px;">'
+										+ "名称："+ setting.title 
+										+ "<br/>经度："+ setting.longitude 
+										+ "<br/>纬度："+ setting.latitude 
+										+ "<br/>序号："+ setting.data.idx 
+										+ "<br/>颜色："+ setting.data.color 
+										+ '</div>',
+								bg: "#f7f7f7",
+								color: "#333",
+								pointer: "2"
+							});
+					},
+					dblclick: function( evt, markerObj, setting ){
+						da.out(["dblclick", setting.longitude,setting.latitude]);
+					},
+					mouseover: function( evt, markerObj, setting ){
+	//					da.out(["over", setting.longitude,setting.latitude]);
+					},
+					mouseout: function( evt, markerObj, setting ){
+	//					da.out(["out", setting.longitude,setting.latitude]);
+					}
+				});
+				
+				layer2.appendMarker( marker1 );
+			}
+			
+			layer2.draw();
+			
+		}
+		
+		
+		function showLayer1(){
+			if( layer1 ) {
+				layer1.hide();
+				return;
+			
+			}
+			
+			layer1 = daMapLayer({ code:"layer001", minLevel:2, isMerge:true });
+			map1.appendLayer( layer1 );
+			
+			for(var i=0; i<100; i++){
+				_longitude = da.random(100000000,110000000)/1000000;
+				_latitude = da.random(30000000,40000000)/1000000;
+				_title = "成都汉默地理资讯科技有限公司0000"+i;
+				
+				var marker1 = daMapMarker({
+					
+					longitude: _longitude, 
+					latitude: _latitude,
+					
+					title: _title,
+					
+					loaded: function( evt, markerObj, setting ){
+	//					da.out(["loaded", setting.longitude,setting.latitude]);
+					},
+					click: function( evt, markerObj, setting ){
+//						da.out(["click", setting.longitude,setting.latitude]);
+							map1.pop({
+								daMapMarker: markerObj,
+//								width: 400,
+//								height: 300,
+								html: [
+									'<div style="font-size:12px">',
+									'<div style="padding:5px;">', setting.title, '</div>',
+									'<div style="padding:5px;">经度', setting.longitude, '&nbsp;&nbsp;&nbsp;&nbsp;纬度', setting.latitude, '</div>',
+									'<div style="padding:5px;">', setting.width, '&nbsp;&nbsp;&nbsp;&nbsp;', setting.height, '&nbsp;&nbsp;&nbsp;&nbsp;', setting.titleColor, '</div>',
+									'<div style="padding:5px;">&nbsp;&nbsp;&nbsp;&nbsp;<img src="/myImages/1.png" style="width:100px;height:50px;border:1px solid #f0f0f0"/>&nbsp;&nbsp;&nbsp;&nbsp;</div>',
+								  '</div>'
+								].join(""),
+								url: "http://www.baidu.com"
+							});
+							
+							map1.toCenterByPos( evt.pageX, evt.pageY-200 );
+
+					},
+					dblclick: function( evt, markerObj, setting ){
+						da.out(["dblclick", setting.longitude,setting.latitude]);
+					},
+					mouseover: function( evt, markerObj, setting ){
+	//					da.out(["over", setting.longitude,setting.latitude]);
+	//						daTip({
+	//							target: this,
+	//							html: "经度："+ setting.longitude +", 纬度："+ setting.latitude,
+	//							close: false
+	//						});
+					},
+					mouseout: function( evt, markerObj, setting ){
+	//					da.out(["out", setting.longitude,setting.latitude]);
+	//						daTip.hide();
+					}
+				});
+				
+				layer1.appendMarker( marker1 );
+			}
+
+			layer1.draw();
+		}
+		
+		
+		function randomColor(){
+			var str = "0123456789abcdef"; 
+			return [ "#", 
+				str.charAt(Math.random()*str.length), 
+				str.charAt(Math.random()*str.length), 
+				str.charAt(Math.random()*str.length),
+				str.charAt(Math.random()*str.length),
+				str.charAt(Math.random()*str.length),
+				str.charAt(Math.random()*str.length)
+			].join("");  
+		}
+		
+		
+	</script>
+	
+
+	<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<v:shape id=shape1 name=shape1 onmouseover="alert(this.id)">
+	<v:Stroke StrokeColor=red/>
+	<v:Path v="m 0,0 l 10,10 x e"/>
+</v:shape>
+
+
+<div id="tileContainer" style="overflow-x: hidden; overflow-y: hidden; width: 100%; height: 100%; position: relative; border:1px solid #f00;">
+	<div style="position: absolute; left: 0px; top: 0px; z-index: 0;">
+		
+			<!-- 点标注<area shape="circle" coords="x1, y1,r" href=url> -->
+			<div style="position: absolute; left: 0px; top: 0px; z-index: 101; " class="css-3d-bug-fix-hack">
+			    <div style="position: absolute; left: 0px; top: 0px; z-index: 0; ">
+			        <div style="position: absolute; left: 0px; top: 0px; z-index: 0; ">
+			            <img style="-webkit-user-select: none; 
+			            border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; 
+			            padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; 
+			            position: absolute; left: 0px; top: 0px; height: 256px; width: 256px; "
+			            src="/myImages/dotdot.png" class="css-3d-bug-fix-hack">
+			        </div>
+			    </div>
+			</div>
+			
+			<!-- 阴影 -->
+			<div style="position: absolute; left: 0px; top: 0px; z-index: 105; " class="css-3d-bug-fix-hack">
+			    <div style="position: absolute; left: -150px; top: 0px; " class="gmnoprint">
+			        <div style="width: 70px; height: 30px; overflow-x: hidden; overflow-y: hidden; z-index: 1; position: absolute; left: 89px; top: 0px; ">
+			            <img style="position: absolute; left: -323px; top: 0px; width: 1144px; height: 370px; -webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; -webkit-user-drag: none; "
+			            src="/myImages/iws3.png">
+			        </div>
+			        <div style="width: 70px; height: 30px; overflow-x: hidden; overflow-y: hidden; z-index: 1; position: absolute; left: 364px; top: 0px; ">
+			            <img style="position: absolute; left: -1033px; top: 0px; width: 1144px; height: 370px; -webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; -webkit-user-drag: none; "
+			            src="/myImages/iws3.png">
+			        </div>
+			        <div style="width: 70px; height: 60px; overflow-x: hidden; overflow-y: hidden; z-index: 1; position: absolute; left: 0px; top: 90px; ">
+			            <img style="position: absolute; left: -14px; top: -310px; width: 1144px; height: 370px; -webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; -webkit-user-drag: none; "
+			            src="/myImages/iws3.png">
+			        </div>
+			        <div style="width: 70px; height: 60px; overflow-x: hidden; overflow-y: hidden; z-index: 1; position: absolute; left: 305px; top: 90px; ">
+			            <img style="position: absolute; left: -754px; top: -310px; width: 1144px; height: 370px; -webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; -webkit-user-drag: none; "
+			            src="/myImages/iws3.png">
+			        </div>
+			        <div style="width: 140px; height: 60px; overflow-x: hidden; overflow-y: hidden; z-index: 1; position: absolute; left: 93px; top: 90px; ">
+			            <img style="position: absolute; left: -119px; top: -310px; width: 1144px; height: 370px; -webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; -webkit-user-drag: none; "
+			            src="/myImages/iws3.png">
+			        </div>
+			        <div style="height: 30px; overflow-x: hidden; overflow-y: hidden; width: 205px; position: absolute; left: 159px; top: 0px; ">
+			            <div style="width: 640px; height: 30px; overflow-x: hidden; overflow-y: hidden; ">
+			                <img style="position: absolute; left: -393px; top: 0px; width: 1144px; height: 370px; -webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; -webkit-user-drag: none; "
+			                src="/myImages/iws3.png">
+			            </div>
+			        </div>
+			        <div style="overflow-x: hidden; overflow-y: hidden; bottom: -1px; width: 130px; height: 60px; position: absolute; left: 29px; top: 30px; ">
+			            <img style="-webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; -webkit-user-drag: none; position: absolute; left: -263px; top: -30px; "
+			            src="/myImages/iws3.png">
+			        </div>
+			        <div style="overflow-x: hidden; overflow-y: hidden; bottom: -1px; width: 130px; height: 60px; position: absolute; left: 334px; top: 30px; ">
+			            <img style="-webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; -webkit-user-drag: none; position: absolute; left: -1003px; top: -30px; "
+			            src="/myImages/iws3.png">
+			        </div>
+			        <div style="height: 60px; overflow-x: hidden; overflow-y: hidden; width: 23px; position: absolute; left: 70px; top: 90px; ">
+			            <div style="width: 320px; height: 60px; overflow-x: hidden; overflow-y: hidden; ">
+			                <img style="position: absolute; left: -345px; top: -310px; width: 1144px; height: 370px; -webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; -webkit-user-drag: none; "
+			                src="/myImages/iws3.png">
+			            </div>
+			        </div>
+			        <div style="height: 60px; overflow-x: hidden; overflow-y: hidden; width: 72px; position: absolute; left: 233px; top: 90px; ">
+			            <div style="width: 320px; height: 60px; overflow-x: hidden; overflow-y: hidden; ">
+			                <img style="position: absolute; left: -345px; top: -310px; width: 1144px; height: 370px; -webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; -webkit-user-drag: none; "
+			                src="/myImages/iws3.png">
+			            </div>
+			        </div>
+			        <div style="overflow-x: hidden; overflow-y: hidden; width: 175px; height: 60px; position: absolute; left: 159px; top: 30px; ">
+			            <div style="width: 640px; height: 598px; overflow-x: hidden; overflow-y: hidden; ">
+			                <img style="position: absolute; left: -360px; top: -30px; width: 1144px; height: 370px; -webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; -webkit-user-drag: none; "
+			                src="/myImages/iws3.png">
+			            </div>
+			        </div>
+			    </div>
+			</div>
+			
+			<!-- 标注边界  -->
+			<div style="position:absolute; left: 0px; top: 0px; z-index: 106;" class="css-3d-bug-fix-hack">
+				<img style="width: 39px; height: 34px; -webkit-user-select: none; 
+				border:1px solid #f00;
+				padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; 
+				cursor: pointer; visibility: hidden; z-index: -98105921; position: absolute; left: 0px; top: 0px; " 
+				crossorigin="" src="/myImages/arrowtransparent.png" class="gmnoprint" log="miw" id="mtgt_near.1000">
+			</div>
+			
+			<!-- 底图  -->
+			<div style="position: absolute; left: 0px; top: 0px; z-index: 0; ">
+					<img style="-webkit-user-select: none; 
+					border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; 
+					padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; 
+					position: absolute; left: 0px; top: 0px; height: 256px; width: 256px; " 
+					src="/myImages/map.png" 
+					class="css-3d-bug-fix-hack">
+			</div>
+			
+			
+		</div>
+</div>
+
+<!--
+<div class="css-3d-bug-fix-hack" style="width: 70px; height: 30px; z-index: 1; position: absolute; left: 89px; top: 0px; ">
+	<div style="position:absolute;z-index:-12321321;left:0px;top:0px;padding:2px 6px; border:1px solid #333333;cursor:pointer;" onclick="alert('点得我好痒啊！');">点击</div>	
+	<img  style="-webkit-user-select: none; cursor:pointer;
+		border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; 
+		padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; 
+		position: absolute; left: 0px; top: 0px; height: 256px; width: 256px; " 
+		src="/myImages/dotdot.png" 
+		class="css-3d-bug-fix-hack">
+		
+		
+	<img style="position: absolute; left: -323px; top: 0px; 
+	
+	width: 1144px; height: 370px; 
+	
+	-webkit-user-select: none; 
+	
+	border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; 
+	
+	padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px;
+	 margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; 
+	 
+	-webkit-user-drag: none; " 
+	
+	src="//maps.gstatic.com/mapfiles/iws3.png">
+
+	<img style="width: 20px; height: 34px; -webkit-user-select: none; 
+	
+	border:1px solid #f00;
+	padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; 
+	
+	z-index: -98097602; cursor: pointer; position: absolute; left: 0px; top: 0px; " crossorigin="" 
+	
+	src="//maps.gstatic.com/mapfiles/markers2/markerTransparent.png" 
+	
+	class="gmnoprint" log="miw" id="mtgt_A.1001" />
+</div>
+-->
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<script src="js/da.js"></script>
+	<script src="js/daFx.js"></script>
+	<script src="js/daGif.js"></script>
+	<link href="daOption.css" rel="stylesheet" />
+	<script src="daOption.js"></script>
+	
+
+	<script langruage="javascript">
+			var radio1,radio2,radio3,
+					checkbox1,checkbox2,checkbox3,checkbox4,checkbox5,checkbox6;
+		
+			da(function(){
+				radio1 = daOption({parent:"#radioList",name:"color", text: "红色", value:"001" });
+				radio2 = daOption({parent:"#radioList",name:"color", text: "蓝色", value:"002" });
+				radio3 = daOption({parent:"#radioList",name:"color", text: "白色", value:"003" });
+				
+				checkbox4 = daOption({parent:"#checkboxList", id:"red1", type:"checkbox",name:"color2", text: "红色", value:"A"});
+				checkbox5 = daOption({parent:"#checkboxList",type:"checkbox",name:"color2", text: "蓝色", value:"B"});
+				checkbox6 = daOption({parent:"#checkboxList",type:"checkbox",name:"color2", text: "白色", value:"C"});
+				
+				checkbox1 = daOption({parent:"#checkboxList2",type:"checkbox",text: "背景颜色-红色<br/> 哈哈哈哈按哈哈哈哈按<br/> 哈哈哈哈按<br/> 哈哈哈哈按<br/> 哈哈哈哈按哈哈哈哈按"});
+				checkbox2 = daOption({parent:"#checkboxList2",type:"checkbox",text: "背景颜色-蓝色<br/> 哈哈哈哈按哈哈哈哈按"});
+				checkbox3 = daOption({parent:"#checkboxList2",type:"checkbox",text: "背景颜色-白色<br/> 哈哈哈哈按哈哈哈哈按<br/> 哈哈哈哈按"});
+				
+				da.timer( 3000, function(){
+					radio1.check( true );
+				});
+				
+			});
+			
+			
+			function setWhite(){
+				radio3.check( true );
+			}
+			
+			function setValue(){
+				daOption.check( "color", "002" );
+			}
+			function unSetValue(){
+				daOption.check( "color", "002", false );
+			}
+			
+			function setValue2(){
+				daOption.check( "color2", ["A","C"] );
+			}
+			function unSetValue2(){
+				daOption.check( "color2", ["A"], false );
+			}
+			
+			function getColor(){
+				var obj = daOption.check("color");
+				alert( "当前选中的颜色是："+obj.value+","+obj.text );
+			}
+			
+			function getColor2(){
+				var list, arr = [];
+				
+				list = daOption.check("color2",function( value, text, idx ){
+					alert( "遍历操作: "+idx+","+value+","+text );
+				});
+				
+				for( var i=0,len=list.length; i<len; i++ )		
+					arr.push( list[i].value+" "+list[i].text+"; " );
+				alert( "当前选中的颜色是："+arr.join("") );
+			}
+			
+			function findOption(){
+				var obj = daOption( 'red1' );
+				
+				alert( [ obj.text, obj.value ] );
+			}
+	</script>
+
+	
+</head>
+
+
+<body style="font:12px/1.5 '宋体';">
+	<div id="radioList" >
+		<input type="button" value="选择白色" onclick="setWhite()" />
+		<input type="button" value="通过value设置蓝色" onclick="setValue()" />
+		<input type="button" value="取消选择蓝色" onclick="unSetValue()" />
+		<input type="button" value="获取单选选中颜色" onclick="getColor()" />
+		单选按钮列表：
+	</div>
+	<br/>
+	
+	<div id="checkboxList" >
+		<input type="button" value="通过value数组设置多个选项" onclick="setValue2()" />
+		<input type="button" value="取消选择红色" onclick="unSetValue2()" />
+		<input type="button" value="获取复选选中颜色" onclick="getColor2()" />
+		<input type="button" value="全选" onclick="daOption.check( 'color2', true );" />
+		<input type="button" value="清空" onclick="daOption.check( 'color2', false );" />
+		<input type="button" value="反选" onclick="daOption.inverse( 'color2' );" />
+		<input type="button" value="隐藏" onclick="checkbox4.hide();" />
+		<input type="button" value="显示" onclick="checkbox4.show();" />
+		<input type="button" value="查找red1" onclick="findOption()" />
+		<input type="button" value="移除" onclick="checkbox4.remove();" />
+		复选按钮列表：
+	</div>
+	<br/>
+	
+	<div id="checkboxList2">
+	</div>
+	<br/>
+	
+	<input id="myRadio1" name="ra1" type="radio" text="myRadio1" value="mr1" /><label for="myRadio1">myRadio1</label>
+	<input id="myRadio2" name="ra1" type="radio" /><label for="myRadio2">myRadio2</label>
+	
+	<input id="checkbox1" name="chk2" type="checkbox" text="checkbox1" value="cb1" /><label for="checkbox1">checkbox1</label>
+	<input id="checkbox2" name="chk2" type="checkbox" checked /><label for="checkbox2">checkbox2</label>
+</body>
+</html>

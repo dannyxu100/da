@@ -1,0 +1,83 @@
+﻿.mapnav_topLeft {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -4px -2px;width:18px;height:20px; } 
+.mapnav_top {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -22px -2px;width:18px;height:20px; } 
+.mapnav_topRight {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -40px -2px;width:22px;height:20px ; } 
+.mapnav_middleLeft {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -4px -22px;width:18px;height:20px ; } 
+.mapnav_middle {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -22px -22px;width:18px;height:20px;   } 
+.mapnav_middleRight {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -40px -22px;width:22px;height:20px ; } 
+.mapnav_bottomLeft {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -4px -42px;width:18px;height:22px;  } 
+.mapnav_bottom {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -22px -42px;width:18px;height:22px;  } 
+.mapnav_bottomRight {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -40px -42px;width:22px;height:22px;  } 
+.mapnav_plus {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -22px -70px;width:18px;height:18px ; } 
+.mapnav_minus {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -22px -219px;width:18px;height:22px ; } 
+.mapnav_splitter {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -22px -251px;width:20px;height:18px;line-height:18px; } 
+
+.mapnav_topLeft2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -68px -2px;width:18px;height:20px ; } 
+.mapnav_top2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -86px -2px;width:18px;height:20px ; } 
+.mapnav_topRight2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -104px -2px;width:22px;height:20px;  } 
+.mapnav_middleLeft2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -68px -22px;width:18px;height:20px ; } 
+.mapnav_middle2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -86px -22px;width:18px;height:20px;  } 
+.mapnav_middleRight2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -104px -22px;width:22px;height:20px;  } 
+.mapnav_bottomLeft2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -68px -42px;width:18px;height:22px ; } 
+.mapnav_bottom2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -86px -42px;width:18px;height:22px ; } 
+.mapnav_bottomRight2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -104px -42px;width:22px;height:22px;  } 
+.mapnav_plus2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -86px -70px;width:18px;height:18px ; } 
+.mapnav_minus2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -86px -219px;width:18px;height:22px;  } 
+.mapnav_splitter2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -86px -251px;width:20px;height:18px;line-height:18px;  }
+
+
+.mapnav_back {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -22px -88px;width:18px;height:126px ; } 
+
+.maptool_plus {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -170px -10px;width:34px;height:45px ;  display:inline-block;} 
+.maptool_minus {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -204px -10px;width:31px;height:45px ;  display:inline-block;} 
+.maptool_move {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -235px -10px;width:31px;height:45px ;  display:inline-block;} 
+.maptool_select {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -266px -10px;width:31px;height:45px ;  display:inline-block;} 
+.maptool_org {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -297px -10px;width:33px;height:45px ;  } 
+.maptool_measure  {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -330px -10px;width:40px;height:45px;   display:inline-block;} 
+
+.maptool_plus2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -170px -60px;width:34px;height:45px ;  display:inline-block;} 
+.maptool_minus2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -204px -60px;width:31px;height:45px ;  display:inline-block;} 
+.maptool_move2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -235px -60px;width:31px;height:45px ;  display:inline-block;} 
+.maptool_select2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -266px -60px;width:31px;height:45px;   display:inline-block;} 
+.maptool_org2 {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -297px -60px;width:33px;height:45px ;  display:inline-block;} 
+.maptool_measure2  {cursor:hand; background: url(images/daMapNavigator.png) no-repeat  -330px -60px;width:40px;height:45px ;  display:inline-block;} 
+
+/* danny.xu 卫星地图切换按钮 2011-4-8 18:11:59 */
+.maptool_star {cursor:hand; width:60px;height:45px ;background: url(images/daMapNavigator.png) no-repeat  -130px -121px;  } 
+.maptool_star2 {cursor:hand; width:60px;height:45px ;background: url(images/daMapNavigator.png) no-repeat  -130px -171px;  } 
+	
+
+
+.daMapZoomAct { display:none;position:absolute; z-index:0;top:0px; left:0px;width:150px;height:100px;background:url(images/daMapZoomAct.gif) no-repeat;}
+.daMapCoordBar { position:absolute; z-index:0;top:10px; left:60px;width:300px;height:18px; background:url(images/daMapCoord.png) no-repeat;text-indent:5px;color:#cc6600;font:10px/16px Arial; }
+
+.daMapMarker { width:32px;height:32px;background:url(images/daMapPin.png) no-repeat;cursor:hand;}
+.daMapMarkerTitle,
+.daMapMarkerTitle2 {
+	font: 12px/22px '宋体', arial, helvetica, verdana, tahoma, sans-serif;
+	text-align:center; 
+	overflow:hidden;
+	border:0px solid #333;
+}
+.daMapMultiNum { bottom:0px;left:100%; color:#922;font: 12px '宋体', arial, helvetica, verdana, tahoma, sans-serif; }
+
+.daMapMarkerTitle,
+.daMapMultiNum {
+	filter: Dropshadow(offx=1,offy=0,color=white)
+	Dropshadow(offx=0,offy=1,color=white)
+	Dropshadow(offx=0,offy=-1,color=white)
+	Dropshadow(offx=-1,offy=0,color=white);																				 /*ie滤镜*/
+	text-shadow:#ffffff 1px 0 0,#ffffff 0 1px 0,#ffffff -1px 0 0,#ffffff 0 -1px 0; /*兼容未w3c*/
+}
+
+.daMapMarkerTitle2 {
+	color:#f7f7f7;
+	filter: Dropshadow(offx=1,offy=0,color=#333333)
+	Dropshadow(offx=0,offy=1,color=#333333)
+	Dropshadow(offx=0,offy=-1,color=#333333)
+	Dropshadow(offx=-1,offy=0,color=#333333);														 /*ie滤镜*/
+	text-shadow:#333 1px 0 0,#333 0 1px 0,#333 -1px 0 0,#333 0 -1px 0; /*兼容w3c*/
+}
+
+.daMapDot { width:10px;height:10px;background:url(images/daMapDot.gif) no-repeat;cursor:hand; }
+.daMapPopClose { top:5px; right:5px;width:16px; height:16px;background:url(images/daMapPopPointer.png) -100px 0px no-repeat;cursor:pointer; }
+.daMapPopPointer { left:50%;bottom:-80px;width:100px;height:80px;overflow:hidden;background:url(images/daMapPopPointer.png) no-repeat; }

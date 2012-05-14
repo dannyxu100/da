@@ -1,0 +1,20 @@
+daLoader.defined('daTable', {path:'demo-files/a.js', type:'js', charset:'utf-8', need:"da,jQuery,daDrag" });
+daLoader.defined('daDrag', {path:'demo-files/a.js', type:'js', charset:'utf-8', need:"da,jquery" });
+daLoader.defined('daButton', {path:'demo-files/a.js', type:'js', charset:'utf-8', need:"da,jquery" });
+daLoader.defined('daSelect', {path:'demo-files/a.js', type:'js', charset:'utf-8', need:"da,jquery" });
+
+
+daLoader.include("jQuery,daTable,daDrag");
+daLoader.include("daTable");
+daLoader.include("daDrag");
+
+
+daLoader.ready(function(){
+	
+});
+
+
+
+daLoader.ready("jQuery,daTable,daDrag", function(){
+	
+});

@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>无标题文档</title>
+	<script src="js/da.js"></script>
+	<script src="js/daDrag.js"></script>
+	<script src="js/daWheel.js"></script>
+	
+	<link rel="stylesheet" href="daFrame.css" />
+	<script src="daFrame.js"></script>
+
+	
+	<script langruge="javascript">
+		da(function(){
+			daFrame({
+//				width: 500,
+//				height: 400,
+				parent: "#right",
+				url: 'http://www.baidu.com'
+			});
+	
+		
+			daFrame({
+//				width: 500,
+//				height: 400,
+				parent: "#left",
+				html: '<img src="http://www.kpbz.net/uploads/allimg/2010-10/10140T6-1-15F7.jpg" />'
+			});
+		
+		
+			daFrame({
+//				width: 500,
+//				height: 400,
+				parent: "#mid",
+				html: [
+				'<table style="width:100%;background:#fff;" border="1" cellspacing="0" cellpadding="10">',
+						'<tr>',
+							'<td style="height:100px;">&nbsp;</td>',
+							'<td>&nbsp;</td>',
+							'<td>&nbsp;</td>',
+						'</tr>',
+						'<tr>',
+							'<td >',
+									'<div style="width:500px;height:400px;"></div>',
+							'</td>',
+							'<td style="width:500px;">&nbsp;</td>',
+							'<td style="width:200px;">&nbsp;</td>',
+						'</tr>',
+						'<tr>',
+							'<td>&nbsp;</td>',
+							'<td>&nbsp;</td>',
+							'<td>&nbsp;</td>',
+						'</tr>',
+					'</table>'
+				].join("")
+			});
+		
+		});
+	</script>		
+</head>
+
+<body>
+	<table style="width:100%" border="1" cellspacing="0" cellpadding="10">
+		<tr>
+			<td style="height:100px;">&nbsp;</td>
+			<td id="right" style="width:500px;height:400px;"></td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td >
+					<div id="left" style="width:500px;height:400px;"></div>	
+			</td>
+			<td style="width:500px;">&nbsp;</td>
+			<td style="width:200px;">&nbsp;</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td id="mid">&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+	
+	
+	
+</body>
+
+</html>

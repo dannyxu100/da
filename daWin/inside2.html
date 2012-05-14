@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script src="js/da.js" type="text/javascript"></script>
+<script src="js/daDrag.js" type="text/javascript"></script>
+<script src="js/daWheel.js" type="text/javascript"></script>
+
+<link href="daLoading/daLoading.css" rel="stylesheet"/>
+<script src="daLoading/daLoading.js" type="text/javascript"></script>
+<link href="daFrame/daFrame.css" rel="stylesheet"/>
+<script src="daFrame/daFrame.js" type="text/javascript"></script>
+
+<link href="daWin.css" rel="stylesheet"/>
+<script src="daWin2.2.js" type="text/javascript"></script>
+<title>无标题文档</title>
+
+<script>
+	function usersubmit1(obj){
+		var dawin1 = daWin({
+			width: "520px",
+			height: "290px",
+			title: function(){
+				return '我的<span style="color:#f00">超级</span>自定义窗口！';
+			},
+//			url: "inside.html",
+			url: "http://www.taobao.com",
+			
+			before: function(a){
+				adad = 100;
+			},
+			load: function(){
+				//alert(this.dwSetting.load);
+			},
+			after: function(){
+				
+			},
+			
+		});
+	}
+	function usersubmit2(obj){
+	}
+
+	function usersubmit3(obj){
+		var param = {};
+		param.a=100;
+		param.b=1000;
+		param.c=100000;
+	}
+</script>
+</head>
+
+<body>
+	inside2<br/>
+单个参数：
+<input type="button" value="aaaa" onclick="usersubmit1(this)"/>111111111111111111111
+</body>
+</html>

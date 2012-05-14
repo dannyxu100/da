@@ -1,0 +1,52 @@
+﻿<html>
+	<head>
+		<link href="daTip2.0.css" rel="stylesheet" />
+		<script src="js/da.js" langruage="javascript"></script>
+		<script src="daMenu_source2.0.js" langruage="javascript"></script>
+		
+		 <script>
+		 	da(function(){
+		 		daMenu({
+					target: document.body,
+					list: [
+						[ "放大", function(){alert("放大")} ],
+						[ "缩小", function(){alert("缩小")} ],
+						[ "居中", function(){alert("居中")} ],
+					]
+		 		});
+		 	
+		 	});
+		 		
+		 </script>
+		 
+		 <style>
+				/* 圆角 */
+				.daRadius {
+					-moz-border-radius: 5px;
+					-khtml-border-radius: 5px;
+					-webkit-border-radius: 5px;
+					border-radius: 5px;
+				}
+				
+		 		.daMenu { display:;position:absolute; top:0px;left:0px; border:1px solid #ccc; background:#eee; }
+		 		.daMenu .list { border:1px solid #fff; }
+		 		
+		 		.daMenu .list a{display:block;padding:5px 10px 5px 15px;text-decoration:none;color:#333;font-size:12px;}
+				.daMenu .list a:hover{color:#fff;background:#333;}
+		 </style>
+	</head>
+	
+	<body>
+		<div id="popmenubox" style="width:300px;height:300px;border:3px solid #666"></div>
+		
+		<div class="daMenu daShadow daRadius">
+			<div class="list daRadius">
+					<a >放大</a>
+					<a >缩小</a>
+					<a >居中</a>
+					<a >关于菜单</a>
+			</div>
+		</div>		
+	</body>
+
+</html>

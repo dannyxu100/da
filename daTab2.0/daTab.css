@@ -1,0 +1,69 @@
+﻿/*
+	author: danny.xu
+	date:	2012-1-30
+	description:	动态自定义tab页样式表
+*/
+/*
+	author: danny.xu
+	date:	2010-9-25
+	description:	动态自定义tab页样式表
+*/
+
+.daTab{ 
+	position: relative;
+	height: 31px; 
+	border-bottom: 1px solid #ccc; 
+}
+.daTab .tabs{
+	position: absolute;
+	top: 0;
+	overflow: visible;
+	padding-right: 2px;
+	word-break: break-all; word-wrap: break-word;
+	color: #333;
+}
+.daTab .tabs li{ 
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif;
+	display: list-item;
+	list-style: none;
+	height: 30px;
+	margin: 0;
+	margin-right: -1px;
+	border: 1px solid #ccc;
+	border-bottom: none;
+	float: left;
+	overflow: hidden;
+	text-align: -webkit-match-parent;
+	background: #f0f0f0;
+	cursor: pointer;
+	color: #444;
+}
+
+.daTab .tabs li.current {
+	cursor: default;
+	color: #222;
+	height: 31px;
+	background: #fff;
+}
+
+.daTab .tabs li .cnt { height:30px; padding: 5px 10px;border:1px solid #fff; }
+.daTab .tabs li .cnt .ico{ float:left; width:16px; height:16px; }
+.daTab .tabs li .cnt .txt{ float:left; margin-left:5px;}
+
+.daTab .tabs li .cnt .close{display:none;}
+.daTab .tabs .current .cnt .close{ display:block; float:left; border:0px solid #f00; width:12px; height:12px; background:url(images/close.png) 0px 0px no-repeat;margin:4px 0px 0px 10px;}
+.daTab .tabs .current .cnt .close:hover{ background-position:-12px 0px;}
+
+/* 小图标 */
+.money,
+.file,
+.add, .save, .delete,
+.user1, .user2, .user3, .user4{
+	background:url(images/daTab_icons.png) no-repeat;
+}
+
+.money{ background-position:0px 0px;}
+.file{ background-position:-16px 0px;}
+.add{ background-position:-32px 0px;}
+.save{ background-position:-48px 0px;}
+.delete{ background-position:-64px 0px;}

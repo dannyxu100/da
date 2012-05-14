@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>无标题文档</title>
+	<script src="js/da.js"></script>
+	<script src="js/daWheel.js"></script>
+	<script src="js/daDrag.js"></script>
+	<script src="js/daFx.js"></script>
+		
+	<link href="daLoading/daLoading.css" rel="stylesheet"/>
+	<script src="daLoading/daLoading.js" type="text/javascript"></script>
+	
+	<link rel="stylesheet" href="daFrame.css" />
+	<script src="daFrame_source.js"></script>
+
+
+	<script langruge="javascript">
+		var daFrameObj;
+		
+		da(function(){debugger;
+			daFrameObj = daFrame({
+				parent: "#right",
+//				width: 500,
+//				height: 400,
+//				border: 0,
+				url: "inside.htm"
+//				url: 'http://www.baidu.com'
+			});
+			daFrame.shandowborder("#bbb","top,left,right,bottom");
+
+			// daFrame({
+				// width: 500,
+				// height: 400,
+				// parent: "#left",
+				// src: "http://www.kpbz.net/uploads/allimg/2010-10/10140T6-1-15F7.jpg"
+			// });
+		
+//			daFrame({
+////				width: 500,
+////				height: 400,
+//				parent: "#mid",
+//				src: "http://www.kpbz.net/uploads/allimg/2010-10/10140T6-1-15F7.jpg"
+//			});
+		
+//			daFrame({
+//				width: 500,
+//				height: 400,
+//				parent: "#mid",
+//				html: [
+//				'<table style="width:500px;height:500px;background:#fff;margin:10px;" border="1" cellspacing="0" cellpadding="10">',
+//						'<tr>',
+//							'<td>&nbsp;</td>',
+//							'<td>&nbsp;</td>',
+//							'<td>&nbsp;</td>',
+//						'</tr>',
+//						'<tr>',
+//							'<td >',
+//									'<div></div>',
+//							'</td>',
+//							'<td>&nbsp;</td>',
+//							'<td>&nbsp;</td>',
+//						'</tr>',
+//						'<tr>',
+//							'<td>&nbsp;</td>',
+//							'<td>&nbsp;</td>',
+//							'<td>&nbsp;</td>',
+//						'</tr>',
+//					'</table>'
+//				].join("")
+//			});
+		
+		});
+		
+		var arrFrame = []
+		function newFrame(){
+			arrFrame[ arrFrame.length ] = daFrame({
+//				width: 500,
+//				height: 400,
+				parent: "#right",
+				url: 'image.htm',
+				border: 0
+//				url: 'http://www.baidu.com'
+			});
+		}
+		
+		function closeFrame(){
+			for( var i=0,len=arrFrame.length; i<len; i++ ){
+				arrFrame[i].remove();
+				
+			}
+		}
+		
+		function setScroll( t, l ){
+			daFrameObj.scroll( t, l );
+			
+		}
+	</script>		
+</head>
+
+<body >
+<div id="bbb" style="width:500px;height:400px;border:1px solid #666"></div>
+<input onclick="newFrame()" type="button" value="新内容框架" />&nbsp;&nbsp;
+<input onclick="closeFrame()" type="button" value="关闭(释放)所有" /><br/><br/><br/><br/>
+
+<input onclick="setScroll(0,0)" type="button" value="设置滚动条位置0, 0" />
+<input onclick="setScroll(5000,5000)" type="button" value="设置滚动条位置5000, 5000" />
+	<table style="width:100%" border="0" cellspacing="0" cellpadding="10">
+		<tr>
+			<td style="height:100px;">&nbsp;</td>
+			<td id="right" style="width:500px;height:400px;"></td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td id="left" style="width:500px;height:400px;">
+			</td>
+			<td style="width:500px;">&nbsp;</td>
+			<td style="width:200px;">&nbsp;</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td id="mid" style="width:500px;height:200px;">&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+	
+	
+	
+</body>
+
+</html>

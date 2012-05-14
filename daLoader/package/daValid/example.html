@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		
+		<script src="js/da.js" langruage="javascript"></script>
+
+		<script src="daTip_v2.0/daTip.js" langruage="javascript"></script>
+		<link href="daTip_v2.0/daTip.css" rel="stylesheet" />
+		<!--		-->
+		<script src="daValid_min.js" langruage="javascript"></script>
+		
+		<script>
+				da(function(){
+					daValid("#bill");
+					
+					/*
+					daValid({
+						target: "#name",
+						simple: true
+					});
+					
+					daValid({
+						target: "#name2"
+					});
+					
+					daTip.cursor({
+						target: "#name2"
+					});
+					*/
+					
+					da("#name2").bind("contextmenu",function(evt){
+							daTip({
+								target: this,
+								html: [
+									'<div class="popmenu">',
+										'<a href="javascript:void(0);" >添加</a>',
+										'<a href="javascript:void(0);" >删除</a>',
+										'<a href="javascript:void(0);" >修改</a>',
+										'<hr/>',
+										'<a href="javascript:void(0);" >复制</a>',
+										'<a href="javascript:void(0);" >粘贴</a>',
+										'<hr/>',
+										'<a href="javascript:void(0);" >移动</a>',
+									'</div>'
+								].join(""),
+								group: "popmenu",
+								
+								pointer: 5,
+								bg: "#f5f5f5",
+								color: "#666",
+								close: false
+								
+							}).followMouse(evt);
+							
+							return false;
+							
+					});
+					da(document).bind("click",function(evt){
+						daTip.hide("popmenu");
+						
+					});
+					
+				});
+				
+				
+				function save(){
+					alert( daValid.all() )
+					//alert( daValid("[type=text]") );			//验证
+				}
+		</script>
+		<style>
+				.popmenu{ width:100px; }
+				.popmenu hr{border:0px;border-top:1px solid #dedede;border-bottom:1px solid #fff;}
+				.popmenu a{display:block;padding: 3px;text-decoration:none;color:#333;border:1px solid #f5f5f5;}
+				.popmenu a:hover{border:1px solid #222;color:#f5f5f5;background:#444;}
+		</style>
+	</head>
+	
+	
+	<body>
+		<div style="text-align:center;">
+			<input type="button" value="提交" onclick="save()" />
+			<table id="bill" border="0px" cellspacing="0" cellpadding="5">
+				<tr>
+					<td datip="我有提示：11111111111">
+						电话:<input id="name" type="text" value="" valid="phone" validinfo="请输入[电话号码] 正确格式" />
+					</td>
+					<td datip="我有提示：2222222222222">
+						身份证:<input id="name2" type="text" value="" valid="idcard" validinfo="请输入[身份证] 正确格式" />
+					</td>
+					<td datip="我有提示：3333333333333">
+						<input type="text" value="super100" valid="account,false" />
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+	</body>
+
+</html>

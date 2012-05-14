@@ -1,0 +1,158 @@
+/*
+	author:	danny.xu
+	date:	2010-10-27
+	description:	daWin,daDialog类样式表
+*/
+
+
+div.daWin{
+	position:fixed; left:200px; top:100px;/*background:#f00;*/
+}
+table.dwBody, table.dwBody2{
+	white-space:nowrap;
+	border:0px;
+	font-size:12px;
+}
+/* 活动窗口样式 */
+.dwBody td.mid{ background:#fff;}
+
+.dwBody td.top{height:34px; background:url(images/window_borderH.png) 0px 0px repeat-x; cursor:n-resize;}
+.dwBody td.left{width:10px; background:url(images/window_borderV.png) 0px 0px repeat-y;cursor:w-resize;}
+.dwBody td.right{width:9px; background:url(images/window_borderV.png) -10px 0px repeat-y;cursor: e-resize;}
+.dwBody td.bottom{height:32px; background:url(images/window_borderH.png) 0px -34px repeat-x;cursor: s-resize;}
+
+.dwBody td.tl{width:10px; height:34px; background:url(images/window_corner.png) 0px 0px no-repeat;cursor: nw-resize;}
+.dwBody td.tl2{width:16px; height:34px; background:url(images/window_corner.png) -10px 0px no-repeat;cursor: nw-resize;}
+.dwBody td.tr2{width:16px; height:34px; background:url(images/window_corner.png) -26px 0px no-repeat;cursor: ne-resize;}
+.dwBody td.tr{width:9px; height:34px; background:url(images/window_corner.png) -42px 0px no-repeat;cursor: ne-resize;}
+
+.dwBody td.bl{width:10px; height:32px; background:url(images/window_corner.png) 0px -34px no-repeat;cursor: sw-resize;}
+.dwBody td.bl2{width:16px;height:32px; background:url(images/window_corner.png) -10px -34px no-repeat;cursor: sw-resize;}
+.dwBody td.br2{width:16px;height:32px; background:url(images/window_corner.png) -26px -34px no-repeat;cursor: se-resize;}
+.dwBody td.br{width:9px; height:32px; background:url(images/window_corner.png) -42px -34px no-repeat;cursor: se-resize;}
+
+.dwBody a.btmin{display:block; float:left;width:30px; height:21px;background:url(images/bt_caption.png) 0px 0px no-repeat;}
+.dwBody a.btmin:hover{background-position:0px -21px;}
+
+.dwBody a.btmax{display:block; float:left;width:30px; height:21px;background:url(images/bt_caption.png) -30px 0px no-repeat;}
+.dwBody a.btmax:hover{background-position:-30px -21px;}
+
+.dwBody a.btmax2{display:block; float:left;width:30px; height:21px;background:url(images/bt_caption.png) -60px 0px no-repeat;}
+.dwBody a.btmax2:hover{background-position:-60px -21px;}
+
+.dwBody a.btclose{display:block; float:left;width:65px; height:21px;background:url(images/bt_caption.png) -90px 0px no-repeat;}
+.dwBody a.btclose:hover{background-position:-90px -21px;}
+
+.dwBody div.dwCaption{height:32px; line-height:32px; overflow:hidden;color:#000; font-size:12px; padding-top:4px;}
+.dwBody div.dwCaption div.dwCaptionIco{float:left;width:16px; height:16px; background:url(images/dwIco.png) -16px 0px;margin:7px 5px 0px 0px;}
+.dwBody div.dwCaplight{position:absolute; top:0px; width:100%; height:34px; background:url(images/window_borderH.png) 0px -66px repeat-x;}
+
+.dwBody div.dwStatus{height:32px; line-height:28px; text-align:right;color:#000;}
+.dwBody div.dwStatuslight{ position:absolute; top:0px; width:100%; height:34px; background: url(images/window_borderH.png) 0px -98px repeat-x;}
+
+
+.dwBody div.dwLoadover{
+	position:absolute; top:0px; left:0px;
+	background:#fff;
+	filter: Alpha(opacity=80);	/* IE */    
+	-moz-opacity:0.8; 			/* FF 主要是为了兼容老版本的FF */
+	opacity:0.8; 				/* FF */
+}
+
+/* 非活动窗口样式 */
+.dwBody2 td.mid{ background:#fff;}
+
+.dwBody2 td.top{height:34px; background:url(images/window_borderH.png) 0px -132px repeat-x; cursor:n-resize;}
+.dwBody2 td.left{width:10px; background:url(images/window_borderV.png) -19px 0px repeat-y;cursor:w-resize;}
+.dwBody2 td.right{width:9px; background:url(images/window_borderV.png) -29px 0px repeat-y;cursor: e-resize;}
+.dwBody2 td.bottom{height:32px; background:url(images/window_borderH.png) 0px -166px repeat-x;cursor: s-resize;}
+
+.dwBody2 td.tl{width:10px; height:34px; background:url(images/window_corner.png) 0px -66px no-repeat;cursor: nw-resize;}
+.dwBody2 td.tl2{width:16px; height:34px; background:url(images/window_corner.png) -10px -66px no-repeat;cursor: nw-resize;}
+.dwBody2 td.tr2{width:16px; height:34px; background:url(images/window_corner.png) -26px -66px no-repeat;cursor: ne-resize;}
+.dwBody2 td.tr{width:9px; height:34px; background:url(images/window_corner.png) -42px -66px no-repeat;cursor: ne-resize;}
+
+.dwBody2 td.bl{width:10px; height:32px; background:url(images/window_corner.png) 0px -100px no-repeat;cursor: sw-resize;}
+.dwBody2 td.bl2{width:16px;height:32px; background:url(images/window_corner.png) -10px -100px no-repeat;cursor: sw-resize;}
+.dwBody2 td.br2{width:16px;height:32px; background:url(images/window_corner.png) -26px -100px no-repeat;cursor: se-resize;}
+.dwBody2 td.br{width:9px; height:32px; background:url(images/window_corner.png) -42px -100px no-repeat;cursor: se-resize;}
+
+.dwBody2 a.btmin{display:block; float:left;width:30px; height:21px;background:url(images/bt_caption.png) 0px 0px no-repeat;}
+.dwBody2 a.btmin:hover{background-position:0px -21px;}
+
+.dwBody2 a.btmax{display:block; float:left;width:30px; height:21px;background:url(images/bt_caption.png) -30px 0px no-repeat;}
+.dwBody2 a.btmax:hover{background-position:-30px -21px;}
+
+.dwBody2 a.btmax2{display:block; float:left;width:30px; height:21px;background:url(images/bt_caption.png) -60px 0px no-repeat;}
+.dwBody2 a.btmax2:hover{background-position:-60px -21px;}
+
+.dwBody2 a.btclose{display:block; float:left;width:65px; height:21px;background:url(images/bt_caption.png) -90px 0px no-repeat;}
+.dwBody2 a.btclose:hover{background-position:-90px -21px;}
+
+.dwBody2 div.dwCaption{height:32px; line-height:32px; overflow:hidden;color:#fff; font-size:12px; padding-top:4px;}
+.dwBody2 div.dwCaption div.dwCaptionIco{float:left;width:16px; height:16px; background:url(images/dwIco.png);margin:7px 5px 0px 0px;}
+.dwBody2 div.dwCaplight{position:absolute; top:0px; width:100%; height:34px; background:url(images/window_borderH.png) 0px -198px repeat-x;}
+
+.dwBody2 div.dwStatus{height:32px; line-height:28px; text-align:right;color:#fff;}
+.dwBody2 div.dwStatuslight{ position:absolute; top:0px; width:100%; height:34px; background: url(images/window_borderH.png) 0px -230px repeat-x;}
+
+.dwBody2 div.dwLoadover{
+	position:absolute; top:0px; left:0px;
+	background:#f5f5f5;
+	filter: Alpha(opacity=10);	/* IE */    
+	-moz-opacity:0.1; 			/* FF 主要是为了兼容老版本的FF */
+	opacity:0.1; 				/* FF */
+}
+
+
+
+/**************************************  daLoading类  *********************************************/
+/*
+	author:	danny.xu
+	date:	2010-10-27
+	description:	daLoading类样式表
+*/
+
+div.dl_body{
+	position:absolute; z-index:9999; top:50%; left:50%;
+	padding:20px 20px;
+	border:1px solid #000;
+	background:url(images/alpha_bg.png);
+	font-size:12px;
+	cursor:pointer;
+}
+.dl_body div.dl_text{width:104px; text-align:center;margin-left:5px; color:#787878;}
+.dl_body div.dl_barbox{
+	position:relative;
+	width:104px; height:6px;
+	padding-top:3px;
+	overflow:hidden;
+}
+.dl_barbox div.dl_barbg{
+	position:absolute; z-index:9998; 
+	width:100px; height:6px; 
+	background:url("images/loading.png") 0px 0px;
+}
+.dl_barbox div.dl_barflow{
+	position:absolute; z-index:9999; left:1px; 
+	width:100px; height:6px; 
+	background:url("images/loading.png") 0px -6px
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

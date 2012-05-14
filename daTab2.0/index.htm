@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" >
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+<head>
+    <title>daTab2.0测试页面</title>
+    <LINK href="daTab.css" type="text/css" rel="stylesheet">
+		<script src="daTab_source.js" language="javascript"></script>
+
+
+		<script>
+			window.onload = function(){
+				var objParent = document.getElementById("cnt");
+				
+				var daTab0 = daTab(objParent,"daTab0","myname");
+				daTab0.appendItem("item01","客户信息","file");
+		
+				daTab0.appendItem("item02","客户信息2");
+				daTab0.appendItem("item03","客户信息2","file");
+				daTab0.appendItem("item05","客户信息");
+				
+				daTab0.click("item02");
+			}
+		</script>
+
+</head>
+
+<body>
+<div id="content">
+	<div id="daTab" class="daTab">
+		<div id="daTabBar"  class="tabs">
+				<li><div style="padding:5px 10px;">客户管理</div></li>
+				<li><div style="padding:5px 10px;">详细信息</div></li>
+				<li class="current"><div style="padding:5px 10px;">财务信息</div></li>
+				<li><div style="padding:5px 10px;">附属信息</div></li>
+				<li><div style="padding:5px 10px;">更多</div></li>
+		</div>
+	</div>
+	
+	<div style="height:300px;border:1px solid #ccc;border-top:0px;"></div>
+	
+</div>
+<br/>
+
+<div id="cnt"></div>
+
+</body>
+</html>

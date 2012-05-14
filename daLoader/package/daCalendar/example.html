@@ -1,0 +1,242 @@
+<html>
+	<head>
+	<link href="daCalendar.css" rel="stylesheet" />
+	<script src="da.js" language="javascript"></script>
+	<script src="daCalendar.js" language="javascript"></script>
+	<style>
+        /****************** danny.xu 2010-9-27 统一小图标样式 **********************/
+        span.addBt{display:inline-block;width:16px;height:16px;background:url(images/daCalendarTools.gif) 0px 0px no-repeat;}
+
+	</style>
+	
+	<script>
+    //自定义代码
+    function addJob(){
+        var objTd = this,
+            ndate = "";
+        while( "TD" !== objTd.nodeName && objTd.parentNode ) objTd = objTd.parentNode;		//保证高亮样式针对的是TD对象
+        if( !objTd || "TD" != objTd.nodeName ) return false;						//TD对象有效性过滤
+        ndate = objTd.id.substring( objTd.id.indexOf("_") + 1);					//点击TD对应的日期
+        
+        
+        //这里添加自定义代码处理
+        alert("自定义工具事件");
+            
+    }
+    
+    
+    
+		var arrColor = ["#ff0000","#321340","#787954","#674543","#f46543","#989324"];
+		function GetRandomNum(Min,Max){  
+		        var Range = Max - Min;  
+		        var Rand = Math.random();  
+		        return(Min + Math.round(Rand * Range));  
+		}  
+
+		var daCalendarObj;
+		da(function(){
+			daCalendarObj = daCalendar( "#mycalendar", 2, 
+	        [
+	            '<span class="addBt" onclick="addJob.call( this )"></span>',
+	        ].join(""),
+					{"click":function(){
+						alert("点击日历头！！");
+					}},
+					{"click":function( evt ){
+							var objTd = evt.srcElement || evt.target;
+							daCalendarObj.addItem( objTd, "danny", '工作计划技术部全年策划工作计划技术部全年策划', arrColor[ GetRandomNum(0,5)]);
+							
+							var arrTmp = daCalendarObj.getControls(objTd);
+							alert( arrTmp.tools[0].outerHTML+"\n"+arrTmp.tools[1].outerHTML+"\n"+arrTmp.tools[2].outerHTML+"\n"+arrTmp.tools[3].outerHTML );
+					}});
+
+			//da.copy( da( "id:mycalendar" ).dom[0].outerHTML );
+
+			for(var i=4; i<10; i++){
+						daCalendarObj.addItem(
+							i, 
+							i,
+							"group1",
+							'工作计划技术部全年策划工作计划技术部全年策划', 
+							arrColor[ GetRandomNum(0,5)] );
+			}
+			
+			for(var i=4; i<10; i++){
+						daCalendarObj.addItem(
+							i, 
+							i,
+							"group2",
+							'工作计划技术部全年策划工作计划技术部全年策划', 
+							arrColor[ GetRandomNum(0,5)] );
+			}
+			
+			
+		});	
+	
+		//自定义事件
+		var group1State = group2State = true;
+		function showgroup1(){
+				var items = daCalendarObj.arrUlItem[ "group1" ];
+				
+				if( group1State ){
+						da( items ).each(function(){
+								this.style.display = "none";
+						});
+						
+						group1State = false;
+				}
+				else{
+						da( items ).each(function(){
+								this.style.display = "";
+						});
+						
+						group1State = true;
+				}
+		}
+		
+		function showgroup2(){
+				var items = daCalendarObj.arrUlItem[ "group2" ];
+				
+				if( group2State ){
+						da( items ).each(function(){
+								this.style.display = "none";
+						});
+						
+						group2State = false;
+				}
+				else{
+						da( items ).each(function(){
+								this.style.display = "";
+						});
+						
+						group2State = true;
+				}
+		}
+	</script>
+	</head>
+	<body>
+	<input type="button"  value="分组1" onclick="showgroup1()" />
+	<input type="button"  value="分组2" onclick="showgroup2()" />
+	
+	<div id="mycalendar"></div>
+	
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<div>
+		<div class="daCalendarBar" >
+			<div class="barLeft">
+					<a class="today" href="javascript:void(0)"></a>	
+					<a class="previous" href="javascript:void(0)"></a>	
+					<a class="next" href="javascript:void(0)"></a>
+					<span id="" class="barTitle">今天是2011年2月 农历十二月 ~ 正月 </span>
+			</div>
+			<div class="barRight">
+					<a class="bt" href="javascript:void(0)">刷新</a>	
+			</div>
+		</div>
+		<table class="daCalendar" cellspacing="0" cellpadding="0">
+		  <tr class="head">
+			<td class="tdr tdb">周一</td>
+			<td class="tdr tdb">周二</td>
+			<td class="tdr tdb">周三</td>
+			<td class="tdr tdb">周四</td>
+			<td class="tdr tdb">周五</td>
+			<td class="tdr tdb weekend">周六</td>
+			<td class="tdr tdb weekend">周日</td>
+		  </tr>
+		  <tr class="date" darow="1">
+			<td class="tdr tdb" dacol="1">
+				<div class="title">1 初八</div>
+				<div class="list">
+				</div>
+			</td>
+			<td class="tdr tdb" dacol="2">
+				<div class="title">2 初九</div>
+				<div class="list">
+				</div>
+			</td>
+			<td class="tdr tdb" dacol="3">
+				<div class="title">3 初十</div>
+				<div class="list">
+				</div>
+			</td>
+			<td class="tdr tdb" dacol="4">
+				<div class="title">4 十一</div>
+				<div class="list">
+					<ul class="item">情人节内容</ul>
+					<ul class="item" style="background:#3366FF">公司日程</ul>
+					<ul class="item" style="background:#321321"><input type="checkbox"/>工作计划</ul>
+					<ul class="item">情人节内容</ul>
+					<ul class="item" style="background:#767676">公司日程</ul>
+					<ul class="item" style="background:#456546"><input type="checkbox"/>工作计划</ul>
+					<ul class="item">情人节内容</ul>
+					<ul class="item" style="background:#876876">公司日程</ul>
+					<ul class="item" style="background:#987989"><input type="checkbox"/>工作计划</ul>
+				</div>
+			</td>
+			<td class="tdr tdb" dacol="5">
+				<div class="title">5 十二</div>
+				<div class="list">
+					<ul class="item">情人节内容</ul>
+					<ul class="item" style="background:#564545">学习mapstudio</ul>
+				</div>
+			</td>
+			<td class="tdr tdb weekend" dacol="6">
+				<div class="title">6 十三</div>
+				<div class="list">
+					<ul class="item">情人节内容</ul>
+				</div>
+			</td>
+			<td class="tdr tdb weekend" dacol="7">
+				<div class="title">7 十四</div>
+				<div class="list">
+					<ul class="item">情人节内容</ul>
+				</div>
+			</td>
+		  </tr>
+		  <tr class="date" darow="2">
+			<td class="tdr tdb" dacol="1">&nbsp;</td>
+			<td class="tdr tdb" dacol="2">&nbsp;</td>
+			<td class="tdr tdb" dacol="3">&nbsp;</td>
+			<td class="tdr tdb" dacol="4">&nbsp;</td>
+			<td class="tdr tdb" dacol="5">&nbsp;</td>
+			<td class="tdr tdb weekend" dacol="6">&nbsp;</td>
+			<td class="tdr tdb weekend" dacol="7">&nbsp;</td>
+		  </tr>
+		  <tr class="date" darow="3">
+			<td class="tdr tdb" dacol="1">&nbsp;</td>
+			<td class="tdr tdb" dacol="2">&nbsp;</td>
+			<td class="tdr tdb" dacol="3">&nbsp;</td>
+			<td class="tdr tdb" dacol="4">&nbsp;</td>
+			<td class="tdr tdb" dacol="5">&nbsp;</td>
+			<td class="tdr tdb weekend" dacol="6">&nbsp;</td>
+			<td class="tdr tdb weekend" dacol="7">&nbsp;</td>
+		  </tr>
+		  <tr class="date" darow="4">
+			<td class="tdr tdb" dacol="1">&nbsp;</td>
+			<td class="tdr tdb" dacol="2">&nbsp;</td>
+			<td class="tdr tdb" dacol="3">&nbsp;</td>
+			<td class="tdr tdb" dacol="4">&nbsp;</td>
+			<td class="tdr tdb" dacol="5">&nbsp;</td>
+			<td class="tdr tdb weekend" dacol="6">&nbsp;</td>
+			<td class="tdr tdb weekend" dacol="7">&nbsp;</td>
+		  </tr>
+		  <tr class="date" darow="5">
+			<td class="tdr tdb" dacol="1">&nbsp;</td>
+			<td class="tdr tdb" dacol="2">&nbsp;</td>
+			<td class="tdr tdb" dacol="3">&nbsp;</td>
+			<td class="tdr tdb" dacol="4">&nbsp;</td>
+			<td class="tdr tdb" dacol="5">&nbsp;</td>
+			<td class="tdr tdb weekend" dacol="6">&nbsp;</td>
+			<td class="tdr tdb weekend" dacol="7">&nbsp;</td>
+		  </tr>
+		</table>
+	</div>
+	
+	<!-- 
+	 -->
+	
+	</body>
+</html>

@@ -1,0 +1,387 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>无标题文档</title>
+<script src="js/da.js" type="text/javascript"></script>
+<script src="js/daFx.js" type="text/javascript"></script>
+<script src="js/daDrag.js" type="text/javascript"></script>
+<script src="js/daWheel.js" type="text/javascript"></script>
+
+<link href="daLoading/daLoading.css" rel="stylesheet"/>
+<script src="daLoading/daLoading.js" type="text/javascript"></script>
+<link href="daFrame/daFrame.css" rel="stylesheet"/>
+<script src="daFrame/daFrame_source.js" type="text/javascript"></script>
+
+<link href="daWin.css" rel="stylesheet" />
+<script src="daWin_source_1.2.js" type="text/javascript"></script>
+
+<script language="javascript">
+function foo(){alert(1)};
+function test(){
+
+		var arrFrame = []
+		
+		for( var i=0; i<50; i++ ){
+			arrFrame[i] = daWin({
+				width: "520px",
+				height: "290px",
+				title:  function(){
+					return '<div style="height:30px;">我的超级自定义窗口</div>';
+				},
+				
+//				modal: true,
+				url: "inside.html",
+				
+				load: function(){
+					//info( this.location.href );
+				},
+				
+				after: function(){
+					//info( this.location.href );
+				},
+				
+				back: function(data1,data2,data3,data4,data5,data6){
+					alert(data1+"\n"+data2+"\n"+data3+"\n"+data4+"\n"+data5+"\n"+data6+"\n");
+				}
+			});
+		}
+		
+		for( var i=0,len=arrFrame.length; i<len; i++ ){
+			arrFrame[i].close();
+			arrFrame[i] = null;
+		}
+
+}
+	
+	
+	
+	da(function(){
+//		daWin.fnStruct.setting.act = false;
+//		//getNavigator();
+//		daWin({
+//				type: "info",
+//				html: '佛说：菩提本无树，明镜亦非台，<br/>本来无一物，何处惹尘埃。爱是没长大却被溺坏的幸福。<br/>它总听甜言和蜜语，我却总不。它明明知道，<br/>我习惯了执意的生活态度，总是被隐不去的孩子<br/>气折磨得死去活来。倔强等待离别的风吹散两<br/>个人的思绪，等到慢慢远去的时候才回过神来，原来指尖和心头<br/>的牵挂变得紧绷起来，越吹越远，越远越紧。翻然悔悟心头的傲慢，上去容易，下来难。<br/>或随风继续远走，或迷恋尘世缠留他人枝头。<br/>已不能回到原点，却总想回到原点。佛说：菩提本无树，明镜亦非台，<br/>本来无一物，何处惹尘埃。爱是没长大却被溺坏的幸福。<br/>它总听甜言和蜜语，我却总不。它明明知道，<br/>我习惯了执意的生活态度，总是被隐不去的孩子<br/>气折磨得死去活来。倔强等待离别的风吹散两<br/>个人的思绪，等到慢慢远去的时候才回过神来，原来指尖和心头<br/>的牵挂变得紧绷起来，越吹越远，越远越紧。翻然悔悟心头的傲慢，上去容易，下来难。<br/>或随风继续远走，或迷恋尘世缠留他人枝头。<br/>已不能回到原点，却总想回到原点。',
+//				yes: function(){
+//				
+//				}
+//			});
+
+//		var arrWin = [];						//测试内存泄露
+//		for( var i=0,len=5; i<len; i++ ){
+//			arrWin[i]  = daWin({
+//				type: "info",
+//				html: '佛说：菩提本无树，明镜亦非台，<br/>本来无一物，何处惹尘埃。爱是没长大却被溺坏的幸福。<br/>它总听甜言和蜜语，我却总不。它明明知道，<br/>我习惯了执意的生活态度，总是被隐不去的孩子<br/>气折磨得死去活来。倔强等待离别的风吹散两<br/>个人的思绪，等到慢慢远去的时候才回过神来，原来指尖和心头<br/>的牵挂变得紧绷起来，越吹越远，越远越紧。翻然悔悟心头的傲慢，上去容易，下来难。<br/>或随风继续远走，或迷恋尘世缠留他人枝头。<br/>已不能回到原点，却总想回到原点。佛说：菩提本无树，明镜亦非台，<br/>本来无一物，何处惹尘埃。爱是没长大却被溺坏的幸福。<br/>它总听甜言和蜜语，我却总不。它明明知道，<br/>我习惯了执意的生活态度，总是被隐不去的孩子<br/>气折磨得死去活来。倔强等待离别的风吹散两<br/>个人的思绪，等到慢慢远去的时候才回过神来，原来指尖和心头<br/>的牵挂变得紧绷起来，越吹越远，越远越紧。翻然悔悟心头的傲慢，上去容易，下来难。<br/>或随风继续远走，或迷恋尘世缠留他人枝头。<br/>已不能回到原点，却总想回到原点。',
+//				yes: function(){
+//				
+//				}
+//			});
+//		}
+//
+//		for( var i=0,len=5; i<len; i++ ){
+//			arrWin[i].close();
+//			arrWin[i] = null;
+//		}
+		
+		
+		var dawin1 = daWin({
+			width: "520px",
+			height: "290px",
+			title:  function(){
+				return '<div style="height:30px;">我的超级自定义窗口</div>';
+			},
+			
+//			modal: true,
+			
+			url: "inside.html",
+//			url: "http://www.taobao.com",
+			
+			load: function(){
+				//info( this.location.href );
+			},
+			
+			after: function(){
+				//info( this.location.href );
+			},
+			
+			back: function(data1,data2,data3,data4,data5,data6){
+				alert(data1+"\n"+data2+"\n"+data3+"\n"+data4+"\n"+data5+"\n"+data6+"\n");
+			}
+		});
+
+
+//		win( 500, 400, "inside.html" );
+//		dialog( 500, 400, "inside.html" );
+
+//		var dawin2 = daWin({
+//			title: "DANNY's Window",
+//			url: "http://www.baidu.com",
+//			status: "百度网站"
+//		});
+
+//		var dawin22 = daWin({
+//			width: "520px",
+//			height: "290px",
+//			title: "www.hanmo.net",
+//			url: "http://www.hanmo.net"
+//		});
+
+//		var dawin2 = daWin({
+//			width: "520px",
+//			height: "290px",
+//			title: "淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网淘宝网",
+//			url: "http://www.taobao.com"
+//		});
+//		
+		
+//		var dawin3 = daWin({
+//			html: "你确定要删除吗？"
+//		});
+//		var dawin4 = daWin({
+//			type: "error",
+//			html: '佛说：菩提本无树，明镜亦非台，<br/>本来无一物，何处惹尘埃。爱是没长大却被溺坏的幸福。<br/>它总听甜言和蜜语，我却总不。它明明知道，<br/>我习惯了执意的生活态度，总是被隐不去的孩子<br/>气折磨得死去活来。倔强等待离别的风吹散两<br/>个人的思绪，等到慢慢远去的时候才回过神来，原来指尖和心头<br/>的牵挂变得紧绷起来，越吹越远，越远越紧。翻然悔悟心头的傲慢，上去容易，下来难。<br/>或随风继续远走，或迷恋尘世缠留他人枝头。<br/>已不能回到原点，却总想回到原点。佛说：菩提本无树，明镜亦非台，<br/>本来无一物，何处惹尘埃。爱是没长大却被溺坏的幸福。<br/>它总听甜言和蜜语，我却总不。它明明知道，<br/>我习惯了执意的生活态度，总是被隐不去的孩子<br/>气折磨得死去活来。倔强等待离别的风吹散两<br/>个人的思绪，等到慢慢远去的时候才回过神来，原来指尖和心头<br/>的牵挂变得紧绷起来，越吹越远，越远越紧。翻然悔悟心头的傲慢，上去容易，下来难。<br/>或随风继续远走，或迷恋尘世缠留他人枝头。<br/>已不能回到原点，却总想回到原点。',
+//			yes: function(){
+//			
+//			}
+//		});
+//		var dawin5 = daWin({
+//			width: ">V",
+//			//type: "warn",
+//			button: {
+//				"全选": function( dwObj, evt ){
+//					alert("全选")
+//					//dwObj.close();
+//				},
+//				"OK": function( dwObj, evt ){
+//					alert("OK")
+//					dwObj.close();
+//				}
+//			
+//			},
+//			html: '<img style="width:300px;height:200px;" src="http://i.mmcdn.cn/simba/img/T1NuiaXkRbXXXXXXXX.gif?noq=y" />'
+//		});
+//		var dawin6 = daWin({
+//			width: "v",
+//			type: "confirm",
+//			html: 'js事件动态绑定移除，兼容Firefox和IE（带注释）',
+//			yes: function( dwObj, evt ){
+//				alert("返回 yes");
+//			},
+//			no: function( dwObj, evt ){
+//				alert("返回 no");
+//			}
+//		});
+	
+
+//		info( '佛说：菩提本无树，明镜亦非台，<br/>本来无一物，何处惹尘埃。爱是没长大却被溺坏的幸福。<br/>它总听甜言和蜜语，我却总不。它明明知道，<br/>我习惯了执意的生活态度，总是被隐不去的孩子<br/>气折磨得死去活来。倔强等待离别的风吹散两<br/>个人的思绪，等到慢慢远去的时候才回过神来，原来指尖和心头<br/>的牵挂变得紧绷起来，越吹越远，越远越紧。翻然悔悟心头的傲慢，上去容易，下来难。<br/>或随风继续远走，或迷恋尘世缠留他人枝头。<br/>已不能回到原点，却总想回到原点。佛说：菩提本无树，明镜亦非台，<br/>本来无一物，何处惹尘埃。爱是没长大却被溺坏的幸福。<br/>它总听甜言和蜜语，我却总不。它明明知道，<br/>我习惯了执意的生活态度，总是被隐不去的孩子<br/>气折磨得死去活来。倔强等待离别的风吹散两<br/>个人的思绪，等到慢慢远去的时候才回过神来，原来指尖和心头<br/>的牵挂变得紧绷起来，越吹越远，越远越紧。翻然悔悟心头的傲慢，上去容易，下来难。<br/>或随风继续远走，或迷恋尘世缠留他人枝头。<br/>已不能回到原点，却总想回到原点。' );
+//		
+//		warn( "js事件动态绑定移除!!!" );
+//		
+//		error( "您无权查看!" );
+//		
+//		confirm( "你确定要删除吗？", function(){
+//			//alert(1);
+//			
+//		},function(){
+//			//alert(2);
+//			
+//		});
+		
+
+	});
+	
+	function infoDialog(){
+		info( '佛说：菩提本无树，明镜亦非台，<br/>本来无一物，何处惹尘埃。爱是没长大却被溺坏的幸福。<br/>它总听甜言和蜜语，我却总不。它明明知道，<br/>我习惯了执意的生活态度，总是被隐不去的孩子<br/>气折磨得死去活来。倔强等待离别的风吹散两<br/>个人的思绪，等到慢慢远去的时候才回过神来，原来指尖和心头<br/>的牵挂变得紧绷起来，越吹越远，越远越紧。翻然悔悟心头的傲慢，上去容易，下来难。<br/>或随风继续远走，或迷恋尘世缠留他人枝头。<br/>已不能回到原点，却总想回到原点。佛说：菩提本无树，明镜亦非台，<br/>本来无一物，何处惹尘埃。爱是没长大却被溺坏的幸福。<br/>它总听甜言和蜜语，我却总不。它明明知道，<br/>我习惯了执意的生活态度，总是被隐不去的孩子<br/>气折磨得死去活来。倔强等待离别的风吹散两<br/>个人的思绪，等到慢慢远去的时候才回过神来，原来指尖和心头<br/>的牵挂变得紧绷起来，越吹越远，越远越紧。翻然悔悟心头的傲慢，上去容易，下来难。<br/>或随风继续远走，或迷恋尘世缠留他人枝头。<br/>已不能回到原点，却总想回到原点。' );
+
+	}
+	
+	function openWin(){
+//		daWin({
+//			width: "520px",
+//			height: "290px",
+//			title: "www.hanmo.net",
+//			url: "http://www.hanmo.net"
+//		});
+
+		daWin({
+				width: "520px",
+				height: "290px",
+				title:  function(){
+					return '<div style="height:30px;">我的超级自定义窗口</div>';
+				},
+				
+//				modal: true,
+				
+				url: "inside3.html",
+				
+				load: function(){
+					//info( this.location.href );
+				},
+				
+				after: function(){
+					//info( this.location.href );
+				},
+				
+				back: function(data1,data2,data3,data4,data5,data6){
+					alert(data1+"\n"+data2+"\n"+data3+"\n"+data4+"\n"+data5+"\n"+data6+"\n");
+				}
+			});
+
+	}
+	
+	function imageBox(){
+		daWin({
+			title: "我的相册",
+			type: "image",
+			imageSetting: {
+				index: 2
+			},
+			//html: '<img src="http://www.hanmo.net/v2011/sliderImages/slider_1.gif" />'
+			html: [
+				'http://www.hanmo.net/v2012/images/focus/mobile3.JPG|本站资源均来自网络',
+				'bigimage.jpg|本站资源均来自网络',
+				'bigimage2.jpg|本站资源均来自网络2',
+				'bigimage3.jpg|本站资源均来自网络3',
+			]
+
+//			html: [
+//				'http://www.topdesignmag.com/wp-content/uploads/2011/09/05.jpg|本站资源均来自网络，如侵犯您的权利请告知。',
+//				'http://www.topdesignmag.com/wp-content/uploads/2011/09/141.jpg|优酷',
+//				'http://www.topdesignmag.com/wp-content/uploads/2011/09/132.jpg|浪漫巧克力色 舒适的复古生活。',
+//				'http://img04.taobaocdn.com/tps/i4/T1_uyoXdxyXXXXXXXX-490-170.png|js事件动态绑定移除，兼容Firefox和IE（带注释）。浪漫巧克力色 舒适的复古生活浪漫巧克力色 舒适的复古生活',
+//				'http://www.google.com.hk/images/nav_logo86.png|谷歌LOGO',
+//				'http://www.911pop.com/flash/images/376.jpg|青檬音乐台'
+//			]
+		});
+		
+
+	}
+</script>
+<style>
+
+</style>
+</head>
+
+<body style="background:#999;">
+<!--
+<img src="http://www.hanmo.net/v2011/sliderImages/slider_1.gif" />
+
+<div class="daWin">
+<table id="" class="dwBody" cellpadding="0" cellspacing="0">
+ <thead id="">
+  <tr>
+   <td id="" class="tl"></td>
+   <td id="" class="tl2"></td>
+   <td id="dw_bodytop_" class="top">
+       <table style="width:100%; height:34px;" cellpadding="0" cellspacing="0">
+         <tr>
+           <td >
+              <div style="position:relative; height:34px;">
+                <div class="dwCaplight"></div>
+                <div id="dw_caption_" class="dwCaption"></div>
+              </div>
+           </td>
+           <td style="width:60px">
+             <a id="dw_btmin_" href="javascript:void(0)" class="btmin" title="最小化"></a>
+             <a id="dw_btmax_" href="javascript:void(0)" class="btmax" title="窗口/最大化"></a>
+             <a id="dw_btclose_" href="javascript:void(0)" class="btclose" title="关闭"></a>
+           </td>
+         </tr>
+       </table>
+   </td>
+   <td id="dw_bodytr2_" class="tr2"></td>
+   <td id="dw_bodytr_" class="tr"></td>
+  </tr>
+  </thead>
+ 	<tbody id="dw_tbody_ dwId, '">
+  <tr>
+    <td id="dw_bodyleft_" class="left"></td>
+    <td class="mid" colspan="3">
+       <div style="position:relative; overflow:hidden;" >
+            
+            <div id="dw_dialog_" class="dwDialog" >d222222</div>
+            <div id="dw_loadover_" class="dwLoadover"></div>
+       </div>
+    </td>
+    <td id="dw_bodyright_" class="right"></td>
+  </tr>
+  </tbody>
+ 	<tfoot id="dw_tfoot_ dwId, '">
+  <tr>
+    <td id="dw_bodybl_" class="bl"></td>
+    <td id="dw_bodybl2_" class="bl2"></td>
+    <td id="dw_bodybottom_" class="bottom" style="position:relative;">
+       <div style="position:relative; height:32px;">
+          <div id="dw_status_" class="dwStatusInfo"></div>
+          <div id="dw_statusbts_" class="dwStatusBts">
+          		<a id="dw_btfresh_" href="javascript:void(0)" class="btfresh" title="刷新"></a>
+          </div>
+       </div>
+    </td>
+    <td id="dw_bodybr2_" class="br2"></td>
+    <td id="dw_bodybr_" class="br"></td>
+  </tr>
+  </tfoot>
+ </table>
+</div>
+-->
+<div id="piframe"></div>
+<div style="WIDTH: 120; HEIGHT: 140; OVERFLOW: scroll; scrollbar-face-color: #FFFFFF; scrollbar-shadow-color: #D2E5F4; scrollbar-highlight-color: #D2E5F4; scrollbar-3dlight-color: #FFFFFF; scrollbar-darkshadow-color: #FFFFFF; scrollbar-track-color: #FFFFFF; scrollbar-arrow-color: #D2E5F4">
+文字内容
+</div>
+<input onclick="test()" type="button" value="内存泄露回收测试" />
+<input onclick="openWin()" type="button" value="弹出窗体" />
+<input onclick="imageBox()" type="button" value="图片展示" />
+<input onclick="infoDialog()" type="button" value="提示信息" />
+	<input type="text" value="测试窗体返回后输入功能" />
+
+<div>js事件动态绑定移除，兼容Firefox和IE（带注释）</div>
+<!--
+<div>2010年10月09日 星期六 19:30</div>
+<div>js事件动态绑定移除，兼容Firefox和IE（带注释）</div>
+<div>2010年10月09日 星期六 19:30</div>
+<div>js事件动态绑定移除，兼容Firefox和IE（带注释）</div>
+<div>2010年10月09日 星期六 19:30</div>
+<div>js事件动态绑定移除，兼容Firefox和IE（带注释）</div>
+<div>2010年10月09日 星期六 19:30</div>
+<div>js事件动态绑定移除，兼容Firefox和IE（带注释）</div>
+<div>2010年10月09日 星期六 19:30</div>
+<div>js事件动态绑定移除，兼容Firefox和IE（带注释）</div>
+<div>2010年10月09日 星期六 19:30</div>
+<div>js事件动态绑定移除，兼容Firefox和IE（带注释）</div>
+<div>2010年10月09日 星期六 19:30</div>
+<div>js事件动态绑定移除，兼容Firefox和IE（带注释）</div>
+<div>2010年10月09日 星期六 19:30</div>
+<div>js事件动态绑定移除，兼容Firefox和IE（带注释）</div>
+<div>2010年10月09日 星期六 19:30</div>
+<div>js事件动态绑定移除，兼容Firefox和IE（带注释）</div>
+<div>2010年10月09日 星期六 19:30</div>
+<div>js事件动态绑定移除，兼容Firefox和IE（带注释）</div>
+<div>2010年10月09日 星期六 19:30</div>
+<div>js事件动态绑定移除，兼容Firefox和IE（带注释）</div>
+<div>2010年10月09日 星期六 19:30</div>
+<div>js事件动态绑定移除，兼容Firefox和IE（带注释）</div>
+<div>2010年10月09日 星期六 19:30</div>
+<div>js事件动态绑定移除，兼容Firefox和IE（带注释）</div>
+<div>2010年10月09日 星期六 19:30</div>
+-->
+	
+<EMBED src="flash.swf"width="800px" height="600px" type="application/x-shockwave-flash">
+<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="550" height="400" id="Untitled-1" align="middle">
+<param name="allowScriptAccess" value="sameDomain" />
+<param name="quality" value="high" />
+<param name="bgcolor" value="#ffffff" />
+<param name="movie" value="flash.swf" />
+<embed src="flash.swf" quality="high" bgcolor="#ffffff" width="550"  height="400" name="mymovie" align="middle" allowScriptAccess="sameDomain"  type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+</object>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+

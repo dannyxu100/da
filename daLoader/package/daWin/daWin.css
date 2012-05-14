@@ -1,0 +1,190 @@
+﻿/*
+	author:	danny.xu
+	date:	2010-10-27
+	description:	daWin,daDialog类样式表
+*/
+.daWin{
+	position:fixed; left:200px; top:100px;/*background:#f00;*/
+}
+.daWin .daWinBtBar{
+	height:23px;text-align:center;padding-top:10px;
+}
+.daWin .daWinBtBar .daWinBt{ display:inline-block;margin:0px 5px;color:#333;text-decoration:none; cursor:pointer;}
+.daWin .daWinBtBar .daWinBt:hover{ color:#fff;}
+.daWin .daWinBtBar .daWinBt .l,
+.daWin .daWinBtBar .daWinBt .r{ float:left;width:10px;height:23px;background:url(images/dwButtonLR.png) no-repeat; display:inline-block;}
+.daWin .daWinBtBar .daWinBt .l{ background-position:0px 0px}
+.daWin .daWinBtBar .daWinBt .r{ background-position:-10px 0px}
+.daWin .daWinBtBar .daWinBt .txt { float:left;height:23px;line-height:23px;background:url(images/dwButtonBg.png) repeat-x; font-size:12px; }
+
+.daWin .daWinBtBar .daWinBt:hover .l,
+.daWin .daWinBtBar .daWinBt:hover .r{ float:left;width:10px;height:23px;background:url(images/dwButtonLR.png) no-repeat; display:inline-block;}
+.daWin .daWinBtBar .daWinBt:hover .l{ background-position:0px -23px}
+.daWin .daWinBtBar .daWinBt:hover .r{ background-position:-10px -23px}
+.daWin .daWinBtBar .daWinBt:hover .txt { float:left;height:23px;line-height:23px;background:url(images/dwButtonBg.png) 0px -23px repeat-x; font-size:12px; }
+
+.dwCaption .info,
+.dwCaption .warn,
+.dwCaption .error,
+.dwCaption .confirm {
+		position:absolute;top:-8px;left:-35px;
+		width:32px;height:32px;
+		background:url(images/dwDialogIco.png) no-repeat;
+		display:inline-block;
+}
+.dwCaption .info {background-position:0px 0px}
+.dwCaption .warn {background-position:-32px 0px}
+.dwCaption .error {background-position:-64px 0px}
+.dwCaption .confirm {background-position:-96px 0px}
+
+.dwBody, .dwBody2{
+	border:0px;
+	font-size:12px;
+}
+/* 活动窗口样式 */
+.dwBody .mid{ background:#d7d7d7;}
+
+.dwBody .top{height:34px; background:url(images/window_borderH.png) 0px 0px repeat-x;}
+.dwBody .left{width:10px; background:url(images/window_borderV.png) 0px 0px repeat-y;}
+.dwBody .right{width:9px; background:url(images/window_borderV.png) -10px 0px repeat-y;}
+.dwBody .bottom{height:32px; background:url(images/window_borderH.png) 0px -34px repeat-x;}
+
+.dwBody .tl, .dwBody .tl2, .dwBody .tr2, .dwBody .tr,
+.dwBody .bl, .dwBody .bl2, .dwBody .br2, .dwBody .br {
+	background:url(images/window_corner.png) no-repeat;
+}
+.dwBody .tl{width:10px; height:34px; background-position: 0px 0px;}
+.dwBody .tl2{width:16px; height:34px; background-position: -10px 0px;}
+.dwBody .tr2{width:16px; height:34px; background-position: -26px 0px;}
+.dwBody .tr{width:9px; height:34px; background-position: -42px 0px;}
+
+.dwBody .bl{width:10px; height:32px; background-position: 0px -34px;}
+.dwBody .bl2{width:16px;height:32px; background-position: -10px -34px;}
+.dwBody .br2{width:16px;height:32px; background-position: -26px -34px;}
+.dwBody .br{width:9px; height:32px; background-position: -42px -34px;}
+
+.dwBody .dwCaption{height:32px; line-height:28px; overflow:hidden;color:#333; font-size:12px; font-weight:bold;padding-top:2px;}
+.dwBody .dwCaption .dwCaptionIco{float:left;width:16px; height:16px; background:url(images/dwIco.png) -16px 0px;margin:5px 3px 5px 0px;}
+.dwBody .dwCaplight{position:absolute; top:0px; width:100%; height:34px;}
+
+.dwBody .dwStatusInfo{float:left;height:32px; line-height:28px; overflow:hidden;color:#858585;}
+.dwBody .dwStatusBts{float:right;height:32px; line-height:28px;color:#858585;}
+.dwBody .dwStatuslight{ position:absolute; top:0px; width:100%; height:34px;}
+
+
+.dwBody .dwLoadover{
+	display: none;
+	position:absolute; top:0px; left:0px;
+	background:#fff;
+	filter: Alpha(opacity=30);	/* IE */    
+	-moz-opacity:0.3; 					/* FF 主要是为了兼容老版本的FF */
+	opacity:0.3; 								/* FF */
+	z-index: 19999;
+}
+.dwBody .dwDialog{ background:#d7d7d7; font-size:14px; line-height:22px;padding:0px 10px;overflow:hidden;}
+
+
+/* 非活动窗口样式 */
+.dwBody2 .mid{ background:#d7d7d7;}
+
+.dwBody2 .top{height:34px; background:url(images/window_borderH.png) 0px -132px repeat-x;}
+.dwBody2 .left{width:10px; background:url(images/window_borderV.png) -19px 0px repeat-y;}
+.dwBody2 .right{width:9px; background:url(images/window_borderV.png) -29px 0px repeat-y;}
+.dwBody2 .bottom{height:32px; background:url(images/window_borderH.png) 0px -166px repeat-x;}
+
+.dwBody2 .tl, .dwBody2 .tl2, .dwBody2 .tr2, .dwBody2 .tr,
+.dwBody2 .bl, .dwBody2 .bl2, .dwBody2 .br2, .dwBody2 .br {
+	background:url(images/window_corner.png) no-repeat;
+}
+.dwBody2 .tl{width:10px; height:34px; background-position: 0px -66px;}
+.dwBody2 .tl2{width:16px; height:34px; background-position: -10px -66px;}
+.dwBody2 .tr2{width:16px; height:34px; background-position: -26px -66px;}
+.dwBody2 .tr{width:9px; height:34px; background-position: -42px -66px;}
+
+.dwBody2 .bl{width:10px; height:32px; background-position: 0px -100px;}
+.dwBody2 .bl2{width:16px;height:32px; background-position: -10px -100px;}
+.dwBody2 .br2{width:16px;height:32px; background-position: -26px -100px;}
+.dwBody2 .br{width:9px; height:32px; background-position: -42px -100px;}
+
+.dwBody2 .dwCaption{height:30px; line-height:28px; overflow:hidden;color:#fff; font-size:12px; padding-top:2px;}
+.dwBody2 .dwCaption .dwCaptionIco{display:none;float:left;width:16px; height:16px; background:url(images/dwIco.png);margin:5px 3px 5px 0px;}
+.dwBody2 .dwCaplight{position:absolute; top:0px; width:100%; height:34px; }
+
+.dwBody2 .dwStatusInfo{float:left;height:30px; line-height:28px; overflow:hidden;color:#959595;}
+.dwBody2 .dwStatusBts{float:right;height:30px; line-height:28px;color:#959595;}
+.dwBody2 .dwStatuslight{ position:absolute; top:0px; width:100%; height:34px; }
+
+.dwBody2 .dwLoadover{
+	display: none;
+	position:absolute; top:0px; left:0px;
+	background:#d7d7d7;
+	filter: Alpha(opacity=10);	/* IE */    
+	-moz-opacity:0.1; 					/* FF 主要是为了兼容老版本的FF */
+	opacity:0.1; 								/* FF */
+	z-index: 19999;
+}
+.dwBody2 .dwDialog{ background:#b7b7b7; font-size:14px; line-height:22px;padding:0px 10px;overflow:hidden; }
+
+.dwBody .btmin, 
+.dwBody2 .btmin, 
+.dwBody .btnormal, 
+.dwBody2 .btnormal, 
+.dwBody .btmax, 
+.dwBody2 .btmax, 
+.dwBody .btclose,
+.dwBody2 .btclose,
+.dwBody .btfresh,
+.dwBody2 .btfresh { display:block; float:left;width:20px; height:20px;background:url(images/bt_tool.png) no-repeat;display:inline-block; }
+
+.dwBody .btmin,
+.dwBody2 .btmin{background-position: 0px 0px;}
+.dwBody .btmin:hover,
+.dwBody2 .btmin:hover {background-position:0px -20px;}
+
+.dwBody .btmax,
+.dwBody2 .btmax{background-position: -20px 0px;}
+.dwBody .btmax:hover,
+.dwBody2 .btmax:hover{background-position:-20px -20px;}
+
+.dwBody .btnormal,
+.dwBody2 .btnormal{background-position: -40px 0px;}
+.dwBody .btnormal:hover,
+.dwBody2 .btnormal:hover{background-position:-40px -20px;}
+
+.dwBody .btclose,
+.dwBody2 .btclose{background-position: -60px 0px;}
+.dwBody .btclose:hover,
+.dwBody2 .btclose:hover{background-position:-60px -20px;}
+
+.dwBody .btfresh,
+.dwBody2 .btfresh {background-position: -80px 0px;}
+.dwBody .btfresh:hover,
+.dwBody2 .btfresh:hover{background-position:-80px -20px;}
+
+
+/*********************** 图片展示框相关样式 *************************/
+.daWin .imgHotZone { 
+	position:absolute; top:0px; left:0px; 
+	width:50%; height:100%;
+	border:0px solid #f00;
+	background:#fff;
+	filter: Alpha(opacity=10);		/* IE */
+	-moz-opacity:0.1; 						/* FF 主要是为了兼容老版本的FF */
+	opacity:0.1; 									/* FF */
+	cursor:pointer;
+}
+.daWin .pre { left:0px; }
+.daWin .next { left:50%; }
+
+.daWin .preBt,
+.daWin .nextBt {
+	display:none; position:absolute; top:30%;
+	width:32px; height:32px;
+	background:url(images/dwDialogIco.png) no-repeat;
+	display:inline-block;
+	cursor:pointer;
+}
+.daWin .preBt { left:0px; background-position:0px -32px;}
+.daWin .nextBt { right:0px; background-position:-32px -32px;}
+
+.daWin .imgHotZone2 .bt {display:block;}

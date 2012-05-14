@@ -1,0 +1,40 @@
+﻿<html>
+	<head>
+		 <script src="da.js" ></script>
+		 <script src="daKey.js" ></script>
+		 <script>
+		 	da(function(){
+		 		
+		 		daKey({
+		 			keydown: function( key, ctrl, alt, shift ){
+		 				da.out( "ctrl:"+ctrl+" - alt:" + alt+" - shift:" + shift +" - key:"+ key );
+		 				
+		 			}
+		 		});
+		 		
+		 		daKey({
+		 			target: "#mytest",
+		 			noDefault: true,
+		 			noParent: true,
+		 			keydown: function(  key, ctrl, alt, shift  ){
+		 				da.out( "#mytest keyDown"+ key );
+		 				
+		 			},
+		 			keyup: function(  key, ctrl, alt, shift  ){
+		 				da.out( "#mytest keyUp"+ key );
+		 				
+		 			}
+		 		});
+		 	});
+		 </script>
+	</head>	
+	
+	<body>
+		<h3>daKey键盘按键自定义类</h3>
+		直接按键测试
+		<input id="mytest" type="text" value="对象绑定测试" />
+		
+	</body>
+
+
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<title></title>
+	<script type="text/javascript" src="daLoader_min.js"></script>
+	<script type="text/javascript">
+		daLoader.in("daWin,daCanvas");
+		
+		daLoader.ready(function(){
+			da(function(){
+				canvasObj = daCanvas({
+							parent: "#myCanvas",
+							width: 1000,
+							height: 500,
+							
+							click: function(x,y){},
+							mousemove: function(x,y){da.out("坐标x:"+x+",y:"+y);}
+						});
+				
+				canvasObj.draw.daBoxObj.css({ border: "1px solid #333" });
+				
+				canvasObj.draw.polygon({
+					points: "43,234 100,100 232,124 324,545",
+					fillColor: "#324576",
+					borderWidth: 10
+				}).insert();
+				
+				//da.out(da( "#myCanvas" ).dom[0].innerHTML)
+				
+				arrImages.unshift("images/配色表2.gif");
+			});
+		});
+		
+		var arrImages = [
+			"images/正则表达式_备忘.png",
+			"images/javascript备忘.png",
+			"images/jquery_1.3备忘.png",
+			"images/html字符编码备忘.png",
+			"images/CSS备忘.png",
+			"images/html备忘.png"
+		];
+		
+		function show(){
+			daLoader.ready("daWin,daFx", function(){
+				da.out(da( "#myCanvas" ).dom[0].innerHTML);
+
+				daWin({
+					type: "image",
+					html: arrImages
+				});
+				
+			});
+		};
+		
+	</script>
+</head>
+<body>
+	<input type="button" value="全局变量测试" onclick="show();" />
+	<div id="myCanvas" style="position:absolute;width:1px;height:1px;"></div>
+	<div id="tttt">1231321321321312321</div>
+</body>
+</html>

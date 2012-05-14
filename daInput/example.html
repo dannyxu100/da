@@ -1,0 +1,85 @@
+﻿<html>
+	<head>
+		 <link href="daInput.css" rel="stylesheet" />
+		 <script src="js/da.js" ></script>
+		 <script src="js/daKey.js" ></script>
+		 <script src="js/daFx.js" ></script>
+		 <script src="js/daGif.js" ></script>
+		 <script src="js/daFrame.js" ></script>
+		 <script src="js/daList.js" ></script>
+		 
+		 <script src="daInput.js" ></script>
+		 <script>
+		 	
+		 	da(function(){
+			 	daInput({
+					parent: "#ptd2",
+					className: "editLine",
+					icon: "dialog",
+					click: function(){
+						alert("click");
+					},
+					
+					dblclick: function(){
+						alert("dblclick");
+					},
+					
+//					change: function(){
+//						alert("change:"+this.value);
+//					},
+					
+					keyup: function( key, isCtrl, isAlt, isShift ){
+						if( "Enter" === key )
+							alert( [ "keyup:", key, this.value ] )
+					}
+			 	});
+			 	
+				daInput({
+					parent: "#ptd0",
+					icon: "list",
+					source: '{ 小小兵:"", 小兵:"", 大兵:"", 炊事员:"", 军长:"" }'
+				});
+				
+				daInput({
+					parent: "#ptd0",
+					width: "200px",
+					height: "150px",
+					isTextarea: true
+				});
+		 	});
+		 	
+		 	function myFun( obj ){
+		 			debugger;
+		 	}
+		 </script>
+	</head>	
+	
+	<body>
+		<h3>daInput多功能输入框测试页面</h3>
+
+		<table border="1px" style="border: 1px solid #ddd;" cellspacing="0" cellpadding="3">
+			<tr>
+				<td>&nbsp;</td>
+				<td><div id="ptd0"></div></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>
+					<input id="mytest" type="text" icon="date" value="对象绑定测试" />
+				</td>
+				<td>
+					<input id="mytest2" type="text" source="myFun(this)" value="对象绑定测试" />
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td><div id="ptd2"></div></td>
+				<td>&nbsp;</td>
+			</tr>
+		</table>
+		
+	</body>
+
+
+</html>

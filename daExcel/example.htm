@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <title>daExcel 页面缓存</title>
+    <link href="daExcel.css" rel="stylesheet" />
+  	<script type="text/javascript" src="js/da.js"></script>
+  	<script type="text/javascript" src="js/daFx.js"></script>
+  	<script type="text/javascript" src="daExcel.js"></script>
+  	
+		<style>
+			table { border-right:1px solid #999; border-top:1px solid #999; }
+			td { border-left:1px solid #999; border-bottom:1px solid #999; }
+		</style>
+</head>
+
+<body>
+	<table id="mytable" cellspacing="0" cellpadding="3" style="width:500px;height:200px;">
+		<tr>
+			<td name="noedittag" edit>isedit</td><td>01</td><td>02</td>
+		</tr>
+		<tr>
+			<td edit>isedit</td><td>11</td><td>12</td>
+		</tr>
+		<tr>
+			<td>20</td><td>21</td><td>22</td>
+		</tr>
+		<tr id="tr1" style="background:#f00;display:none;">
+			<td>30</td><td>31</td><td>32</td>
+		</tr>
+		<tr>
+			<td colspan="2" edit>isedit</td><td edit>isedit</td>
+		</tr>
+		<tr>
+			<td>50</td><td>51</td><td>52</td>
+		</tr>
+		<tr>
+			<td>60</td><td>61</td><td rowspan="2" >62</td>
+		</tr>
+		<tr>
+			<td edit>isedit</td><td>71</td>
+		</tr>
+	</table>
+	
+	<input type="button" value="隐藏" onclick="document.getElementById('tr1').style.display = 'none'" />
+	<input type="button" value="显示行" onclick="document.getElementById('tr1').style.display = ''" />
+	
+	<script>
+		var excelFocusObj = document.getElementById( "daExcelFocus" ),
+				tb = document.getElementById( "mytable" ),
+				tds = document.getElementsByTagName( "TD" );
+		
+		daExcel({
+			id: "#mytable",
+			
+			editTag: "edit",
+			
+			filter: function( type ){
+			/*
+				alert([this.getAttribute("name"),this.outerHTML]);
+				if( "noedittag" === this.getAttribute("name") ) return false;
+				this.setAttribute("edit","1");
+			*/
+			},
+			
+			before: function( td, fn ){
+//				alert( td.outerHTML )
+			},
+			
+			edit: function( obj, td, fn ){
+//				alert( obj.outerHTML )
+//				alert( td.outerHTML )
+			},
+			
+			after: function( obj, td, fn ){
+//				alert( obj.outerHTML )
+//				alert( td.outerHTML )
+/*
+				var params = {
+					sqlcmd: "pub_sqllist",
+					opt: "edt",
+					sql_menuid: da(trObj).attr("value")
+				};
+				daExcel.update( "/sys/aspx/execcmd.aspx", params, trObj );
+*/
+			}
+			
+		});
+				
+//		da( tb ).bind( "mousedown", function( evt ){
+//			focusTable( this );
+//			
+//		});
+//		
+//		da( tds ).bind( "mousedown", function( evt ){
+//			focusTable( this.parentNode.parentNode.parentNode );
+//			focusCell( this );
+//			
+//		});
+//		
+//		da( document ).bind( "keydown", function( evt ){
+//			//this.style.border = "1px solid #000";
+//			
+//			if( !window.editTable ) return;
+//			switch( evt.keyCode ){
+//				case 13: 							//Enter
+//					alert( evt.keyCode );
+//					break;
+//				case 37: 							//左
+//					alert( evt.keyCode );
+//					break;
+//				case 38: 							//上
+//					alert( evt.keyCode );
+//					break;
+//				case 39:  						//右
+//					alert( evt.keyCode );
+//					break;
+//				case 40: 							//下
+//					alert( evt.keyCode );
+//					break;
+//			}
+//			
+//		});
+		
+		
+	</script>
+	
+</body>
+</html>

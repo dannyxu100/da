@@ -1,0 +1,40 @@
+/*
+	author:	danny.xu
+	date:	2011-8-14 12:31:50
+	fileName:	通用框架daFrame-样式文件
+	decription:	通用框架daFrame-样式文件
+*/
+
+.daCnt { position:relative; border:1px solid #f0f0f0; background:#fff;  }
+
+.daCntMain { position:relative; overflow:hidden; }
+.daCntBox { position:absolute; border:0px solid #666; }
+.daCntOver { 
+	position:absolute;
+	top:0px; left:0px;
+	background:#d7d7d7;
+	filter: Alpha(opacity=1);		/* IE */    
+	-moz-opacity:0.01; 					/* FF 主要是为了兼容老版本的FF */
+	opacity:0.01; 							/* FF */
+}
+
+.scl_v,
+.scl_h,
+.scl_v2,
+.scl_h2 {
+	position:absolute;
+	display:none;
+	background:#fff;
+	-moz-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border:1px solid #999;
+	filter: Alpha(opacity=60);/* IE */ 
+	-moz-opacity:0.6;/* FF 主要是为了兼容老版本的FF */ 
+	opacity:0.6;/* FF */
+}
+.scl_v, .scl_v2 {width:5px;height:50px;right:1px;top:1px;}
+.scl_h, .scl_h2 {width:50px;height:5px;bottom:1px;left:1px;}
+
+.scl_v2, .scl_h2 {background:#666; }

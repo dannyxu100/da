@@ -1,0 +1,42 @@
+﻿<html>
+	<head>
+		 <link href="daLoading.css" rel="stylesheet" />
+		 <script src="da.js" ></script>
+		 <script src="daLoading.js" ></script>
+		 <script>
+		 		window.onload = function(){
+		 			daLoading({
+		 				parent: "ptd2",
+		 				text:"加载中..."
+		 			});
+		 			daLoading({
+		 				parent: "ptd"
+		 			});
+		 			
+		 		}		
+		 
+		 </script>
+	</head>	
+	
+	<body>
+		<table border="1px" style="width:800px;height:600px;">
+			<tr>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td><div id="ptd"></div></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td><div id="ptd2"></div></td>
+				<td>&nbsp;</td>
+			</tr>
+		</table>
+	</body>
+
+
+</html>

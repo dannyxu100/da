@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>无标题文档</title>
+	<script src="js/da.js"></script>
+	<script langruge="javascript">
+		da(function(){
+			fnNewElement( 10 );
+//			daFrameAutoSize();
+		});
+		
+		function fnNewElement( n ){
+			n = n || 50;
+			var item;
+
+			for( var i=0; i<n; i++ ){
+				item = document.createElement("div");
+				item.style.cssText = "width:900px;height:22px;border:1px solid #222; background:#89AA43; margin:5px;";
+				
+				document.body.insertBefore(item);
+			}
+		}
+		
+		
+		function fnAutoSize(){
+			daFrameAutoSize();
+		}
+	</script>		
+</head>
+
+<body style="padding:0px;margin:0px;background:#666;">
+<input onclick="fnNewElement()" type="button" value="动态添加元素" />&nbsp;&nbsp;
+<input onclick="fnAutoSize()" type="button" value="自适应尺寸" />
+	
+</body>
+
+</html>

@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<link href="daTip2.0.css" rel="stylesheet" />
+		<script src="js/da.js" langruage="javascript"></script>
+		<script src="js/daFx.js" langruage="javascript"></script>
+		<script src="daTip.js" langruage="javascript"></script>
+		
+		
+		<script>
+			var sHTML = ['<table style="width:80px; height:100px;" border="0px" cellspacing="0" cellpadding="0">',
+											'<tr>',
+												'<td onclick="posClick.call( this );">',
+													'点这里吧，我是超人！',
+												'</td>',
+												'<td onclick="posClick.call( this );">',
+													'请您输入完整的客户信息，谢谢!',
+												'</td>',
+												'<td onclick="posClick.call( this );">',
+													'点这里吧，我是超人！',
+												'</td>',
+											'</tr>',
+										'</table>'
+									].join("");
+									
+				function posClick(){
+						var tipObj = daTip({
+							target: this,
+							pointer: "87",
+							html: sHTML,
+							events: {"click": function(evt){
+								tipObj.hide();
+							}},
+							warn: {open: true}
+						});
+					
+					
+//						var div_daTip1 = da("id:da_tip1");
+//						div_daTip1.css("display","");
+//						var da_DIV = da( this );
+//						
+//						var objPos = da_DIV.pos();
+//						var objTipPos = div_daTip1.pos();
+//						
+//						alert(da.inPageArea(objPos,{width:div_daTip1.width() ,height:div_daTip1.height()}));				//判断点所处位置
+//						
+//						div_daTip1.offset( {left:objPos.left, top:objPos.top} );
+//						
+//						var a_btclose = da("id:da_tip1_btclose");
+//						a_btclose.dom[0].focus();
+				}
+				
+				
+				function closeTip(){
+						var div_daTip1 = da("id:da_tip1");
+						div_daTip1.css("display","none");
+				}
+		
+				da(function(){
+					var tdObjs = document.getElementsByTagName("td");
+					
+					for ( var i=0,len=tdObjs.length; i<len; i++ ){
+						daTip.cursor({
+							target: tdObjs[i],
+							pointer: "no",
+							onlyOne: true,
+						});
+					}
+
+								
+					daMenu({
+						target: document.body,
+						list: [
+							'红色',
+							'绿色',
+							'蓝色',
+							"-",
+							"width=100px",
+							"height=100px",
+							"更多菜单"
+						],
+						click: function( dom, idx, html, menuObj ){
+							switch( idx ){
+								case 0: 
+									dom.style.background = "#f00";
+									break;
+								case 1: 
+									dom.style.background = "#0f0";
+									break;
+								case 2: 
+									dom.style.background = "#00f";
+									break;
+								case 3: 
+									dom.style.background = "#00f";
+									break;
+								default:
+									alert(menuObj.menuLevel);
+									break;
+							}
+						}
+					});
+					
+				});
+		</script>
+		<style>input {width:20px;height:20px;}</style>
+	</head>
+	
+	
+	<body>
+		<div style="text-align:center;">
+			<table style="width:800px; height:600px;" border="1px" cellspacing="0" cellpadding="0">
+				<tr>
+					<td  onclick="posClick.call( this );" datip="我有提示：11111111111">
+						<input type="text" value="点这里吧，我是超人！" onclick="posClick.call( this );"/>
+					</td>
+					<td  onclick="posClick.call( this );" datip="我有提示：2222222222222">
+						<input type="text" value="点这里吧，我是超人！" onclick="posClick.call( this );"/>
+					</td>
+					<td  onclick="posClick.call( this );" datip="我有提示：3333333333333">
+						<input type="text" value="点这里吧，我是超人！" onclick="posClick.call( this );"/>
+					</td>
+				</tr>
+				<tr>
+					<td  onclick="posClick.call( this );" datip="我有提示：11111111111">
+						<input type="text" value="点这里吧，我是超人！" onclick="posClick.call( this );"/>
+					</td>
+					<td  onclick="posClick.call( this );" datip="我没有提示">
+						<input type="text" value="点这里吧，我是超人！" onclick="posClick.call( this );"/>
+					</td>
+					<td  onclick="posClick.call( this );" datip="我有提示：11111111111">
+						<input type="text" value="点这里吧，我是超人！" onclick="posClick.call( this );"/>
+					</td>
+				</tr>
+				<tr>
+					<td  onclick="posClick.call( this );">
+						<input type="text" value="点这里吧，我是超人！" onclick="posClick.call( this );"/>
+					</td>
+					<td  onclick="posClick.call( this );">
+						<input type="text" value="点这里吧，我是超人！" onclick="posClick.call( this );"/>
+					</td>
+					<td  onclick="posClick.call( this );">
+						<input type="text" value="点这里吧，我是超人！" onclick="posClick.call( this );"/>
+					</td>
+				</tr>
+				<tr>
+					<td  onclick="posClick.call( this );">
+						<input type="text" value="点这里吧，我是超人！" onclick="posClick.call( this );"/>
+					</td>
+					<td  onclick="posClick.call( this );">
+						<input type="text" value="点这里吧，我是超人！" onclick="posClick.call( this );"/>
+					</td>
+					<td  onclick="posClick.call( this );">
+						<input type="text" value="点这里吧，我是超人！" onclick="posClick.call( this );"/>
+					</td>
+				</tr>
+				<tr>
+					<td  onclick="posClick.call( this );">
+						<input type="text" value="点这里吧，我是超人！" onclick="posClick.call( this );"/>
+					</td>
+					<td  onclick="posClick.call( this );">
+						<input type="text" value="点这里吧，我是超人！" onclick="posClick.call( this );"/>
+					</td>
+					<td  onclick="posClick.call( this );">
+						<input type="text" value="点这里吧，我是超人！" onclick="posClick.call( this );"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+		<div id="da_tip1" style="display:none; position:absolute; left:0xp; top:0px; width:200px; height:300px; background:#789789; border:1px solid #f00;">
+			<a id="da_tip1_btclose" href="javascript:void(0);" onblur="closeTip();">关闭</a>
+		</div>
+		
+	</body>
+
+</html>
