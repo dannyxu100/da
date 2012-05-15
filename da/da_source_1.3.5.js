@@ -2645,7 +2645,9 @@ var daRe_until = /Until$/,
 		*/
 		is: function( selector ) {
 			return !!selector && ( typeof selector === "string" ?
-				da.filter( selector, this.dom ).length > 0 :
+				POS.test( selector ) ?
+					jQuery( selector, this.context ).index( this[0] ) >= 0 :
+					jQuery.filter( selector, this ).length > 0 :
 				this.filter( selector ).length > 0 );
 		},
 		
@@ -2785,36 +2787,36 @@ var daRe_until = /Until$/,
 		input = div.getElementsByTagName( "input" )[ 0 ];
 
 		support = {
-				leadingWhitespace: ( div.firstChild.nodeType === 3 ),													// IE strips leading whitespace when .innerHTML is used
-			
-				tbody: !!div.getElementsByTagName( "tbody" ).length,													//判断是否自动插入了tbody标签元素，IE会对空的table标签自动插入tbody标签元素
-	
-				htmlSerialize: !!div.getElementsByTagName( "link" ).length,										//判读link元素能否通过innerHTML正确的被串行化，IE中不能通过innerHTML正常的串行化link和script标签元素
-				
-				opacity: /^0.55$/.test( a.style.opacity ),																		//opacity 不透明度属性兼容性判断
-				cssFloat: !!a.style.cssFloat,																									//float 浮动位置属性兼容性判断
-	
-				// Make sure that if no value is specified for a checkbox
-				// that it defaults to "on".
-				// (WebKit defaults to "" instead)
-				checkOn: ( input.value === "on" ),
-
-				// Make sure that a selected-by-default option has a working selected property.
-				// (WebKit defaults to false instead of true, IE too, if it's in an optgroup)
-				optSelected: opt.selected,																										//验证option默认选中项，有selected属性
+			leadingWhitespace: ( div.firstChild.nodeType === 3 ),		// IE strips leading whitespace when .innerHTML is used
 		
-				getComputedStyle: doc.defaultView && doc.defaultView.getComputedStyle,				//defaultView.getComputedStyle 函数支持判断
-				
-				getSetAttribute: div.className !== "t",			//如果是IE，可以通过驼峰格式值设置属性,这时候在今后的属性操作时就要进行兼容处理了。
-				
-				boxModel: null,															//盒子模型支持
-				inlineBlockNeedsLayout: false,							//inline-block支持
-				shrinkWrapBlocks: false,										//拆封块支持
-				reliableHiddenOffsets: true,								//隐藏元素可靠性支持
-				
-				scriptEval: false,													//判断是否支持script元素引入并执行自定义代码
-				deleteExpando: true,												
-				ajax:	false																	//是否支持XHR requests
+			tbody: !!div.getElementsByTagName( "tbody" ).length,		//判断是否自动插入了tbody标签元素，IE会对空的table标签自动插入tbody标签元素
+
+			htmlSerialize: !!div.getElementsByTagName( "link" ).length,	//判读link元素能否通过innerHTML正确的被串行化，IE中不能通过innerHTML正常的串行化link和script标签元素
+			
+			opacity: /^0.55$/.test( a.style.opacity ),					//opacity 不透明度属性兼容性判断
+			cssFloat: !!a.style.cssFloat,								//float 浮动位置属性兼容性判断
+
+			// Make sure that if no value is specified for a checkbox
+			// that it defaults to "on".
+			// (WebKit defaults to "" instead)
+			checkOn: ( input.value === "on" ),
+
+			// Make sure that a selected-by-default option has a working selected property.
+			// (WebKit defaults to false instead of true, IE too, if it's in an optgroup)
+			optSelected: opt.selected,						//验证option默认选中项，有selected属性
+	
+			getComputedStyle: doc.defaultView && doc.defaultView.getComputedStyle,		//defaultView.getComputedStyle 函数支持判断
+			
+			getSetAttribute: div.className !== "t",			//如果是IE，可以通过驼峰格式值设置属性,这时候在今后的属性操作时就要进行兼容处理了。
+			
+			boxModel: null,									//盒子模型支持
+			inlineBlockNeedsLayout: false,					//inline-block支持
+			shrinkWrapBlocks: false,						//拆封块支持
+			reliableHiddenOffsets: true,					//隐藏元素可靠性支持
+			
+			scriptEval: false,								//判断是否支持script元素引入并执行自定义代码
+			deleteExpando: true,												
+			ajax: false										//是否支持XHR requests
 		};		
 		
 		// Make sure checked status is properly cloned
@@ -3362,15 +3364,15 @@ var daRe_until = /Until$/,
 			elems: 元素对象集合
 		*/
 		cleanData: function( elems ) {
-			var data, id, cache = da.daData,
-					internalKey = da.identifier, 
+			var data, id, cache = da.cache,
+					internalKey = da.expando, 
 					special = da.event.special,
 					deleteExpando = da.support.deleteExpando;
 	
 			for ( var i = 0, elem; (elem = elems[i]) != null; i++ ) {
 				if ( elem.nodeName && da.noData[elem.nodeName.toLowerCase()] ) continue;
 	
-				id = elem[ da.identifier ];
+				id = elem[ da.expando ];
 	
 				if ( id ) {
 //					data = cache[ id ] && cache[ id ][ internalKey ];					//internalKey 用于内部使用标记，暂时不加入该保障机制吧（涉及相关代码太多）。
@@ -3394,10 +3396,10 @@ var daRe_until = /Until$/,
 					}
 	
 					if ( deleteExpando ) {
-						delete elem[ da.identifier ];
+						delete elem[ da.expando ];
 	
 					} else if ( elem.removeAttribute ) {
-						elem.removeAttribute( da.identifier );
+						elem.removeAttribute( da.expando );
 					}
 	
 					delete cache[ id ];
@@ -3414,13 +3416,14 @@ var daRe_until = /Until$/,
 		daRe_alpha = /alpha\([^)]*\)/,
 		daRe_opacity = /opacity=([^)]*)/,
 		daRe_float = /float/i,
-		daRe_dashAlpha = /-([a-z])/ig,
+		daRe_dashAlpha = /-([a-z]|[0-9])/ig,
+		daRe_msPrefix = /^-ms-/,
 		daRe_upper = /([A-Z])/g,
 		daRe_numpx = /^-?\d+(?:px)?$/i,
 		daRe_num = /^-?\d/,
 
 		fcamelCase = function( all, letter ) {
-			return letter.toUpperCase();
+			return ( letter + "" ).toUpperCase();
 		};
 
 	//DOM对象 样式属性 操作函数扩展
@@ -3464,7 +3467,7 @@ var daRe_until = /Until$/,
 			/**属性名驼峰格式化函数
 			*/
 			camelCase: function( string ) {
-				return string.replace( daRe_dashAlpha, fcamelCase );
+				return string.replace( daRe_msPrefix, "ms-" ).replace( daRe_dashAlpha, fcamelCase );
 			},
 			
 			//节点最高优先级样式属性 操作函数
@@ -3520,9 +3523,7 @@ var daRe_until = /Until$/,
 					}
 					//IE 通过currentStyle获取当前计算好的样式属性值
 					else if ( obj.currentStyle ) {
-							var camelCase = name.replace(daRe_dashAlpha, function( all, letter ) {		//如:font-weight把中间部分 "-w"替换成 "-W"大写的驼峰格式
-								return letter.toUpperCase();
-							});	
+							var camelCase = da.camelCase(name);						//如:font-weight把中间部分 "-w"替换成 "-W"大写的驼峰格式
 				
 							ret = obj.currentStyle[ name ] || obj.currentStyle[ camelCase ];
 				
@@ -3684,9 +3685,7 @@ var daRe_until = /Until$/,
 					
 					//属性名 格式标准化处理
 					if ( daRe_float.test( name ) ) name=da.support.cssFloat ? "cssFloat" : "styleFloat";			//因为float是js的关键字,所以js规定方位float要用cssFloat，而为了兼容IE要用styleFloat访问
-					name = name.replace(daRe_dashAlpha, function( all, letter ) {														//如:font-weight把中间部分 "-w"替换成 "-W"大写的驼峰格式
-						return letter.toUpperCase();
-					});			
+					name = da.camelCase(name);																		//如:font-weight把中间部分 "-w"替换成 "-W"大写的驼峰格式
 			
 					if ( set )	style[ name ] = value;			//如果是赋值操作，就给相应样式属性赋值
 	
@@ -4805,8 +4804,38 @@ var daRe_until = /Until$/,
 	
 
 	//***************** da库事件管理机制 核心函数集 *****************/
-	var daRe_namespaces = /\.(.*)$/,
+	var daRe_typenamespace = /^([^\.]*)?(?:\.(.+))?$/,
+		// daRe_namespaces = /\.(.*)$/,
+		daRe_hoverHack = /(?:^|\s)hover(\.\S+)?\b/,
+		daRe_keyEvent = /^key/,
+		daRe_mouseEvent = /^(?:mouse|contextmenu)|click/,
+		daRe_quickIs = /^(\w*)(?:#([\w\-]+))?(?:\.([\w\-]+))?$/,
 		daRe_escape = /[^\w\s.|`]/g;
+	
+	function quickParse( selector ) {
+		var quick = daRe_quickIs.exec( selector );
+		if ( quick ) {
+			//   0  1    2   3
+			// [ _, tag, id, class ]
+			quick[1] = ( quick[1] || "" ).toLowerCase();
+			quick[3] = quick[3] && new RegExp( "(?:^|\\s)" + quick[3] + "(?:\\s|$)" );
+		}
+		return quick;
+	}
+	
+	function quickIs( elem, m ) {
+		var attrs = elem.attributes || {};
+		return (
+			(!m[1] || elem.nodeName.toLowerCase() === m[1]) &&
+			(!m[2] || (attrs.id || {}).value === m[2]) &&
+			(!m[3] || m[3].test( (attrs[ "class" ] || {}).value ))
+		);
+	}
+	
+	//支持绑定hover事件(转为mouseenter$1和mouseleave$1)
+	function hoverHack( events ) {
+		return da.event.special.hover ? events : events.replace( daRe_hoverHack, "mouseenter$1 mouseleave$1" );
+	}
 	
 	//清理函数
 	function fnCleanup( nm ) {
@@ -4859,7 +4888,7 @@ var daRe_until = /Until$/,
 		}
 	
 		this.timeStamp = da.nowId();				//修正timeStamp,因为firefox中一些event的时间戳不准确，所以还是自己定义个来得保险
-		this[ da.identifier ] = true;				//对当前event对象打上已做封装处理的标志
+		this[ da.expando ] = true;				//对当前event对象打上已做封装处理的标志
 		
 	};
 	
@@ -4907,73 +4936,199 @@ var daRe_until = /Until$/,
 
 	da.event = {
 		props: ["altKey","attrChange","attrName","bubbles","button","cancelable","charCode",
-						"clientX","clientY","ctrlKey","currentTarget","data","detail","eventPhase",
-						"fromElement","handler","keyCode","layerX","layerY","metaKey","newValue",
-						"offsetX","offsetY","pageX","pageY","prevValue","relatedNode","relatedTarget",
-						"screenX","screenY","shiftKey","srcElement","target","toElement","view",
-						"wheelDelta","which"],										//event对象的所有 成员列表
+				"clientX","clientY","ctrlKey","currentTarget","data","detail","eventPhase",
+				"fromElement","handler","keyCode","layerX","layerY","metaKey","newValue",
+				"offsetX","offsetY","pageX","pageY","prevValue","relatedNode","relatedTarget",
+				"screenX","screenY","shiftKey","srcElement","target","toElement","view",
+				"wheelDelta","which"],										//event对象的所有 成员列表
 		guid: 1,
 		proxy: da.proxy,
+		
+		fixHooks: {},
+
+		keyHooks: {
+			props: "char charCode key keyCode".split(" "),
+			filter: function( event, original ) {
+				if ( event.which == null ) {					//修正which，针对按键事件 charCode（键盘）keyCode（鼠标）
+					event.which = original.charCode != null ? original.charCode : original.keyCode;
+				}
+
+				return event;
+			}
+		},
+
+		mouseHooks: {
+			props: "button buttons clientX clientY fromElement offsetX offsetY pageX pageY screenX screenY toElement".split(" "),
+			filter: function( event, original ) {
+				var eventDoc, doc, body,
+					button = original.button,
+					fromElement = original.fromElement;
+
+				if ( event.pageX == null && original.clientX != null ) {	//修正pageX/Y、clientX/Y属性,event事件的位置是相对page，如果页面可以滚动，
+																			//client位置还要加上scroll，如果是IE浏览器，还要减去body的边框宽
+					eventDoc = event.target.ownerDocument || document;		
+					doc = eventDoc.documentElement;
+					body = eventDoc.body;
+
+					event.pageX = original.clientX + ( doc && doc.scrollLeft || body && body.scrollLeft || 0 ) - ( doc && doc.clientLeft || body && body.clientLeft || 0 );
+					event.pageY = original.clientY + ( doc && doc.scrollTop  || body && body.scrollTop  || 0 ) - ( doc && doc.clientTop  || body && body.clientTop  || 0 );
+				}
+
+				if ( !event.relatedTarget && fromElement ) {				//修正relatedTarget属性，针对mouseover和mouserout事件；
+																			//IE分成了to和from两个属性存放；FF没有分
+					event.relatedTarget = fromElement === event.target ? original.toElement : fromElement;
+				}
+
+				//在 IE 里面 没有按键动作的时候 event.button = 0; 左键是1; 中键是4; 右键是2
+				//在 Firefox 里面 没有按键动作的时候 event.button = 0; 左键是0 ;中键是1 ;右键是2
+				//TODO: 这是不标准的，最好不要用这个
+				if ( !event.which && button !== undefined ) {
+					event.which = ( button & 1 ? 1 : ( button & 2 ? 3 : ( button & 4 ? 2 : 0 ) ) );
+				}
+
+				return event;
+			}
+		},
 		
 		//事件封装函数
 		/*
 			event: 事件对象
 		*/
 		fix: function( event ) {
-			if ( event[ da.identifier ] ) {						//判断event对象是否已经封装过
+			if ( event[ da.expando ] ) {							//event对象已经封装过, 直接退出
 				return event;
 			}
 	
-			var originalEvent = event;								//缓存一个原始event对象
-			event = da.Event( originalEvent );				//event对象并对其进行原型改造
+			var originalEvent = event,								//缓存一个原始event对象
+				fixHook = da.event.fixHooks[ event.type ] || {};
+				copy = fixHook.props ? this.props.concat( fixHook.props ) : this.props;
+				
+			event = da.Event( originalEvent );						//event对象并对其进行原型改造
 	
-			for ( var i = this.props.length, prop; i; ) {			//复制原始event对象属性值
-				prop = this.props[ --i ];
+			for ( var i = copy.length; i; ) {						//继承浏览器原event对象的属性
+				prop = copy[ --i ];
 				event[ prop ] = originalEvent[ prop ];
 			}
-	
-			if ( !event.target ) {															//修正target属性的存在
-				event.target = event.srcElement || document;			//没有target属性，就是IE浏览器，那就把srcElement赋值给target
+		
+			if ( !event.target ) {									//由于target属性的重要性，我们要再次确认是否被继承过来(兼容IE 6/7/8、Safari2)
+				event.target = originalEvent.srcElement || document;
 			}
-	
-			if ( event.target.nodeType === 3 ) {								//如果是文本节点，就将父节点对象赋给target，针对safari浏览器
+
+			if ( event.target.nodeType === 3 ) {					//避免target属性指向的是一个文本对象(兼容Safari)
 				event.target = event.target.parentNode;
 			}
-	
-			if ( !event.relatedTarget && event.fromElement ) {		//修正relatedTarget属性，针对mouseover和mouserout事件；IE分成了to和from两个属性存放；FF没有分
-				event.relatedTarget = event.fromElement === event.target ? 
-																event.toElement : event.fromElement;
-			}
-	
-			if ( event.pageX == null && event.clientX != null ) {  //修正pageX/Y属性,event事件的位置是相对page，如果页面可以滚动，client位置还要加上scroll，如果是IE浏览器，还要减去body的边框宽
-				var doc = document.documentElement,
-						body = document.body;
-	
-				event.pageX = event.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) - (doc && doc.clientLeft || body && body.clientLeft || 0);
-				event.pageY = event.clientY + (doc && doc.scrollTop  || body && body.scrollTop  || 0) - (doc && doc.clientTop  || body && body.clientTop  || 0);
-			}
-	
-			if ( event.which == null && (event.charCode != null || event.keyCode != null) ) {		//修正which，针对按键事件 charCode（键盘）keyCode（鼠标）
-				event.which = event.charCode != null ? event.charCode : event.keyCode;
-			}
 
-
-//在 IE 里面 
-//没有按键动作的时候 event.button = 0; 左键是1; 中键是4; 右键是2
-//在 Firefox 里面 
-//没有按键动作的时候 event.button = 0; 左键是0 ;中键是1 ;右键是2
-			if ( !event.which && event.button !== undefined ) {		//button属性是非标准的东东，所以咱们不用它，还是统一成which吧
-				event.which = (event.button & 1 ? 1 : ( event.button & 2 ? 3 : ( event.button & 4 ? 2 : 0 ) ));		//1 === 鼠标左键; 2 === 鼠标中键; 3 === 鼠标右键  ?????
-			}
-
-			if ( !event.metaKey && event.ctrlKey ) {							//修正metaKey，苹果电脑没有Ctrl键，只有meta键
+			if ( event.metaKey === undefined ) {					//修正metaKey，苹果电脑没有Ctrl键，只有meta键
 				event.metaKey = event.ctrlKey;
 			}
-	
-			return event;
+
+			return fixHook.filter? fixHook.filter( event, originalEvent ) : event;			//特殊事件，需要特殊筛选处理
 		},
 		
 		global: {},						//事件类型注册使用情况，标志集
+
+		
+		//分派自定义事件函数，通过命名空间分类和有序的执行( this是触发event事件的源元素对象 )
+		/*
+			event: 已经封装过的da.Event事件对象
+		*/
+		dispatch: function( event ) {
+			event = da.event.fix( event || window.event );				//修正传入的event对象，保证其是封装过的
+			
+			var handlers = ( (da._data( this, "events" ) || {} )[ event.type ] || []),
+				delegateCount = handlers.delegateCount,
+				args = [].slice.call( arguments, 0 ),					//数组化参数列表
+				run_all = !event.exclusive && !event.namespace,
+				special = da.event.special[ event.type ] || {},
+				handlerQueue = [],
+				daObj, cur, selMatch, matches, handleObj, sel;
+			
+			args[0] = event;											//用封装好的Event对象代替原生浏览器event对象使用
+			event.delegateTarget = this;								//事件托管目标指向自己
+			
+			/*TODO:	
+			// Call the preDispatch hook for the mapped type, and let it bail if desired
+			if ( special.preDispatch && special.preDispatch.call( this, event ) === false ) {
+				return;
+			} */
+
+			// Determine handlers that should run if there are delegated events
+			if ( delegateCount && !(event.button && event.type === "click") ) {			//避免非鼠标左单击的事件冒泡
+				// Pregenerate a single jQuery object for reuse with .is()
+				daObj = da(this);
+				daObj.context = this.ownerDocument || this;
+
+				for ( cur = event.target; cur != this; cur = cur.parentNode || this ) {	//事件冒泡处理
+					if ( cur.disabled !== true ) {										//不处理不可用的元素
+						selMatch = {};
+						matches = [];
+						daObj.dom[0] = cur;
+						
+						for ( var i = 0; i < delegateCount; i++ ) {						
+							handleObj = handlers[ i ];									//事件处理结构体
+							sel = handleObj.selector;									//委托对象选择器
+
+							if ( selMatch[ sel ] === undefined ) {
+								selMatch[ sel ] = (										//快速匹配事件委托对象
+									handleObj.quick ? quickIs( cur, handleObj.quick ) : daObj.is( sel )
+								);
+							}
+							if ( selMatch[ sel ] ) {
+								matches.push( handleObj );
+							}
+						}
+						
+						if ( matches.length ) {
+							handlerQueue.push({ elem: cur, matches: matches });
+						}
+					}
+				}
+			}
+			
+			// Add the remaining (directly-bound) handlers
+			if ( handlers.length > delegateCount ) {
+				handlerQueue.push({ elem: this, matches: handlers.slice( delegateCount ) });
+			}
+
+			// Run delegates first; they may want to stop propagation beneath us
+			for ( var i = 0; i < handlerQueue.length && !event.isPropagationStopped(); i++ ) {
+				matched = handlerQueue[ i ];
+				event.currentTarget = matched.elem;
+
+				for ( var j = 0; j < matched.matches.length && !event.isImmediatePropagationStopped(); j++ ) {
+					handleObj = matched.matches[ j ];
+
+					// Triggered event must either 1) be non-exclusive and have no namespace, or
+					// 2) have namespace(s) a subset or equal to those in the bound event (both can have no namespace).
+					if ( run_all 
+					|| (!event.namespace && !handleObj.namespace) 
+					|| event.namespace_re && event.namespace_re.test( handleObj.namespace ) ) {
+
+						event.data = handleObj.data;
+						event.handleObj = handleObj;
+
+						ret = ( (da.event.special[ handleObj.origType ] || {}).handle || handleObj.handler )
+									.apply( matched.elem, args );
+
+						if ( ret !== undefined ) {
+							event.result = ret;
+							if ( ret === false ) {
+								event.preventDefault();
+								event.stopPropagation();
+							}
+						}
+					}
+				}
+			}
+			
+			// Call the postDispatch hook for the mapped type
+			if ( special.postDispatch ) {
+				special.postDispatch.call( this, event );
+			}
+
+			return event.result;
+		},
+	
 		
 		//给元素绑定事件
 		/*
@@ -4982,121 +5137,121 @@ var daRe_until = /Until$/,
 			handler: 自定义事件回调函数,值为false可以屏蔽事件响应
 			data: 额外自定义传入数据对象
 		*/
-		add: function( elem, types, handler, data ) {
-			if ( elem.nodeType === 3 || elem.nodeType === 8 ) {    //我不给文本和备注节点绑事件，没意义
+		add: function( elem, types, handler, data, selector ) {
+			var tns, type, namespaces, 
+				elemData,				//元素data缓存对象
+				events, eventHandle,
+				handleObjIn,			//handleObjIn用于缓存自定义函数参数对象；
+				handleObj,				//handleObj事件属性配置对象，用于事件函数的注册存放和后期移除、触发
+				handlers;
+			
+			if ( elem.nodeType === 3 || elem.nodeType === 8 			//不给文本和备注节点绑事件，没意义
+			|| !types || !handler 										//缺少必要参数
+			|| !(elemData = da._data( elem ))  ) {						//确保元素data缓存结构存在
 				return;
 			}
-	
+			
+			/*
 			if ( da.isWin( elem ) && ( elem !== window && !elem.frameElement ) ) {		//IE浏览器不能直接对window对象操作，所以先复制一下
 				elem = window;
 			}
-	
-			if ( handler === false ) handler = fnReturnFalse;	//如果handler的值为false可以屏蔽事件响应
+			
+			if ( handler === false ) handler = fnReturnFalse;							//如果handler的值为false可以屏蔽事件响应
 			else if ( !handler ) return;
-	
-			var handleObjIn, handleObj;												//handleObjIn用于缓存自定义函数参数对象；handleObj事件属性配置对象，用于事件函数的注册存放和后期移除、触发
-	
-			if ( handler.handler ) {													//如果自定义回调函数参数，是以键值对的方式 如：{handler: function(){……}, guid: handleObj.handler.guid}
-				handleObjIn = handler;													//缓存自定义函数参数对象(这里是键值对咯)
-				handler = handleObjIn.handler;									//修正handler操作函数，为传入键值对的handler属性引用(内定的,在下面的代码可以看到)
-			}
-	
-			if ( !handler.guid ) handler.guid = da.guid++;		//确保时间回调函数有一个唯一标识
-				
-			var elemData = da.data( elem );										//初始化元素data缓存结构 elemData === {}
-			if ( !elemData ) return;													//保证元素data缓存结构已定义
-
-			var eventKey = elem.nodeType ? "events" : "__events__",
-					events = elemData[ eventKey ],								//eventKey通过键值获得尽量避免对于JS引用对象的冲突
-					eventHandle = elemData.handle;
+			*/
 			
-			if ( "function" === typeof events ) {							//如果已经有绑定的事件函数了，将事件函数都缓存出来，供下面追加事件绑定使用
-				// On plain objects events is a fn that holds the the data
-				// which prevents this data from being JSON serialized
-				// the function does not need to be called, it just contains the data
-				eventHandle = events.handle;
-				events = events.events;
-	
-			}
-			else if ( !events ) {															//定义events，事件函数缓存			
-				if ( !elem.nodeType ) {													//检查如果不是节点元素，就赋值函数类型
-					// On plain objects, create a fn that acts as the holder
-					// of the values to avoid JSON serialization of event data
-					elemData[ eventKey ] = elemData = function(){};	
-					
-				}
-				elemData.events = events = {};									//如果是节点元素，就赋值引用类型,因为这样才能指向多个自定义事件函数
-				
+			if ( handler.handler ) {							//如果第3个参数，是以键值对的方式 如：{ handler: function(){……}, guid: 520 }
+				handleObjIn = handler;							//缓存用户原参数对象(这里是键值对咯)
+				handler = handleObjIn.handler;					//修正handler操作函数，为传入键值对的handler属性引用(内定的,在下面的代码可以看到)
+				selector = handleObjIn.selector;
 			}
 	
-			if ( !eventHandle ) {															//定义eventHandle，到这里元素的data缓存结构 elemData === { events: {}, handle: function(){……} }
-				elemData.handle = eventHandle = function() {
-					// Handle the second event of a trigger and when
-					// an event is called after a page has unloaded
-					return ( "undefined" !== typeof da && !da.event.triggered ) ?						//???????
-						da.event.handle.apply( eventHandle.elem, arguments ) : undefined;
-						
+			if ( !handler.guid ){								//回调函数赋值唯一标识，用于之后的查找或移除
+				handler.guid = da.guid++;
+			}
+			
+			events = elemData.events;							//如果已经有绑定的事件函数了，将事件函数都提出来，供下面追加事件绑定使用
+			eventHandle = elemData.handle;
+			
+			if ( !events ) {									//首次add绑定事件
+				elemData.events = events = {};					//初始化事件缓存结构体
+			}
+			if ( !eventHandle ) {								//初始化核心事件处理函数
+																//定义eventHandle，到这里元素的data缓存结构 elemData === { events: {}, handle: function(){……} }
+				elemData.handle = eventHandle = function( e ) {	//避免一个已经销毁的页面事件被调用 和 短时间内da.event.trigger()触发多次同一事件
+					return "undefined" !== typeof da && (!e || e.type !== da.event.triggered ) ?
+						da.event.dispatch.apply( eventHandle.elem, arguments ) :
+						undefined;
 				};
+				eventHandle.elem = elem;						//给事件回调函数对象添加elem属性，存放事件绑定目标元素按对象，针对IE没有本地事件对象(IE的事件对象是放在window对象下统一管理的),可防止内存泄露的处理
 			}
 			
-			eventHandle.elem = elem;									//给事件回调函数对象添加elem属性，存放事件绑定目标元素按对象，针对IE没有本地事件对象(IE的事件对象是放在window对象下统一管理的),防止内存泄露的处理
-	
-			types = types.split(" ");									//多个事件批量定义，可以用空格" "分隔哦，如：da.event.add(obj, "mouseover mouseout", fn);
-	
-			var type,
-					i = 0, 
-					namespaces;
+			types = da.trim( hoverHack(types) ).split( " " );	//支持空格分隔，批量绑定事件 如：da.event.add(obj, "mouseover mouseout", fn);
+			
+			for (var t = 0; t < types.length; t++ ) {							//批量处理逐一添加事件函数
+				tns = daRe_typenamespace.exec( types[t] ) || [];				//提取事件的命名空间
+				type = tns[1];
+				namespaces = ( tns[2] || "" ).split( "." ).sort();
+
+				// If event changes its type, use the special event handlers for the changed type
+				special = da.event.special[ type ] || {};
+
+				// If selector defined, determine special event api type, otherwise given type
+				type = ( selector ? special.delegateType : special.bindType ) || type;
+
+				// Update special based on newly reset type
+				special = da.event.special[ type ] || {};
+
+				// handleObj is passed to all event handlers
+				handleObj = da.extend({						//事件处理所需要的数据结构体
+					type: type,
+					origType: tns[1],
+					data: data,
+					handler: handler,
+					guid: handler.guid,
+					selector: selector,
+					quick: selector && quickParse( selector ),
+					namespace: namespaces.join(".")
 					
-			while ( (type = types[ i++ ]) ) {					//多个事件逐个绑定
-				handleObj = handleObjIn ?								//事件属性配置对象handleObj默认成员属性{ handler: handler, data: data }
-					da.extend( {}, handleObjIn ) : { handler: handler, data: data };
-	
-				if ( -1 < type.indexOf(".") ) {					//满足以命名空间的方式，自定义事件函数
-					namespaces = type.split(".");
-					type = namespaces.shift();
-					handleObj.namespace = namespaces.slice(0).sort().join(".");
-	
-				}
-				else {																	//没有用命名空间的方式
-					namespaces = [];
-					handleObj.namespace = "";
-					
-				}
-	
-				handleObj.type = type;									//事件属性配置扩张type属性
-				if ( !handleObj.guid ) handleObj.guid = handler.guid;		//保证唯一标识属性
-	
-				var handlers = events[ type ],													//获取当前已经绑定的事件函数列表
-						special = da.event.special[ type ] || {};						//对于特殊的事件类型 如:ready、live、beforeunload, 需要特殊处理一下下
-	
-				if ( !handlers ) { 																			//如果当前没有绑定任何事件函数
-					handlers = events[ type ] = [];												//初始化事件函数队列
-					
+				}, handleObjIn );
+
+				handlers = events[ type ];					//提取对应事件的事件函数队列
+				
+				if ( !handlers ) {							//首次添加，初始化事件函数队列
+					handlers = events[ type ] = [];
+					handlers.delegateCount = 0;				//该事件托管处理函数总数 初始化为0
+
 					//如果非特殊事件类型 或da.event.special()判定函数返回值为false，就可以直接用addEventListener()或 attachEvent()绑定事件函数了
-					if ( !special.setup || ( false === special.setup.call( elem, data, namespaces, eventHandle ) ) ) {
-						if ( elem.addEventListener ) {											//针对firefox
+					if ( !special.setup || special.setup.call( elem, data, namespaces, eventHandle ) === false ) {
+						if ( elem.addEventListener ) {
 							elem.addEventListener( type, eventHandle, false );
-	
-						} else if ( elem.attachEvent ) {										//针对IE
+
+						} else if ( elem.attachEvent ) {
 							elem.attachEvent( "on" + type, eventHandle );
 						}
 					}
 				}
-				
-				if ( special.add ) { 											//??????
-					special.add.call( elem, handleObj ); 
-	
-					if ( !handleObj.handler.guid ) {
+
+				if ( special.add ) {									//特殊事件类型结构体，内部定义了add函数，就执行
+					special.add.call( elem, handleObj );
+
+					if ( !handleObj.handler.guid ) {					//修正guid
 						handleObj.handler.guid = handler.guid;
 					}
 				}
-	
-				handlers.push( handleObj );								//将事件属性配置对象，压入到目标元素对象的data缓存events:{}事件列表中，因为handlers指向的就是events[ type ], 供后期移除、触发;
-	
-				da.event.global[ type ] = true;						//给da.event全局变量相应的事件类型打上标记，说明这种事件类型已有被注册，待全局事件触发时查看
+
+				if ( selector ) {										//新事件处理结构体，加入队列
+					handlers.splice( handlers.delegateCount++, 0, handleObj );
+				}
+				else {
+					handlers.push( handleObj );
+				}
+
+				da.event.global[ type ] = true;					//给da.event全局变量相应的事件类型打上标记，说明这种事件类型已有被注册，待全局事件触发时查看
 			}
-	
-			elem = null;								//回收资源，避免内存泄露
+
+			elem = null;										//回收资源，避免内存泄露(兼容IE)
+			
 		},
 	
 		//针对元素移除或重置一个事件
@@ -5237,7 +5392,7 @@ var daRe_until = /Until$/,
 	
 			if ( !bubbling ) {																//非冒泡触发
 				event = ( typeof event === "object" ) ? 										//判断event是否已经封装过的da.Event对象
-									event[ da.identifier ] ? 													//再通过唯一标识符确认是否封装过
+									event[ da.expando ] ? 													//再通过唯一标识符确认是否封装过
 									event : da.extend( da.Event( type ), event ) : da.Event( type );				//只有当type为字符串时 如:"click","mouseout"
 	
 				if ( type.indexOf("!") >= 0 ) {									//支持"click!","evtFn!"这种叹号"!"结尾的exclusive方式
@@ -5249,7 +5404,7 @@ var daRe_until = /Until$/,
 					event.stopPropagation();											//在执行全局事件函数的时候，那就不要冒泡泡用户自定义事件函数啦，浪费资源
 	
 					if ( da.event.global[ type ] ) {									//只需要触发注册过的事件类型就可以了嘛
-						da.each(da.daData, function() {									//批处理全局缓存中所有注册过事件函数的元素对象，并触发执行相应的事件函数
+						da.each(da.cache, function() {									//批处理全局缓存中所有注册过事件函数的元素对象，并触发执行相应的事件函数
 								if ( this.events && this.events[type] ) {
 									da.event.trigger( event, data, this.handle.elem );			//递归逐个触发执行
 								}
@@ -5335,70 +5490,6 @@ var daRe_until = /Until$/,
 			}
 			
 			
-		},
-	
-		//对自定义事件函数，通过命名空间分类和有序的执行( this是触发event事件的源元素对象 )
-		/*
-			event: 已经封装过的da.Event事件对象
-		*/
-		handle: function( event ) {
-			var all, handlers, namespaces, namespace_re, events,
-					namespace_sort = [],
-					args = da.pushArray( arguments );											//先缓存一下参数列表，便于后面使用
-			
-			event = args[0] = da.event.fix( event || win.event );			//修正传入的event对象，保证其是封装过的
-			event.currentTarget = this;
-	
-			all = event.type.indexOf(".") < 0 && !event.exclusive;		//判断是否用命名空间分类执行
-	
-			if ( !all ) {
-				namespaces = event.type.split(".");
-				event.type = namespaces.shift();												//获得命名空间名
-				namespace_sort = namespaces.slice(0).sort();
-				namespace_re = new RegExp("(^|\\.)" + namespace_sort.join("\\.(?:.*\\.)?") + "(\\.|$)");
-			}
-	
-			event.namespace = event.namespace || namespace_sort.join(".");
-	
-			events = da.data( this, this.nodeType ? "events" : "__events__" );			//获得this源元素的事件配置数据
-	
-			if ( "function" === typeof events ) {
-				events = events.events;
-				
-			}
-			handlers = ( events || {} )[ event.type ];
-			
-			if ( events && handlers ) {
-				// Clone the handlers to prevent manipulation
-				handlers = handlers.slice(0);
-	
-				for ( var i = 0, len = handlers.length; i < len; i++ ) {
-					var handleObj = handlers[ i ];
-	
-					// Filter the functions by class
-					if ( all || namespace_re.test( handleObj.namespace ) ) {
-						event.handler = handleObj.handler;															//将事件函数的引用传入，便于之后我们删除
-						event.data = handleObj.data;
-						event.handleObj = handleObj;
-		
-						var ret = handleObj.handler.apply( this, args );								//执行
-	
-						if ( ret !== undefined ) {
-							event.result = ret;
-							if ( ret === false ) {																				
-								event.preventDefault();																			//终止默认事件
-								event.stopPropagation();																		//中止父级事件冒泡
-							}
-						}
-	
-						if ( event.isImmediatePropagationStopped() ) {									//立即中止事件冒泡，默认false
-							break;
-						}
-					}
-				}
-			}
-	
-			return event.result;
 		},
 	
 		//特殊事件函数类型过滤和处理
@@ -5617,6 +5708,14 @@ var daRe_until = /Until$/,
 			if ( da.attrFn ) {
 				da.attrFn[ name ] = true;
 			}
+			
+			if ( daRe_keyEvent.test( name ) ) {
+				da.event.fixHooks[ name ] = da.event.keyHooks;
+			}
+
+			if ( daRe_mouseEvent.test( name ) ) {
+				da.event.fixHooks[ name ] = da.event.mouseHooks;
+			}
 	});
 	
 	
@@ -5752,10 +5851,10 @@ var daRe_until = /Until$/,
 		//异步数据访问
 		/*
 			origSettings: 参数集
-										{属性名: 可选值 = 
-											[type: "GET"/"POST"/"PUT"/"DELETE" = "GET"],
-											[url: "" = location.href],
-										}
+			{属性名: 可选值 = 
+				[type: "GET"/"POST"/"PUT"/"DELETE" = "GET"],
+				[url: "" = location.href],
+			}
 		*/
 		ajax: function( origSettings ) {
 			var s = da.extend( true, {}, da.ajaxSettings, origSettings ),					//将ajaxSettings和origSettings对象合并后放入s局部变量
@@ -6215,17 +6314,38 @@ if ( window.ActiveXObject ) {
 da.support.ajax = !!da.ajaxSettings.xhr();
 
 
-	//***************** 扩展部分 数据操作有关的 函数 *****************/
-	//da缓存机制全局变量
+//全局变量
+win.da = da;
+	
+})(window);
+
+/***************** da缓存机制操作函数  ***************************/
+(function(da){
 	var da_sequence = 0, 
-			da_winData = {};
+		da_winData = {};
+
+
+	function isEmptyDataObject( obj ) {									//核查一个缓存对象是否为空
+		for ( var name in obj ) {
+			// if the public data object is empty, the private is still empty
+			if ( name === "data" && da.isEmptyObj( obj[name] ) ) {
+				continue;
+			}
+			if ( name !== "toJSON" ) {
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	da.extend({
-		daData: {},
+		cache: {},							//da全局缓存区
+		uuid: 0,
 		
-		identifier: "da"+ da.nowId(),	//等同于jQuery expando
+		expando: "da"+ da.nowId(),		//每个页面生成一个缓存区名称，
+											//元素通过这个同名属性值，存放着自己的缓存数据所在全局缓存区中的索引号
 		
-		noData: {											//可怕的家伙们，这些元素如果想给他们添加唯一标识符da.identifier属性，会抛出无法捕获的异常，真恶心 ??????
+		noData: {							//可怕的家伙们，这些元素如果想给他们添加唯一标识符da.expando属性，会抛出无法捕获的异常，真恶心 ??????
 			"embed": true,
 			// Ban all objects except for Flash (which handle expandos)
 			"object": "clsid:D27CDB6E-AE6D-11cf-96B8-444553540000",
@@ -6233,98 +6353,198 @@ da.support.ajax = !!da.ajaxSettings.xhr();
 		},
 
 		hasData: function( elem ) {
-			elem = elem.nodeType ? da.daData[ elem[da.identifier] ] : elem[ da.identifier ];
-	
+			elem = elem.nodeType ? da.cache[ elem[da.expando] ] : elem[ da.expando ];
 			return !!elem && !isEmptyDataObject( elem );
 		},
-	
+
+		acceptData: function( elem ) {						//判断一个元素是否能够进行缓存数据相关操作
+			if ( elem.nodeName ) {
+				var match = da.noData[ elem.nodeName.toLowerCase() ];
+
+				if ( match ) {
+					return !(match === true || elem.getAttribute("classid") !== match);
+				}
+			}
+			return true;
+		},
+		
 		//da缓存函数
 		/*
 			obj:	缓存目标对象
 			key:	缓存数据索引值
 			val:	缓存数据内容
 		*/
-		data: function(obj, key, val){
-				obj = (obj == win) ? da_winData : obj; //如果是窗口全局缓存, da_winData也是一个{}
+		data: function(obj, key, val, pvt/*内部私用*/ ){
+			if ( !da.acceptData( obj ) ) return;
+			
+			var pvtCache,									//内部私有部分缓存数据
+				thisCache,									//用户开放部分缓存数据
+				internalKey = da.expando,
+				getByName = typeof key === "string",
+				isNode = obj.nodeType,						//兼容IE的GC垃圾回收机制不同，所以DOM元素和js对象的处理方式不一样
+				cache = isNode ? da.cache : obj,			//只有DOM元素需要全局的cache，普通js对象数据可以直接指向另一个对象
+				id = isNode ? obj[ internalKey ] : obj[ internalKey ] && internalKey,
+				isEvents = ("events" === key),
+				ret;
+			
+			
+			if ( getByName 									//get操作时，当目标对象没有任何缓存数据，直接返回。
+			&& undefined === val 
+			&& (!id || !cache[id] || (!isEvents && !pvt && !cache[id].data))) {
+				return;
+			}
 
-				var idx = obj[da.identifier];
-				var daData = da.daData;
-				
-				if(!idx) idx = ++da_sequence;					//第一次缓存数据,分配一个唯一识别序号
-				
-				if(da.isPlainObj(key)){								//set 如果是键值对对象,就通过da.extend()函数对目标进行缓存数据
-					obj[da.identifier] = idx;
-					daData[idx] = daData[idx] || {};
-					da.extend(true,daData[idx],key);
+			if ( !id ) {
+				if ( isNode ) {								//只有DOM元素才需要一个全局缓存区索引号
+					obj[ internalKey ] = id = ++da.uuid;
 				}
-				else if(!daData[idx]){								//set 第一次进行缓存数据处理
-					obj[da.identifier] = idx;
-					daData[idx] = {};
+				else {
+					id = internalKey;
 				}
+			}
+			
+			if ( !cache[ id ] ) {							//确定缓存区是空的,并初始化
+				cache[ id ] = {};
+
+				// Avoids exposing jQuery metadata on plain JS objects when the object
+				// is serialized using JSON.stringify
+				if ( !isNode ) {
+					cache[ id ].toJSON = da.noop;
+				}
+			}
+			
+			if ( "object" === typeof key || "function" === typeof key ) {		//以键值对的方式进行set操作
+				if ( pvt ) {													//私有部分
+					cache[ id ] = da.extend( cache[ id ], key );				//set操作,通过da.extend()函数对目标进行缓存数据
+				} 
+				else {															//开放部分
+					cache[ id ].data = da.extend( cache[ id ].data, key );
+				}
+			}
+
+			pvtCache = thisCache = cache[ id ];
+
+			if ( !pvt ) {									//为了避免da库内部使用缓存数据名，和用户使用缓存名冲突，
+				if ( !thisCache.data ) {					//缓存的存储结构是，用户使用缓存对象以名为"data"的对象，嵌入内部使用缓存对象中。
+					thisCache.data = {};
+				}
+
+				thisCache = thisCache.data;					//提出用户使用缓存对象
+			}
+	
+			if ( undefined !== val ) {						//set操作
+				thisCache[ da.camelCase( key ) ] = val;
+			}
+
+			if ( isEvents && !thisCache[ key ] ) {			//用户可以利用"events"作为key,提取出DOM元素上的监听事件相关缓存
+				return pvtCache.events;						//当然前提是，在用户可使用的开发部分没有定义key的同名缓存
+			}
+
+			if ( getByName ) {								//get操作,并且有指定缓存名
+				ret = thisCache[ key ];						//原型名提数据，若提不出数据，转换成驼峰格式，再提数据
 				
-				if(val !== undefined) daData[idx][key] = val;					//set
-				
-				//单值操作,返回key对应的数据,否则返回目标对象上的所有缓存数据。
-				return "string" === typeof key ? daData[idx][key] : daData[idx];
+				if ( ret == null ) {
+					ret = thisCache[ da.camelCase( key ) ];
+				}
+			} 
+			else {											//get操作，全部
+				ret = thisCache;
+			}
+			
+			return ret;
 		},
-		
+
+		/**内部私用
+		*/
+		_data: function( obj, name, data ) {
+			return da.data( obj, name, data, true );
+		},
+
 		//da删除缓存函数
 		/*
-			obj:	缓存目标对象
-			key:	缓存数据索引值
+			obj: 缓存目标对象
+			key: 缓存数据索引值
 		*/
-		undata: function(obj, key) {
-			obj = (obj == win) ? da_winData : obj;
-	
-			var idx = obj[da.identifier],
-					daData = da.daData;
+		removedata: function(obj, key, pvt/*内部私用*/) {
+			if ( !da.acceptData( obj ) ) return;
 
-			if(key){	//删除缓存数据
-				if (daData[idx]){
-					delete daData[idx][key];
-					
-					//如果缓存目标对象,完全没有缓存数据,就删除缓存容器
-					if (da.isEmptyObj(daData[idx])){
-						da.undata(obj);
+			var thisCache,
+				internalKey = da.expando,
+				isNode = obj.nodeType,					//兼容IE的GC垃圾回收机制不同，所以DOM元素和js对象的处理方式不一样
+				cache = isNode ? da.cache : obj,		//只有DOM元素需要全局的cache，普通js对象数据可以直接指向另一个对象
+				id = isNode ? obj[ internalKey ] : internalKey;
+
+			if ( !cache[ id ] ) return;					//没有目标对象任何缓存，直接返回
+			
+			if ( key ) {
+				thisCache = pvt ? cache[ id ] : cache[ id ].data;	//非内部操作，返回用户缓存数据
+
+				if ( thisCache ) {
+					if ( !da.isArray( key ) ) {						//支持数组、空格分隔的方式批量操作
+						if ( key in thisCache ) 					//判断是否单值操作
+							key = [ key ];
+						}
+						else {
+							key = da.camelCase( key );
+							if ( key in thisCache ) {				//转为驼峰格式后，再判断是否单值操作
+								key = [ key ];
+							} 
+							else {									//确定为空格分隔的方式批量操作
+								key = key.split( " " );
+							}
+						}
+					}
+
+					for ( var i = 0, len = key.length; i < len; i++ ) {
+						delete thisCache[ key[i] ];
+					}
+
+					if ( !( pvt ? isEmptyDataObject : da.isEmptyObj )( thisCache ) ) {		//若对象仍然还有其他缓存数据，这时就可以先退出了。
+						return;
 					}
 				}
-				
 			}
-			else {		//删除缓存目标所有缓存数据 或空缓存容器对象
-				try {
-					delete obj[da.identifier];		//删除缓存目标对象唯一识别序号
+
+			if ( !pvt ) {										//若对象已经没有其他任何缓存数据了，就将缓存区自身也销毁
+				delete cache[ id ].data;
+
+				if ( !isEmptyDataObject(cache[ id ]) ) {		//外部用户操作，不能清除内部私用的缓存区
+					return;
 				}
-				catch(e) {
-					if (obj.removeAttribute) {		//如果是DOM对象要通过removeAttribute()函数删除唯一识别序号属性
-						obj.removeAttribute(da.identifier);
-					}
+			}
+
+			// Browsers that fail expando deletion also refuse to delete expandos on
+			// the window, but it will allow it on all other JS objects; other browsers
+			// don't care
+			// Ensure that `cache` is not a window object #10080
+			if ( da.support.deleteExpando || !cache.setInterval ) {
+				delete cache[ id ];
+			}
+			else {
+				cache[ id ] = null;
+			}
+			
+			// We destroyed the cache and need to eliminate the expando on the node to avoid
+			// false lookups in the cache for entries that no longer exist
+			if ( isNode ) {
+				// IE does not allow us to delete expando properties from nodes,
+				// nor does it have a removeAttribute function on Document nodes;
+				// we must handle all of these cases
+				if ( da.support.deleteExpando ) {
+					delete obj[ internalKey ];
+				} 
+				else if ( obj.removeAttribute ) {
+					obj.removeAttribute( internalKey );
 				}
-				
-				//删除缓存目标对象 缓存容器
-				delete daData[idx];
+				else {
+					obj[ internalKey ] = null;
+				}
 			}
 		}
 	});
-	
-	// TODO: This is a hack for 1.5 ONLY to allow objects with a single toJSON
-	// property to be considered empty objects; this property always exists in
-	// order to make sure JSON.stringify does not expose internal metadata
-	function isEmptyDataObject( obj ) {
-		for ( var name in obj ) {
-			if ( name !== "toJSON" ) {
-				return false;
-			}
-			
-		}
-	
-		return true;
-	};
-	
 
-	//全局变量
-	win.da = da;
-	
-})(window);
+})(da);
+
 
 /***************** 遮罩层 **************************/
 (function(da){
