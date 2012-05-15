@@ -4809,6 +4809,7 @@ var daRe_until = /Until$/,
 		daRe_hoverHack = /(?:^|\s)hover(\.\S+)?\b/,
 		daRe_keyEvent = /^key/,
 		daRe_mouseEvent = /^(?:mouse|contextmenu)|click/,
+		daRe_focusMorph = /^(?:focusinfocus|focusoutblur)$/,
 		daRe_quickIs = /^(\w*)(?:#([\w\-]+))?(?:\.([\w\-]+))?$/,
 		daRe_escape = /[^\w\s.|`]/g;
 	
@@ -5129,7 +5130,6 @@ var daRe_until = /Until$/,
 			return event.result;
 		},
 	
-		
 		//给元素绑定事件
 		/*
 			elem: 目标元素对象
@@ -5259,134 +5259,180 @@ var daRe_until = /Until$/,
 			elem: 目标元素对象
 			types: 事件类型
 			handler: 自定义事件回调函数,值为false可以屏蔽事件响应
-			pos: 同时移除多个事件操作，递归调用时传入，避免重复匹配元素的eventType列表
 		*/
-		remove: function( elem, types, handler, pos ) {
-			if ( elem.nodeType === 3 || elem.nodeType === 8 )	return;						//文本、注释元素不绑定事件
-				
-			if ( handler === false )	handler = fnReturnFalse;
-	
-			var ret, type, fn, j, i = 0, all, namespaces, namespace, special, eventType, handleObj, origType,
-					eventKey = elem.nodeType ? "events" : "__events__",
-					elemData = da.data( elem ),
-					events = elemData && elemData[ eventKey ];
-	
-			if ( !elemData || !events ) return;																	//无事件缓存，直接返回
+		remove: function( elem, types, handler, selector, mappedTypes ) {
+			var elemData = da.hasData( elem ) && da._data( elem ),	//元素缓存数据结构体
+				tns, namespaces, origType, origCount, type, 
+				events,	eventType,									//元素事件缓存数据
+				special, handleObj, handle;
+
+			if ( !elemData || !(events = elemData.events) )	return;	//无事件缓存，直接返回
 			
-			if ( "function" === typeof events ) {																//如果events为函数类型（即elem非元素类型）
-				elemData = events;
-				events = events.events;
-			}
-	
-			if ( types && types.type ) {																				//如果参数传入的types是一个事件对象 或{}对象
-				handler = types.handler;
-				types = types.type;
-			}
-	
-			if ( !types || typeof types === "string" && types.charAt(0) === "." ) {							//移除元素所有事件，或某命名空间的所有事件
-				types = types || "";
-	
-				for ( type in events ) {
-					da.event.remove( elem, type + types );
+			// Once for each type.namespace in types; type may be omitted
+			types = da.trim( hoverHack( types || "" ) ).split(" ");		//同时移除多个事件，用空格（" "）分隔，如：da("...").unbind("mouseover mouseout", fn);
+			
+			for ( var t = 0; t < types.length; t++ ) {
+				tns = daRe_typenamespace.exec( types[t] ) || [];		//命名空间的所有事件处理
+				type = origType = tns[1];
+				namespaces = tns[2];
+
+				// Unbind all events (on this namespace, if provided) for the element
+				if ( !type ) {
+					for ( type in events ) {							//递归
+						da.event.remove( elem, type + types[ t ], handler, selector, true );
+					}
+					continue;
 				}
-	
-				return;
+
+				special = da.event.special[ type ] || {};				//特殊事件类型处理
+				type = ( selector? special.delegateType : special.bindType ) || type;
+				eventType = events[ type ] || [];
+				origCount = eventType.length;
+				namespaces = namespaces ? new RegExp("(^|\\.)" + namespaces.split(".").sort().join("\\.(?:.*\\.)?") + "(\\.|$)") : null;
+
+				// Remove matching events
+				for ( var j = 0; j < eventType.length; j++ ) {			//循环元素所有已绑定的事件类型
+					handleObj = eventType[ j ];
+
+					if ( ( mappedTypes || origType === handleObj.origType ) &&
+						 ( !handler || handler.guid === handleObj.guid ) &&
+						 ( !namespaces || namespaces.test( handleObj.namespace ) ) &&
+						 ( !selector || selector === handleObj.selector || selector === "**" && handleObj.selector ) ) {
+						eventType.splice( j--, 1 );						//找到匹配的事件处理函数，并从元素事件类型列表中移除
+
+						if ( handleObj.selector ) {						//委任方式 delegateCount需要-1
+							eventType.delegateCount--;
+						}
+						if ( special.remove ) {							//特殊事件类型，结构体内定义有remove，就执行一下下
+							special.remove.call( elem, handleObj );
+						}
+					}
+				}
+
+				if ( eventType.length === 0 && origCount !== eventType.length ) {			//如果已经移除了该种事件类型所有处理函数，就把监听事件也移除
+					if ( !special.teardown || false === special.teardown.call( elem, namespaces ) ) {
+						da.removeEvent( elem, type, elemData.handle );
+					}
+
+					delete events[ type ];								//释放缓存区
+				}
 			}
-	
-			types = types.split(" ");																						//同时移除多个事件，用空格（" "）分隔，如：da("...").unbind("mouseover mouseout", fn);
-			while ( (type = types[ i++ ]) ) {
-					origType = type;
-					handleObj = null;
-					all = type.indexOf(".") < 0;																		//全清操作
-					namespaces = [];
-		
-					if ( !all ) {
-						namespaces = type.split(".");																	//命名空间的所有事件处理
-						type = namespaces.shift();
-		
-						namespace = new RegExp("(^|\\.)" + da.map( namespaces.slice(0).sort(), fnCleanup ).join("\\.(?:.*\\.)?") + "(\\.|$)");
-						
-					}
-		
-					eventType = events[ type ];
-		
-					if ( !eventType )	continue;																			//没有对应的事件类型，直接处理下一个
-		
-					if ( !handler ) {																								
-						for ( j = 0; j < eventType.length; j++ ) {										//循环元素所有已绑定的事件类型
-							handleObj = eventType[ j ];
-		
-							if ( all || namespace.test( handleObj.namespace ) ) {				//匹配到需要移除的事件
-								da.event.remove( elem, origType, handleObj.handler, j );	//递归移除事件（这里传入了pos参数值，避免重复匹配元素的eventType列表）
-								eventType.splice( j--, 1 );																//从元素已绑定事件类型列表移除
-							}
-						}
-		
-						continue;
-					}
-		
-					special = da.event.special[ type ] || {};
-		
-					for ( j = pos || 0; j < eventType.length; j++ ) {								//pos递归调用时传入，避免重复匹配元素的eventType列表
-						handleObj = eventType[ j ];
-		
-						if ( handler.guid === handleObj.guid ) {											//TODO:注释未完待续
-							//remove the given handler for the given type
-							if ( all || namespace.test( handleObj.namespace ) ) {				
-								if ( pos == null ) {
-									eventType.splice( j--, 1 );
-								}
-		
-								if ( special.remove ) {
-									special.remove.call( elem, handleObj );
-								}
-							}
-		
-							if ( pos != null ) {
-								break;
-							}
-						}
-					}
-		
-					// remove generic event handler if no more handlers exist
-					if ( eventType.length === 0 || pos != null && eventType.length === 1 ) {
-						if ( !special.teardown || special.teardown.call( elem, namespaces ) === false ) {
-							da.removeEvent( elem, type, elemData.handle );
-						}
-		
-						ret = null;
-						delete events[ type ];
-					}
-			}
-	
+
 			// Remove the expando if it's no longer used
 			if ( da.isEmptyObj( events ) ) {
-					var handle = elemData.handle;
-					if ( handle ) {
-						handle.elem = null;
-					}
-		
-					delete elemData.events;
-					delete elemData.handle;
-		
-					if ( typeof elemData === "function" ) {
-						da.undata( elem, eventKey );
-		
-					} else if ( da.isEmptyObj( elemData ) ) {
-						da.undata( elem );
-					}
+				handle = elemData.handle;
+				if ( handle ) {
+					handle.elem = null;
+				}
+
+				// removeData also checks for emptiness and clears the expando if empty
+				// so use it instead of delete
+				da.removeData( elem, [ "events", "handle" ], true );
 			}
 			
 		},
-	
+
+		
+		// Events that are safe to short-circuit if no handlers are attached.
+		// Native DOM events should not be added, they may have inline handlers.
+		customEvent: {
+			"getData": true,
+			"setData": true,
+			"changeData": true
+		},
+
 		//事件触发器( 支持同事件冒泡 )
 		/*
 			event:	da.Event对象 或触发的事件类型event type
 			data: 用户自定义数据传入，数组格式
 			elem:	事件触发目标元素对象
-			bubbling: 是否允许事件冒泡
 		*/
-		trigger: function( event, data, elem /*, bubbling */ ) {
+		trigger: function( event, data, elem, onlyHandlers ) {
+			if ( elem && (elem.nodeType === 3 || elem.nodeType === 8) ) {		//在文本和注释元素上没有事件
+				return;
+			}
+			
+			var type = event.type || event,
+				namespaces = [],
+				exclusive, ontype, special,
+				cache;
+			
+			// focus/blur morphs to focusin/out; ensure we're not firing them right now
+			if ( daRe_focusMorph.test( type + da.event.triggered ) ) {
+				return;
+			}
+
+			if ( type.indexOf( "!" ) >= 0 ) {					//支持"click!","evtFn!"这种叹号"!"结尾的exclusive方式
+				// Exclusive events trigger only for the exact event (no namespaces)
+				type = type.slice(0, -1);						//去掉"!"符号
+				exclusive = true;								//exclusive方式打开，这将会对add注册的所有事件函数根据命名空间的分类来执行
+			}
+
+			if ( type.indexOf( "." ) >= 0 ) {
+				// Namespaced trigger; create a regexp to match event type in handle()
+				namespaces = type.split(".");
+				type = namespaces.shift();
+				namespaces.sort();
+			}
+
+			if ( (!elem || da.event.customEvent[ type ]) 						//没有匹配的da内部自定义事件类型
+			&& !da.event.global[ type ] ) {										//也没有匹配的全局事件类型
+				return;															//直接退出
+			}
+
+			// Caller can pass in an Event, Object, or just an event type string
+			event = typeof event === "object" ?
+				// jQuery.Event object
+				event[ da.expando ] ? event :
+				// Object literal
+				new da.Event( type, event ) :
+				// Just the event type (string)
+				new da.Event( type );
+
+			event.type = type;
+			event.isTrigger = true;
+			event.exclusive = exclusive;
+			event.namespace = namespaces.join( "." );
+			event.namespace_re = event.namespace? new RegExp("(^|\\.)" + namespaces.join("\\.(?:.*\\.)?") + "(\\.|$)") : null;
+			ontype = type.indexOf( ":" ) < 0 ? "on" + type : "";
+
+			// Handle a global trigger
+			if ( !elem ) {														//如果没有指定事件触发的目标元素对象，就是全局事件的触发
+				// TODO: Stop taunting the data cache; remove global events and always attach to document
+				cache = da.cache;												//只需要触发注册过的事件类型就可以了嘛
+				for ( var i in cache ) {										//批处理全局缓存中所有注册过事件函数的元素对象，并触发执行相应的事件函数
+					if ( cache[ i ].events && cache[ i ].events[ type ] ) {
+						da.event.trigger( event, data, cache[ i ].handle.elem, true );			//递归逐个触发执行
+					}
+				}
+				return;
+			}
+
+			// Clean up the event in case it is being reused
+			event.result = undefined;											//如果是再次触发，就先把之前触发执行的结果清楚掉
+			if ( !event.target ) {
+				event.target = elem;
+			}
+
+			// Clone any incoming data and prepend the event, creating the handler arg list
+			data = data != null ? da.pushArray( data ) : [];					//如果有传入数据的话，通过pushArray缓存一下下嘛
+			data.unshift( event );												//在缓存数组首部，压入事件对象
+
+			// Allow special events to draw outside the lines
+			special = da.event.special[ type ] || {};
+			if ( special.trigger && special.trigger.apply( elem, data ) === false ) {
+				return;
+			}
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			var type = event.type || event,										//da.Event事件类型对象 或event type字符串
 					bubbling = arguments[3];
 	
