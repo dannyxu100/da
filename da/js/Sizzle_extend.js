@@ -32,7 +32,7 @@ var daRe_until = /Until$/,
 	daRe_multiselector = /,/,
 	daRe_isSimple = /^.[^:#\[\.,]*$/,
 	daRe_POS = da.expr.match.POS,
-	slice = Array.prototype.slice,
+	
 	// methods guaranteed to produce a unique set when starting from a unique set
 	guaranteedUnique = {
 		children: true,
@@ -268,7 +268,7 @@ var daRe_until = /Until$/,
 				// https://github.com/jquery/jquery/commit/52a0238
 				// to work around a bug in Chrome 10 (Dev) and should be removed when the bug is fixed.
 				// http://code.google.com/p/v8/issues/detail?id=1050
-				args = slice.call(arguments);
+				args = [].slice.call(arguments);
 	
 			if ( !daRe_until.test( name ) ) {
 				selector = until;
