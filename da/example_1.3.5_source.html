@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+
+<script src="da_source_1.3.5.js" type="text/javascript"></script>
+<title>无标题文档</title>
+
+<script language="javascript">
+	da(function(){
+		//创建da对象;
+		var daObj = da("[name=div1]");
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		//事件委任
+		/*
+		da("#handlediv").delegate("#box input", "click mouseover",function(){
+			alert(this.value)
+		});
+		*/
+		da("#box").delegate("#box input", "click",function(){
+			alert(this.value)
+		});
+		
+		for( var i=0; i<20; i++ ){
+			da("#box").append('<input type="button" value="提示绑定事件成功_"'+ i +' />');
+		}
+		
+	});
+</script>
+
+</head>
+
+<body>
+	<div name="div1"></div>
+
+	<div id="handlediv" style="border:1px solid #f00;height:50px;">
+		<span>123</span>
+	</div>
+	
+	<div id="box">
+		<span>123</span>
+		<input type="button" id="bt_110" value="提示绑定事件成功" />
+	</div>
+</body>
+</html>

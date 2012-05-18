@@ -19,21 +19,21 @@
 		
 		// The deferred used on DOM ready
 		readyList = [],									//回调函数列表(支持多个ready函数的调用)
-
+		readyBound = false,								//判断是否已经绑定ready事件函数
 		// The ready event handler
 		DOMContentLoaded,
 		
 		daRe_quickExpr = /^(?:[^<]*(<[\w\W]+>)[^>]*$|#([\w\-]*)$)/,		//验证是否是单纯的HTML字符串,还是元素id选择器，如："#myid"
 		
-		daRe_notwhite = /\S/,																																	//验证字符串是否有空格
+		daRe_notwhite = /\S/,											//验证字符串是否有空格
 		daRe_white = /\s/,
 		
-		daRe_trimLeft = /^\s+/,																																//验证字符串左右是否有空格
+		daRe_trimLeft = /^\s+/,											//验证字符串左右是否有空格
 		daRe_trimRight = /\s+$/,
 
 		daRe_singleTag = /^<(\w+)\s*\/?>(?:<\/\1>)?$/,					//匹配验证一个元素节点
 
-		daRe_validchars = /^[\],:{}\s]*$/,																										// JSON 对象处理
+		daRe_validchars = /^[\],:{}\s]*$/,								// JSON 对象处理
 		daRe_validescape = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g,
 		daRe_validtokens = /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,
 		daRe_validbraces = /(?:^|:|,)(?:\s*\[)+/g,
@@ -236,7 +236,6 @@
 		};
 		//对象继承da类属性
 		da.fnStruct.init.prototype = da.fnStruct;
-		
 		
 		//属性扩展函数（对象重载、合并函数）
 		/*
@@ -861,8 +860,6 @@
 		});	
 	
 		
-		
-		
 		da.each("Boolean Number String Function Array Date RegExp Object".split(" "), function(i, name) {
 			class2type[ "[object " + name + "]" ] = name.toLowerCase();
 		});
@@ -908,5 +905,9 @@
 		
 		return da;
 	})();
+
+	
+	//全局变量
+	win.da = da;
 	
 })(window);
