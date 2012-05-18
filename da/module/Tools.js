@@ -1,4 +1,4 @@
-/***************** 库功能函数 *****************/
+/***************** Tools 功能函数 *****************/
 /*
 	author:	danny.xu
 	date: 2012.5.17
@@ -289,7 +289,7 @@
 				else
 					boxObj.style.display = "";
 			}
-		}
+		},
 		
 		//设置或获取cookie
 		cookie: function( name, value, expires, path, domain, secure ) {

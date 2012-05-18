@@ -1,4 +1,4 @@
-/***************** 缓存机制  ***************************/
+/***************** Data  ***************************/
 /*
 	author:	danny.xu
 	date: 2012.5.17
@@ -6,9 +6,11 @@
 	version: 1.0.0
 */
 (function(da){
-	var da_sequence = 0, 
-		da_winData = {};
+	var daRe_multiDash = /([A-Z])/g,
+		daRe_brace = /^(?:\{.*\}|\[.*\])$/,
 
+		da_sequence = 0, 
+		da_winData = {};
 
 	function isEmptyDataObject( obj ) {									//核查一个缓存对象是否为空
 		for ( var name in obj ) {
@@ -22,7 +24,37 @@
 		}
 		return true;
 	}
-	
+
+	function dataAttr( elem, key, data ) {
+		// If nothing was found internally, try to fetch any
+		// data from the HTML5 data-* attribute
+		if ( data === undefined && elem.nodeType === 1 ) {
+
+			var name = "data-" + key.replace( daRe_multiDash, "-$1" ).toLowerCase();
+
+			data = elem.getAttribute( name );
+
+			if ( typeof data === "string" ) {
+				try {
+					data = data === "true" ? true :
+					data === "false" ? false :
+					data === "null" ? null :
+					da.isNumeric( data ) ? +data :
+						daRe_brace.test( data ) ? da.parseJSON( data ) :
+						data;
+				} catch( e ) {}
+
+				// Make sure we set the data so it isn't changed later
+				da.data( elem, key, data );
+
+			} else {
+				data = undefined;
+			}
+		}
+
+		return data;
+	}
+
 	da.extend({
 		cache: {},							//da全局缓存区
 		uuid: 0,
@@ -150,7 +182,7 @@
 			obj: 缓存目标对象
 			key: 缓存数据索引值
 		*/
-		removedata: function(obj, key, pvt/*内部私用*/) {
+		removeData: function(obj, key, pvt/*内部私用*/) {
 			if ( !da.acceptData( obj ) ) return;
 
 			var thisCache,
@@ -228,5 +260,81 @@
 		}
 	});
 
+	da.fn.extend({
+		data: function( key, value ) {
+			var parts, part, attr, name, l,
+				elem = this.dom[0],
+				i = 0,
+				data = null;
+
+			// Gets all values
+			if ( key === undefined ) {
+				if ( this.dom.length ) {
+					data = da.data( elem );
+
+					if ( elem.nodeType === 1 && !da._data( elem, "parsedAttrs" ) ) {
+						attr = elem.attributes;
+						for ( l = attr.length; i < l; i++ ) {
+							name = attr[i].name;
+
+							if ( name.indexOf( "data-" ) === 0 ) {
+								name = da.camelCase( name.substring(5) );
+
+								dataAttr( elem, name, data[ name ] );
+							}
+						}
+						da._data( elem, "parsedAttrs", true );
+					}
+				}
+
+				return data;
+			}
+
+			// Sets multiple values
+			if ( typeof key === "object" ) {
+				return this.each(function() {
+					da.data( this, key );
+				});
+			}
+
+			parts = key.split( ".", 2 );
+			parts[1] = parts[1] ? "." + parts[1] : "";
+			part = parts[1] + "!";
+
+			return da.access( this, function( value ) {
+
+				if ( value === undefined ) {
+					data = this.triggerHandler( "getData" + part, [ parts[0] ] );
+
+					// Try to fetch any internally stored data first
+					if ( data === undefined && elem ) {
+						data = da.data( elem, key );
+						data = dataAttr( elem, key, data );
+					}
+
+					return data === undefined && parts[1] ?
+						this.data( parts[0] ) :
+						data;
+				}
+
+				parts[1] = value;
+				this.each(function() {
+					var self = da( this );
+
+					self.triggerHandler( "setData" + part, parts );
+					da.data( this, key, value );
+					self.triggerHandler( "changeData" + part, parts );
+				});
+			}, null, value, arguments.length > 1, null, false );
+		},
+
+		removeData: function( key ) {
+			return this.each(function() {
+				da.removeData( this, key );
+			});
+		}
+	});
+
+	
 })(da);
 

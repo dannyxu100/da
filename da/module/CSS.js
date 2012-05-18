@@ -1,4 +1,4 @@
-/***************** 元素样式 *****************/
+/***************** CSS *****************/
 /*
 	author:	danny.xu
 	date: 2012.5.17
@@ -20,25 +20,17 @@
 	da.fnStruct.extend({
 		//节点样式属性 操作函数
 		/*
-			obj: DOM节点对象
 			name: style样式属性名
 			value: style样式属性值
 		*/
 		css: function(name, value ) {
-			return da.access( this.dom, name, value, true, function( obj, name, value ) {			//danny.xu 2010-12-24 将this替换成this.dom因为da类本身不是数组
-				//get操作
-				if ( undefined===value ) {
-					return da.curCSS( obj, name );
-				}
-				
-				//set操作
-				if ( "number"===typeof value && !daRe_exclude.test(name) ) {
-					value += "px";
-				}
-				da.style( obj, name, value );
+			return da.access( this, function( elem, name, value ) {
+				return value !== undefined ?
+					da.style( elem, name, value ) :			//set操作
+					da.css( elem, name );					//get操作
 					
-			});
-				
+			}, name, value, arguments.length > 1 );
+			
 		}
 	});
 	
@@ -126,41 +118,6 @@
 			}
 	
 			return ret;
-		},
-		
-		//操作类型判断入口 函数
-		/*
-			arrObj: DOM节点对象集数组
-			name: 属性名( 可以以 键值对的方式set多个属性值)
-			value: 属性值( 可以是函数的形式, function(index, value){}, 属性值为函数计算返回值)
-			exec:	在属性值的类型为function时,对设置之前的value值执行函数( 默认为true )
-			fn:	
-			pass: 是否通过da类的相应 成员函数来处理属性值
-		*/
-		access: function( arrObj, name, value, exec, fn, pass ) {
-			var len = arrObj.length;
-			
-			//set多个属性
-			if ( "object"===typeof name ) {						//在key值的类型为object时，会拆解value成key,value形式再次递归传入da.access
-				for ( var k in name ) {
-					da.access( arrObj, k, name[k], exec, fn, value );		//注: 键值对的方式 第三个参数value默认为undefined
-				}
-				return arrObj;
-			}
-			
-			//set单一属性
-			if ( undefined!==value ) {
-				exec = !pass && exec && da.isFunction(value);					//判断属性值是否是以函数的形式的计算结果
-				
-				for ( var i=0; i<len; i++ ) {
-					fn( arrObj[i], name, (exec ? value.call( arrObj[i], i, fn( arrObj[i], name ) ) : value), pass );
-				}
-				
-				return arrObj;
-			}
-			
-			//get一个属性值
-			return len ? fn( arrObj[0], name ) : undefined;
 		},
 		
 		//通过部分样式值后, 回调callback函数, 然后还原样式

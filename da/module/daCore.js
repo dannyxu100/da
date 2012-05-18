@@ -47,12 +47,16 @@
 		_daIndexOf = Array.prototype.indexOf,						//数组项匹配索引查询函数
 		_daSlice = Array.prototype.slice,							//提取数组子项
 		_daPush = Array.prototype.push,								//压子项到数组
+
+		fcamelCase = function( all, letter ) {						//属性名驼峰格式化
+			return ( letter + "" ).toUpperCase();
+		},
 		
 		class2type = {};											//数据类型映射表
 		
 		//da类属性集
 		da.fnStruct = da.prototype = {
-			version: "da libary 1.3.5; author: danny.xu; ndate: 2012.5.14",
+			version: "da libary 1.3.5; author: danny.xu; date: 2012.5.14",
 			
 			dom: [],					//操作对象数组
 			length:	0,					//操作对象个数
@@ -368,7 +372,8 @@
 			
 						// Trigger any bound ready events
 						if ( da.fnStruct.trigger ) {
-							da( doc ).trigger( "ready" ).unbind( "ready" );
+							da( doc ).trigger( "ready" );
+							da( doc ).unbind( "ready" );
 						}
 					}
 				}
@@ -723,6 +728,67 @@
 				return proxy;
 			},
 
+			//操作类型判断入口 函数
+			/*
+				elems: DOM节点对象集数组
+				key: 属性名( 可以以 键值对的方式set多个属性值)
+				value: 属性值( 可以是函数的形式, function(index, value){}, 属性值为函数计算返回值)
+				exec:	在属性值的类型为function时,对设置之前的value值执行函数( 默认为true )
+				fn:	
+				pass: 是否通过da类的相应 成员函数来处理属性值
+			*/
+			access: function( elems, fn, key, value, chainable, emptyGet, pass  ) {
+				var exec,
+					bulk = key == null,
+					i = 0,
+					length = elems.dom.length;
+
+				//set多个属性
+				if ( key && typeof key === "object" ) {							//在key值的类型为object时，会拆解value成key,value形式再次递归传入da.access
+					for ( i in key ) {
+						da.access( elems, fn, i, key[i], 1, emptyGet, value );
+					}
+					chainable = 1;
+
+				
+				} //set单一属性
+				else if ( value !== undefined ) {
+					// Optionally, function values get executed if exec is true
+					exec = pass === undefined && da.isFunction( value );		//判断属性值是否是以函数的形式的计算结果
+
+					if ( bulk ) {
+						// Bulk operations only iterate when executing function values
+						if ( exec ) {
+							exec = fn;
+							fn = function( elem, key, value ) {
+								return exec.call( da( elem ), value );
+							};
+
+						// Otherwise they run against the entire set
+						} else {
+							fn.call( elems, value );
+							fn = null;
+						}
+					}
+
+					if ( fn ) {
+						for (; i < length; i++ ) {
+							fn( elems[i], key, exec ? value.call( elems[i], i, fn( elems[i], key ) ) : value, pass );
+						}
+					}
+
+					chainable = 1;
+				}
+
+				//get属性值
+				return chainable ?
+					elems :
+					// Gets
+					bulk ?
+						fn.call( elems ) :
+						length ? fn( elems[0], key ) : emptyGet;
+			},
+			
 			//错误抛出异常
 			error: function( msg ) {
 				throw new Error( msg );

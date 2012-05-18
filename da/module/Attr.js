@@ -1,4 +1,4 @@
-/***************** 元素属性 *****************/
+/***************** Attr *****************/
 /*
 	author:	danny.xu
 	date: 2012.5.17
@@ -18,7 +18,7 @@
 			
 	da.fnStruct.extend({
 		attr: function( name, value ) {
-			return da.access( this.dom, name, value, true, da.attr );
+			return da.access( this, da.attr, name, value, arguments.length > 1 );
 		},
 	
 		removeAttr: function( name ) {
@@ -229,12 +229,12 @@
 		attrHooks: {
 			type: {
 				set: function( elem, value ) {
-					if ( daRe_type.test( elem.nodeName ) && elem.parentNode ) {								//兼容IE,某些元素不允许改变元素的type属性
+					if ( daRe_type.test( elem.nodeName ) && elem.parentNode ) {		//兼容IE,某些元素不允许改变元素的type属性
 						da.error( "温馨提示:button和input元素，不允许改变type属性" );
 					} 
 					else if ( !da.support.radioValue 
 					&& "radio" === value 
-					&& da.isNodeName(elem, "input") ) {																			//兼容IE,如果某元素设置type为radio类型，需要重新设置默认value值
+					&& da.isNodeName(elem, "input") ) {								//兼容IE,如果某元素设置type为radio类型，需要重新设置默认value值
 						var val = elem.getAttribute("value");
 						elem.setAttribute( "type", value );
 						
@@ -357,7 +357,7 @@
 					formHook :
 					undefined );
 	
-			if ( value !== undefined ) {																			//set操作
+			if ( value !== undefined ) {									//set操作
 				if ( value === null || (value === false && !daRe_special.test( name )) ) {
 					da.removeAttr( elem, name );
 					return undefined;
@@ -381,7 +381,7 @@
 				}
 	
 			} 
-			else {																														//get操作
+			else {															//get操作
 				if ( hooks && "get" in hooks && notxml ) {
 					return hooks.get( elem, name );
 	
@@ -389,7 +389,7 @@
 				else {
 					ret = elem.getAttribute( name );
 					
-					return null === ret ? undefined : ret;												// Non-existent attributes return null, we normalize to undefined
+					return null === ret ? undefined : ret;					// Non-existent attributes return null, we normalize to undefined
 				}
 			}
 		},
@@ -406,7 +406,7 @@
 						if ( da.support.getSetAttribute ) {							//判断浏览器是否支持removeAttribute函数
 							elem.removeAttribute( name );
 						}
-						else {																					//如果不支持，可以通过XML节点移除函数完成
+						else {														//如果不支持，可以通过XML节点移除函数完成
 							da.attr( elem, name, "" );
 							elem.removeAttributeNode( elem.getAttributeNode( name ) );
 						}
@@ -469,3 +469,4 @@
 	}
 	
 })(da);
+		
