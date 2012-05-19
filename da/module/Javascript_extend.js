@@ -74,7 +74,7 @@
 		};
 			
 		return da.isNull( res, 0.00);
-	}
+	};
 
 	/***************** String类扩展 *************************************/
 	/**去前后空格
@@ -137,7 +137,7 @@
 				fmt = fmt.replace(RegExp.$1, RegExp.$1.length==1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length)); 
 		}
 		return fmt; 
-	}
+	};
 	
 	/***************** Array类扩展 *************************************/
 	/**从前向后 查找首次匹配成员的索引值
@@ -239,7 +239,7 @@
 		this.splice.apply( this, arrItem );						//插入新项
 		
 		return this;
-	},
+	};
 	
 	/**替换数组指定项
 	* 如：[1,2,3].replace(1,"1.5","1.6");	["a","b","c"].replace("b",["b1","b2","b3"]);
@@ -260,7 +260,7 @@
 		this.splice.apply( this, arrItem );						//插入新项
 		
 		return this;
-	},
+	};
 	
 	/**将另一个数组合并到指定位置(前)
 	* 如：[1,2,3].marge(1, ["a","b","c"]);	["a","b","c"].marge("a","b");
@@ -274,6 +274,6 @@
 		i = ( undefined !== i ? 0 > i ? 0 : i : this.length ); 				//矫正索引
 		
 		return this.slice( 0, i ).concat(arr).concat( this.slice( i ) );	 
-	}
+	};
 
 })(window);
