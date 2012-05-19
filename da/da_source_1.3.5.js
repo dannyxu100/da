@@ -74,7 +74,7 @@
 		};
 			
 		return da.isNull( res, 0.00);
-	}
+	};
 
 	/***************** String类扩展 *************************************/
 	/**去前后空格
@@ -137,7 +137,7 @@
 				fmt = fmt.replace(RegExp.$1, RegExp.$1.length==1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length)); 
 		}
 		return fmt; 
-	}
+	};
 	
 	/***************** Array类扩展 *************************************/
 	/**从前向后 查找首次匹配成员的索引值
@@ -239,7 +239,7 @@
 		this.splice.apply( this, arrItem );						//插入新项
 		
 		return this;
-	},
+	};
 	
 	/**替换数组指定项
 	* 如：[1,2,3].replace(1,"1.5","1.6");	["a","b","c"].replace("b",["b1","b2","b3"]);
@@ -260,7 +260,7 @@
 		this.splice.apply( this, arrItem );						//插入新项
 		
 		return this;
-	},
+	};
 	
 	/**将另一个数组合并到指定位置(前)
 	* 如：[1,2,3].marge(1, ["a","b","c"]);	["a","b","c"].marge("a","b");
@@ -274,7 +274,7 @@
 		i = ( undefined !== i ? 0 > i ? 0 : i : this.length ); 				//矫正索引
 		
 		return this.slice( 0, i ).concat(arr).concat( this.slice( i ) );	 
-	}
+	};
 
 })(window);
 
@@ -1022,7 +1022,7 @@
 				var exec,
 					bulk = key == null,
 					i = 0,
-					length = elems.length;
+					length = elems.dom.length;
 
 				//set多个属性
 				if ( key && typeof key === "object" ) {							//在key值的类型为object时，会拆解value成key,value形式再次递归传入da.access
@@ -1054,7 +1054,7 @@
 
 					if ( fn ) {
 						for (; i < length; i++ ) {
-							fn( elems[i], key, exec ? value.call( elems[i], i, fn( elems[i], key ) ) : value, pass );
+							fn( elems.dom[i], key, exec ? value.call( elems.dom[i], i, fn( elems.dom[i], key ) ) : value, pass );
 						}
 					}
 
@@ -1067,10 +1067,8 @@
 					// Gets
 					bulk ?
 						fn.call( elems ) :
-						length ? fn( elems[0], key ) : emptyGet;
+						length ? fn( elems.dom[0], key ) : emptyGet;
 			},
-
-			
 			
 			//错误抛出异常
 			error: function( msg ) {
@@ -1255,7 +1253,7 @@
 		return da;
 	})();
 
-
+	
 /*********************** Support *****************************/
 /*
 	author:	danny.xu
@@ -1747,7 +1745,7 @@
 			parts[1] = parts[1] ? "." + parts[1] : "";
 			part = parts[1] + "!";
 
-			return da.access( this.dom, function( value ) {
+			return da.access( this, function( value ) {
 
 				if ( value === undefined ) {
 					data = this.triggerHandler( "getData" + part, [ parts[0] ] );
@@ -1764,7 +1762,6 @@
 				}
 
 				parts[1] = value;
-				
 				this.each(function() {
 					var self = da( this );
 
@@ -1805,7 +1802,7 @@
 			
 	da.fnStruct.extend({
 		attr: function( name, value ) {
-			return da.access( this.dom, da.attr, name, value, arguments.length > 1 );
+			return da.access( this, da.attr, name, value, arguments.length > 1 );
 		},
 	
 		removeAttr: function( name ) {
@@ -2256,7 +2253,7 @@
 	}
 	
 })(da);
-		
+
 /***************** Event *****************/
 /*
 	author:	danny.xu
@@ -5782,7 +5779,7 @@ var daRe_until = /Until$/,
 			value: style样式属性值
 		*/
 		css: function(name, value ) {
-			return da.access( this.dom, function( elem, name, value ) {
+			return da.access( this, function( elem, name, value ) {
 				return value !== undefined ?
 					da.style( elem, name, value ) :			//set操作
 					da.css( elem, name );					//get操作
@@ -5809,9 +5806,8 @@ var daRe_until = /Until$/,
 		/*
 			obj: DOM节点对象
 			name: style样式属性名
-			force: 如果class中使用了!import,  force参数就应该为true;
 		*/
-		curCSS: function( obj, name, force ) {
+		curCSS: function( obj, name ) {
 			var ret, style = obj.style, filter;
 			
 			//IE不支持opacity属性，需要用filter滤镜处理
@@ -5827,7 +5823,7 @@ var daRe_until = /Until$/,
 			//如果节点style属性有相应的内嵌值，直接取内嵌值
 			//style中的属性优先级高于class,所以可以先从style中找，然后再从已经计算好的css属性中找。
 			//如果内嵌style属性使用了!import处理兼容问题，就不能直接取style属性值了
-			if ( !force && style && style[ name ] ) {
+			if ( style && style[ name ] ) {
 				ret = style[ name ];
 	
 			}
@@ -5903,10 +5899,9 @@ var daRe_until = /Until$/,
 		/*
 			obj: DOM节点对象
 			name: style样式属性名
-			force: 如果class中使用了!import,  force参数就应该为true;
-			extra: 特殊的属性头说明，如border-left、margin-left等
+			extra: 包含,如:margin, padding, border
 		*/
-		css: function( obj, name, force, extra ) {
+		css: function( obj, name, extra ) {
 			//对节点元素的高宽进行浏览器兼容器算法的统一
 			//IE中节点元素的实际高宽是包含content, padding, border的总和,而firefox等只是content的尺寸;
 			//这里默认以content的尺寸为节点元素的实际高宽
@@ -5925,14 +5920,14 @@ var daRe_until = /Until$/,
 					
 					for(var s=0,len=which.length; s<len; s++){
 						if ( !extra ) {
-							val -= parseFloat(da.curCSS( obj, "padding"+ s, true)) || 0;
+							val -= parseFloat(da.curCSS( obj, "padding"+ which[s])) || 0;
 						}
 	
 						if ( extra === "margin" ) {
-							val += parseFloat(da.curCSS( obj, "margin"+ s, true)) || 0;
+							val += parseFloat(da.curCSS( obj, "margin"+ which[s])) || 0;
 						}
 						else {
-							val -= parseFloat(da.curCSS( obj, "border"+ s + "Width", true)) || 0;
+							val -= parseFloat(da.curCSS( obj, "border"+ which[s] + "Width")) || 0;
 						}
 					}
 				}
@@ -5949,7 +5944,7 @@ var daRe_until = /Until$/,
 				return Math.max(0, Math.round(val));
 			}
 	
-			return da.curCSS( obj, name, force );
+			return da.curCSS( obj, name );
 		},
 	
 		//节点style样式属性操作函数
@@ -6599,7 +6594,6 @@ var daRe_until = /Until$/,
 	da.support.ajax = !!da.ajaxSettings.xhr();
 	
 })(da);
-	
 	
 /***************** Offset *****************/
 /*
