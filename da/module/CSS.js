@@ -51,9 +51,8 @@
 		/*
 			obj: DOM节点对象
 			name: style样式属性名
-			force: 如果class中使用了!import,  force参数就应该为true;
 		*/
-		curCSS: function( obj, name, force ) {
+		curCSS: function( obj, name ) {
 			var ret, style = obj.style, filter;
 			
 			//IE不支持opacity属性，需要用filter滤镜处理
@@ -69,7 +68,7 @@
 			//如果节点style属性有相应的内嵌值，直接取内嵌值
 			//style中的属性优先级高于class,所以可以先从style中找，然后再从已经计算好的css属性中找。
 			//如果内嵌style属性使用了!import处理兼容问题，就不能直接取style属性值了
-			if ( !force && style && style[ name ] ) {
+			if ( style && style[ name ] ) {
 				ret = style[ name ];
 	
 			}
@@ -145,10 +144,9 @@
 		/*
 			obj: DOM节点对象
 			name: style样式属性名
-			force: 如果class中使用了!import,  force参数就应该为true;
 			extra: 包含,如:margin, padding, border
 		*/
-		css: function( obj, name, force, extra ) {
+		css: function( obj, name, extra ) {
 			//对节点元素的高宽进行浏览器兼容器算法的统一
 			//IE中节点元素的实际高宽是包含content, padding, border的总和,而firefox等只是content的尺寸;
 			//这里默认以content的尺寸为节点元素的实际高宽
@@ -191,7 +189,7 @@
 				return Math.max(0, Math.round(val));
 			}
 	
-			return da.curCSS( obj, name, force );
+			return da.curCSS( obj, name );
 		},
 	
 		//节点style样式属性操作函数
