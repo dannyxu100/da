@@ -146,7 +146,7 @@
 			obj: DOM节点对象
 			name: style样式属性名
 			force: 如果class中使用了!import,  force参数就应该为true;
-			extra: 特殊的属性头说明，如border-left、margin-left等
+			extra: 包含,如:margin, padding, border
 		*/
 		css: function( obj, name, force, extra ) {
 			//对节点元素的高宽进行浏览器兼容器算法的统一

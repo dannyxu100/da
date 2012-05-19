@@ -773,7 +773,7 @@
 
 					if ( fn ) {
 						for (; i < length; i++ ) {
-							fn( elems[i], key, exec ? value.call( elems[i], i, fn( elems[i], key ) ) : value, pass );
+							fn( elems.dom[i], key, exec ? value.call( elems.dom[i], i, fn( elems.dom[i], key ) ) : value, pass );
 						}
 					}
 
@@ -786,7 +786,7 @@
 					// Gets
 					bulk ?
 						fn.call( elems ) :
-						length ? fn( elems[0], key ) : emptyGet;
+						length ? fn( elems.dom[0], key ) : emptyGet;
 			},
 			
 			//错误抛出异常

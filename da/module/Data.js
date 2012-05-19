@@ -260,7 +260,7 @@
 		}
 	});
 
-	da.fn.extend({
+	da.fnStruct.extend({
 		data: function( key, value ) {
 			var parts, part, attr, name, l,
 				elem = this.dom[0],
