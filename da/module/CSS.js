@@ -165,14 +165,14 @@
 					
 					for(var s=0,len=which.length; s<len; s++){
 						if ( !extra ) {
-							val -= parseFloat(da.curCSS( obj, "padding"+ s, true)) || 0;
+							val -= parseFloat(da.curCSS( obj, "padding"+ which[s])) || 0;
 						}
 	
 						if ( extra === "margin" ) {
-							val += parseFloat(da.curCSS( obj, "margin"+ s, true)) || 0;
+							val += parseFloat(da.curCSS( obj, "margin"+ which[s])) || 0;
 						}
 						else {
-							val -= parseFloat(da.curCSS( obj, "border"+ s + "Width", true)) || 0;
+							val -= parseFloat(da.curCSS( obj, "border"+ which[s] + "Width")) || 0;
 						}
 					}
 				}
