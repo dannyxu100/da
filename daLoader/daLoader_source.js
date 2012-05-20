@@ -197,8 +197,8 @@ win.daLoader = daLoader;
 var _p = "package";
 
 //-------------------------------------
-daLoader.class('da_CSS', {path: _p+'/da.css' });
-daLoader.class('da', {path: _p+'/da_source_1.3.2.js', type:'js', charset:'utf-8', need:"da_CSS" });			//核心库
+daLoader.class('da_CSS', {path: _p+'/da/da.css' });
+daLoader.class('da', {path: _p+'/da/da_source_1.3.5.js', type:'js', charset:'utf-8', need:"da_CSS" });			//核心库
 //-------------------------------------
 daLoader.class('daTreeCore', {path: _p+'/daTreeCore/daTreeCore.js', need:"da" });							//内存树类
 daLoader.class('daDrag', {path: _p+'/daDrag/daDrag_source.js', need:"da" });									//拖拽操作类

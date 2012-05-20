@@ -1,0 +1,95 @@
+/*
+	author:	danny.xu
+	date:	2010-5-28 Friday
+	fileName:	web通用树-样式文件
+	decription:	通用树-样式文件
+*/
+
+.daTree{
+	padding:1px; border:0px solid #f00;
+}
+
+.daNode,
+.daNodeHover,
+.daNodeSelect{
+	height:18px; clear:both;
+	margin:0px;
+	position:relative;
+	border:0px solid #f0f0f0;
+}
+
+.daNodeHover,
+.daNodeSelect{
+	background: #f0f0f0;
+	color: #222;
+	-moz-border-radius: 8px;
+	-khtml-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+}
+.daNodeSelect{
+	background: #dedede;
+	color: #222;
+	border:0px solid #999;
+}
+
+.daSubContainer{
+	clear:both;
+}
+
+.daJoint,
+.daIcon,
+.daText{ float:left; border:0px solid #00f;}
+.daTools{ display:none; position:absolute; top:0px; right:5px; border:0px solid #00f;}
+
+
+/*节点标题样式*/
+.daText{
+	height:18px; line-height:18px;
+	font-size:12px;
+	padding:0px 5px;
+	cursor:pointer;	
+	border:0px solid #f00;
+}
+
+/*节点编辑样式*/
+.daTextEdit{
+	height:14px;line-height:14px;
+}
+
+/*节点连线样式*/
+.daJoint{ height:18px; }
+.daJoint ul,
+.daIcon ul,
+.daTools ul{
+	margin:0px; padding:0px; float:left;
+	width:18px; height:18px;
+	background:url(images/daTree.png) no-repeat;
+}
+
+.daJoint ul.noline{background-position:18px 0px;}
+.daJoint ul.line{background-position:0px -36px;background-repeat:repeat-y;}
+.daJoint ul.join{background-position:-36px -36px;}
+.daJoint ul.joinbottom{background-position:-18px -36px;}
+.daJoint ul.minus{background-position:-36px -18px; cursor:pointer;}
+.daJoint ul.plus{background-position:-36px 0px; cursor:pointer;}
+.daJoint ul.nolines_minus{background-position:0px -18px; cursor:pointer;}
+.daJoint ul.nolines_plus{background-position:0px 0px; cursor:pointer;}
+.daJoint ul.plusbottom{background-position:-18px 0px; cursor:pointer;}
+.daJoint ul.minusbottom{background-position:-18px -18px; cursor:pointer;}
+
+/*节点小图标样式*/
+.daIcon,
+.daTools{ height:18px; }
+
+.daIcon .icoRoot{background-position:-54px 0px;}
+.daIcon .iconewfile{background-position:-54px -18px;}
+
+.daIcon .icoFolder{background-position:-54px -36px;}
+.daIcon .icoOpenFolder{background-position:-54px -54px;}
+
+.daTools .locked{background-position:-72px 0px; cursor:pointer;}
+.daTools .unlocked{background-position:-72px -18px; cursor:pointer;}
+.daTools .edit{background-position:-72px -36px; cursor:pointer;}
+.daTools .add{background-position:-72px -54px; cursor:pointer;}
+.daTools .delete{background-position:-72px -72px; cursor:pointer;}

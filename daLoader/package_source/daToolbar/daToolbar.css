@@ -1,0 +1,26 @@
+/*
+	author:	danny.xu
+	date:	2012-4-26
+	description: daToolbar工具条样式表
+*/
+
+.daToolbar {
+	display:inline-block; vertical-align:middle;
+	margin:2px; padding:0px;
+	border:solid #eee; border-width:0px 1px 1px 0px;
+	font-size:12px;
+}
+.daToolbar .item { 
+	float:left;
+	margin:0px; margin-left:-1px; padding:5px 10px;
+	border:1px solid #aaa; background:#f0f0f0;
+	list-style:none; 
+	cursor:pointer;
+}
+.daToolbar .hover {
+	background:#fff;
+}
+.daToolbar .current {
+	border:1px solid #000; background:#333; color:#fff;
+	cursor:default;
+}
