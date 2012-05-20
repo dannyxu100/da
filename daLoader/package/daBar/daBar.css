@@ -1,0 +1,27 @@
+﻿/*
+	author:	danny.xu
+	date:	2011-5-12 15:12:07
+	description:	多功能拖动条daBar
+*/
+.daBar,
+.daBar2 { display:inline-block;vertical-align:top;height:13px;width:100px;position:relative;margin-right:30px; font:12px/1 Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;}
+.daBar { border: 1px solid #666;}
+.daBar2 { border: 1px solid #222;}
+
+.daBar .daBarover,
+.daBar2 .daBarover{ height:13px;width:100%; background:url(images/daBar.png) repeat-x;position:absolute;z-index:10; }
+.daBar .daBarover { background-position: 0px 0px}
+.daBar2 .daBarover { background-position: 0px -13px}
+
+.daBar .daBarColor,
+.daBar2 .daBarColor{ height:13px;width:0px; background:#444;position:absolute;z-index:9; }
+.daBar .daBarBg,
+.daBar2 .daBarBg{ height:13px;width:100%; background:#dedede;position:absolute;z-index:8 }
+
+.daBar .daBarTxt,
+.daBar2 .daBarTxt{ height:13px;line-height:14px; position:absolute; top:0px;z-index:10;text-shadow: -1px 1px 1px #fff;}
+
+.daBar .daBarBt,
+.daBar2 .daBarBt{ display:block; width:7px; height:19px; background:url(images/daBar.png) 0px -26px no-repeat; position:absolute; top:-3px;left:0px; z-index:10; }
+.daBar .daBarBt:hover,
+.daBar2 .daBarBt:hover{ background-position:-7px -26px; }

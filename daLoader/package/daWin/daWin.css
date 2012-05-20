@@ -42,7 +42,7 @@
 	font-size:12px;
 }
 /* 活动窗口样式 */
-.dwBody .mid{ background:#d7d7d7;}
+.dwBody .mid{ background:#d7d7d7;vertical-align:top;}
 
 .dwBody .top{height:34px; background:url(images/window_borderH.png) 0px 0px repeat-x;}
 .dwBody .left{width:10px; background:url(images/window_borderV.png) 0px 0px repeat-y;}
@@ -81,11 +81,12 @@
 	opacity:0.3; 								/* FF */
 	z-index: 19999;
 }
-.dwBody .dwDialog{ background:#d7d7d7; font-size:14px; line-height:22px;padding:0px 10px;overflow:hidden;}
+
+.dwBody .dwDialog{ position:relative;top:0px;left:0px;background:#d7d7d7; font-size:14px; line-height:22px;padding:0px 10px;overflow:hidden;}
 
 
 /* 非活动窗口样式 */
-.dwBody2 .mid{ background:#d7d7d7;}
+.dwBody2 .mid{ background:#d7d7d7;vertical-align:top;}
 
 .dwBody2 .top{height:34px; background:url(images/window_borderH.png) 0px -132px repeat-x;}
 .dwBody2 .left{width:10px; background:url(images/window_borderV.png) -19px 0px repeat-y;}
@@ -123,7 +124,7 @@
 	opacity:0.1; 								/* FF */
 	z-index: 19999;
 }
-.dwBody2 .dwDialog{ background:#b7b7b7; font-size:14px; line-height:22px;padding:0px 10px;overflow:hidden; }
+.dwBody2 .dwDialog{ position:relative;top:0px;left:0px;background:#b7b7b7; font-size:14px; line-height:22px;padding:0px 10px;overflow:hidden; }
 
 .dwBody .btmin, 
 .dwBody2 .btmin, 
