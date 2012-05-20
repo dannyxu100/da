@@ -1,7 +1,7 @@
 ﻿/**daVML
 *矢量图形绘制支持类forIE
 * @author danny.xu
-* @version daVML_1.0 2011-10-31 17:31:23
+* @version daVML_1.1.2 2011-10-31 17:31:23
 */
 (function( win, undefined ){
 
