@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
 
-<script src="da_source_1.3.5.js" type="text/javascript"></script>
+<script src="da_min_1.3.5.js" type="text/javascript"></script>
 <title>无标题文档</title>
 
 <script language="javascript">
@@ -16,29 +16,50 @@
 		var daObj = da("[name=div1]");
 	
 		//****************** 兼容性 测试 ******************
-		debugger;
+		
 		//****************** Data 测试 ******************
-		alert(da("#div1").dom.length);
-		da("#div1").data("aaa", 1000);
-		da.out( "#div1缓存数据："+ da("#div1").data("aaa") );
-		da("#div1").removeData("aaa")
-		da.out( "#div1缓存数据："+ da("#div1").data("aaa") );
+		//alert(da("[name=div1]").dom.length);
+		da("[name=div1]").data("aaa", 1000);
+		da.out( "#div1缓存数据："+ da("[name=div1]").data("aaa") );
+		da("[name=div1]").removeData("aaa")
+		da.out( "#div1缓存数据："+ da("[name=div1]").data("aaa") );
+		
+		// ****************** Attr测试 ****************** 
+		
+		da.out( "#handlediv用户数据是: "+ da("#handlediv").attr("userdata") );
+		da("#handlediv").attr("userdata", "777")
+		da.out( "#handlediv用户数据是: "+ da("#handlediv").attr("userdata") );
 		
 		// ****************** Event测试 ****************** 
 		//事件委任
-		da("#handlediv").delegate("#box input", "click mouseover",function(){
+		da("#handlediv").delegate("#box input", "click.da mouseover.da",function(){
 			alert(this.value)
 		});
-		da("#box").delegate("#box input", "click",function(){
+		da("#box").delegate("#box input", "click.da",function(){
 			alert(this.value)
 		});
 		
+		// ****************** 元素操作 ******************
 		for( var i=0; i<20; i++ ){
 			da("#box").append('<input type="button" value="提示绑定事件成功_"'+ i +' />');
 		}
 		
 		// ****************** CSS测试 ****************** 
-		da("input").css({border: "1px solid #999", padding: "5px", backgroundColor:"#f5f5f5"});
+		da("input").css({border: "1px solid #999", margin: "0px", padding: "5px", backgroundColor:"#f5f5f5"});
+		
+		
+		// ****************** Ajax ******************
+		
+		
+		// ****************** Offset ******************
+		da.out( "#box的位置 top:"+ da("#box").offset().top +"; left:"+ da("#box").offset().left );
+		
+		
+		// ****************** Size ******************
+		da.out( "#box的尺寸 width:"+ da("#box").width() +"; height:"+ da("#box").height() );
+		da.out( "#box的内尺寸 innerWidth:"+ da("#box").innerWidth() +"; innerHeight:"+ da("#box").innerHeight() );
+		da.out( "#box的内尺寸 outerWidth:"+ da("#box").outerWidth() +"; outerHeight:"+ da("#box").outerHeight() );debugger;
+		da.out( "#box的内尺寸 outerWidth(包括margin):"+ da("#box").outerWidth(true) +"; outerHeight(包括margin):"+ da("#box").outerHeight(true) );
 		
 	});
 </script>
@@ -48,11 +69,11 @@
 <body>
 	<div name="div1"></div>
 
-	<div id="handlediv" style="border:1px solid #f00;height:50px;">
+	<div id="handlediv" userdata="999" style="border:1px solid #f00;height:50px;">
 		<span>123</span>
 	</div>
 	
-	<div id="box">
+	<div id="box" style="border:20px solid #8f7; margin:10px; padding:20px;">
 		<span>123</span>
 		<input type="button" id="bt_110" value="提示绑定事件成功" />
 	</div>
