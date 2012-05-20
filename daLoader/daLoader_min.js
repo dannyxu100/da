@@ -9,70 +9,70 @@
 
 //模块定义
 (function(){
-var _p = "package";
+var _p = "package_min";
 
 //-------------------------------------
 daLoader.class('da_CSS', {path: _p+'/da.css' });
 daLoader.class('da', {path: _p+'/da_min_1.3.2.js', type:'js', charset:'utf-8', need:"da_CSS" });			//核心库
 //-------------------------------------
-daLoader.class('daTreeCore', {path: _p+'/daTreeCore/daTreeCore.js', need:"da" });							//内存树类
-daLoader.class('daDrag', {path: _p+'/daDrag/daDrag_source.js', need:"da" });									//拖拽操作类
-daLoader.class('daWheel', {path: _p+'/daWheel/daWheel_source.js', need:"da" });								//滚轮操作类
-daLoader.class('daKey', {path: _p+'/daKey/daKey.js', need:"da" });											//键盘操作类
+daLoader.class('daTreeCore', {path: _p+'/daTreeCore/daTreeCore_min.js', need:"da" });							//内存树类
+daLoader.class('daDrag', {path: _p+'/daDrag/daDrag_min.js', need:"da" });									//拖拽操作类
+daLoader.class('daWheel', {path: _p+'/daWheel/daWheel_min.js', need:"da" });								//滚轮操作类
+daLoader.class('daKey', {path: _p+'/daKey/daKey_min.js', need:"da" });											//键盘操作类
 //-------------------------------------
-daLoader.class('daFx', {path: _p+'/daFx/daFx.js', need:"da" });												//动画操作类
-daLoader.class('daGif', {path: _p+'/daFx/daGif.js', need:"da,daFx" });										//逐帧动画类
+daLoader.class('daFx', {path: _p+'/daFx/daFx_min.js', need:"da" });												//动画操作类
+daLoader.class('daGif', {path: _p+'/daFx/daGif_min.js', need:"da,daFx" });										//逐帧动画类
 //-------------------------------------
-daLoader.class('daSVG', {path: _p+'/daCanvas/daSVG.js', need:"da" });
-daLoader.class('daVML', {path: _p+'/daCanvas/daVML_1.1.2.js', need:"da" });
-daLoader.class('daCanvas', {path: _p+'/daCanvas/daCanvas.js', need:"da,daVML,daSVG" });						//绘图类
-daLoader.class('daGuide', {path: _p+'/daGuide/daGuide.js', need:"da,daCanvas" });							//向导类
+daLoader.class('daSVG', {path: _p+'/daCanvas/daSVG_min.js', need:"da" });
+daLoader.class('daVML', {path: _p+'/daCanvas/daVML_min_1.1.2.js', need:"da" });
+daLoader.class('daCanvas', {path: _p+'/daCanvas/daCanvas_min.js', need:"da,daVML,daSVG" });						//绘图类
+daLoader.class('daGuide', {path: _p+'/daGuide/daGuide_min.js', need:"da,daCanvas" });							//向导类
 //-------------------------------------
 daLoader.class('daLoading_CSS', {path: _p+'/daLoading/daLoading.css'});
-daLoader.class('daLoading', {path: _p+'/daLoading/daLoading_source.js', need:"da,daLoading_CSS" });				//Loading类
+daLoader.class('daLoading', {path: _p+'/daLoading/daLoading_min.js', need:"da,daLoading_CSS" });				//Loading类
 //-------------------------------------
 daLoader.class('daMsg_CSS', {path: _p+'/daMsg/daMsg.css'});
-daLoader.class('daMsg', {path: _p+'/daMsg/daMsg.js', need:"da,daFx,daMsg_CSS" });								//消息类
+daLoader.class('daMsg', {path: _p+'/daMsg/daMsg_min.js', need:"da,daFx,daMsg_CSS" });								//消息类
 //-------------------------------------
-daLoader.class('daIframe', {path: _p+'/daIframe/daIframe.js', need:"da,daFx,daLoading" });						//缓存框架类
+daLoader.class('daIframe', {path: _p+'/daIframe/daIframe_min.js', need:"da,daFx,daLoading" });						//缓存框架类
 //-------------------------------------
 daLoader.class('daFrame_CSS', {path: _p+'/daFrame/daFrame.css'});
-daLoader.class('daFrame', {path: _p+'/daFrame/daFrame_source.js', need:"da,daDrag,daWheel,daFrame_CSS" });		//容器框架类
+daLoader.class('daFrame', {path: _p+'/daFrame/daFrame_min.js', need:"da,daDrag,daWheel,daFrame_CSS" });		//容器框架类
 //-------------------------------------
 daLoader.class('daWin_CSS', {path: _p+'/daWin/daWin.css' });
-daLoader.class('daWin', {path: _p+'/daWin/daWin_source_1.2.js', need:"da,daFrame,daWin_CSS" });					//窗口 控件类
+daLoader.class('daWin', {path: _p+'/daWin/daWin_min_1.2.js', need:"da,daFrame,daWin_CSS" });					//窗口 控件类
 //-------------------------------------
 daLoader.class('daButton_CSS', {path: _p+'/daButton/daButton.css' });
-daLoader.class('daButton', {path: _p+'/daButton/daButton_source.js', need:"da,daButton_CSS" });					//按钮 控件类
+daLoader.class('daButton', {path: _p+'/daButton/daButton_min.js', need:"da,daButton_CSS" });					//按钮 控件类
 //-------------------------------------
 daLoader.class('daOption_CSS', {path: _p+'/daOption/daOption.css' });
-daLoader.class('daOption', {path: _p+'/daOption/daOption.js', need:"da,daGif,daOption_CSS" });					//可选项 控件类
+daLoader.class('daOption', {path: _p+'/daOption/daOption_min.js', need:"da,daGif,daOption_CSS" });					//可选项 控件类
 //-------------------------------------
 daLoader.class('daList_CSS', {path: _p+'/daList/daList.css' });
-daLoader.class('daList', {path: _p+'/daList/daList.js', need:"da,daFx,daKey,daList_CSS" });						//列表 控件类
+daLoader.class('daList', {path: _p+'/daList/daList_min.js', need:"da,daFx,daKey,daList_CSS" });						//列表 控件类
 //-------------------------------------
 daLoader.class('daSelect_CSS', {path: _p+'/daSelect/daSelect.css' });
-daLoader.class('daSelect', {path: _p+'/daSelect/daSelect2.0.js', need:"da,daGif,daList,daSelect_CSS" });			//下拉框 控件类
+daLoader.class('daSelect', {path: _p+'/daSelect/daSelect_min_2.0.js', need:"da,daGif,daList,daSelect_CSS" });			//下拉框 控件类
 //-------------------------------------
 daLoader.class('daInput_CSS', {path: _p+'/daInput/daInput.css' });
-daLoader.class('daInput', {path: _p+'/daInput/daInput.js', need:"da,daGif,daKey,daList,daInput_CSS" });			//智能输入框 控件类
+daLoader.class('daInput', {path: _p+'/daInput/daInput_min.js', need:"da,daGif,daKey,daList,daInput_CSS" });			//智能输入框 控件类
 //-------------------------------------
 daLoader.class('daTab_CSS', {path: _p+'/daTab/daTab.css' });
-daLoader.class('daTab', {path: _p+'/daTab/daTab_source.js', need:"da,daTab_CSS" });								//Tab按钮 控件类
+daLoader.class('daTab', {path: _p+'/daTab/daTab_min.js', need:"da,daTab_CSS" });								//Tab按钮 控件类
 //-------------------------------------
 daLoader.class('daTip_CSS', {path: _p+'/daTip/daTip.css' });
-daLoader.class('daTip', {path: _p+'/daTip/daTip.js', need:"da,daTip_CSS" });										//ToolTip类
-daLoader.class('daMenu', {path: _p+'/daTip/daMenu.js', need:"da,daTip" });										//右键菜单类
+daLoader.class('daTip', {path: _p+'/daTip/daTip_min.js', need:"da,daTip_CSS" });										//ToolTip类
+daLoader.class('daMenu', {path: _p+'/daTip/daMenu_min.js', need:"da,daTip" });										//右键菜单类
 //-------------------------------------
 daLoader.class('daCalendar_CSS', {path: _p+'/daCalendar/daCalendar.css' });
-daLoader.class('daCalendar', {path: _p+'/daCalendar/daCalendar.js', need:"da,daTip,daCalendar_CSS" });			//日期控件类
+daLoader.class('daCalendar', {path: _p+'/daCalendar/daCalendar_min.js', need:"da,daTip,daCalendar_CSS" });			//日期控件类
 
 //-------------------------------------
 daLoader.class('daQuery', {path: _p+'/daQuery/daQuery.js', need:"da" });											//组合查询 控件类
-daLoader.class('daValid', {path: _p+'/daValid/daValid_source.js', need:"da,daTip" });							//数据验证类
+daLoader.class('daValid', {path: _p+'/daValid/daValid_min.js', need:"da,daTip" });							//数据验证类
 //-------------------------------------
 daLoader.class('daMap_CSS', {path: _p+'/daMap/daMap.css' });
-daLoader.class('daMap', {path: _p+'/daMap/daMap.js', need:"da,daFx,daDrag,daWheel,daKey,daLoading,daMap_CSS" });			//GIS地图 控件类
+daLoader.class('daMap', {path: _p+'/daMap/daMap_min.js', need:"da,daFx,daDrag,daWheel,daKey,daLoading,daMap_CSS" });			//GIS地图 控件类
 
 
 })();

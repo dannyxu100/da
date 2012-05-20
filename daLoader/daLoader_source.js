@@ -192,7 +192,7 @@ win.daLoader = daLoader;
 
 //模块定义
 (function(){
-var _p = "package";
+var _p = "package_source";
 
 //-------------------------------------
 daLoader.class('da_CSS', {path: _p+'/da/da.css' });
