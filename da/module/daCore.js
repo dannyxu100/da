@@ -214,7 +214,8 @@
 				arg: 此参数只供脚本库内部使用( 可以直接传入调用函数 当前的arguments )
 			*/
 			each: function( fn, args ) {
-				return da.each( this.dom, fn, args );
+				da.each( this.dom, fn, args );
+				return this;								//返回da对象，实现串操作
 			},
 			
 			//数组对象映射过滤器
@@ -611,9 +612,9 @@
 			*/
 			each: function( objs, fn, args ) {
 					var name,
-							i = 0,
-							length = objs.length,
-							isObj = ( length === undefined ) || da.isFunction(objs);
+						i = 0,
+						length = objs.length,
+						isObj = ( length === undefined ) || da.isFunction(objs);
 			
 					if( args ) {
 							if ( isObj ) {						//非类数组
