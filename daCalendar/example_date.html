@@ -1,0 +1,62 @@
+<html>
+	<head>
+	<script src="da.js" language="javascript"></script>
+	
+	<!--
+	<link href="daTip/daTip.css" rel="stylesheet" />
+	<script src="daTip/daTip.js" language="javascript"></script>
+	-->
+	
+	<link href="daCalendar.css" rel="stylesheet" />
+	<script src="daCalendar.js" language="javascript"></script>
+	
+	<script>
+		var d2;
+		
+		da(function(){
+			daCalendar({
+				parent: "#pp1",
+				target: "#mydate",
+				cellEvent: {
+					click: function(){
+						debugger;
+					}
+				},
+				clickToday: function(){
+					debugger;
+				}
+			});
+
+			d2= daCalendar({
+				target: "#mydate",
+				isSelector: true,
+				cellEvent: {
+					click: function(){
+						var data1 = d2.getDate( this );
+						d2.hide();
+					}
+				},
+				clickToday: function(){
+					//return false;
+				}
+			});
+		});	
+	
+	</script>
+	</head>
+	<body>
+		<input type="button" value="ÉèÖÃÎ»ÖÃ" onclick="d2.setPos(200,200)" />
+		<input type="button" value="Òþ²Ø" onclick="d2.hide()" />
+		<input type="button" value="ÏÔÊ¾" onclick="d2.show()" />
+		<br/>
+		<br/>
+	32132132321321323213213232132132<input id="mydate" onfocus="d2.show()" />32132132
+		<br/>
+		<br/>
+		<div id="pp1" style="width:800px;height:600px;"></div>
+		<div id="pp2" style="width:800px;height:600px;border:2px solid #f00"></div>
+		<br/>
+		<br/>
+		<br/>
+	</body>
+</html>

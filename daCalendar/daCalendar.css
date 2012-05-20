@@ -1,0 +1,81 @@
+/*
+	author:	danny.xu
+	date:	2011-11-18 
+	description:	da通用样式库
+*/
+
+.daShadow {
+  -moz-box-shadow: 0px 2px 10px #999;								 /* 阴影 */
+  -webkit-box-shadow: 0px 2px 10px #999;
+  box-shadow: 0px 2px 10px #999;
+  filter:
+  progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=0, Color='#cccccc') 
+  progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=90, Color='#cccccc') 
+  progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=180, Color='#cccccc') 
+  progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=270, Color='#cccccc');
+}
+
+/*
+	author:	danny.xu
+	date:	2011-2-12
+	description:	工作计划日历插件 css样式文件
+*/
+.daCalendarCnt{ padding:10px;width:160px;height:190px;border:1px solid #333;background:#fff;overflow:hidden; }
+.daCalendar{ margin:1px; border:solid #e0e0e0; border-width:1px 0px 0px 1px;}
+
+.daCalendar td{width:14%; height:15%; font: 12px/1.5 arial, tahoma, helvetica, "\5b8b\4f53", sans-serif;}
+.daCalendar .tdl{border-left:1px solid #e0e0e0}
+.daCalendar .tdt{border-top:1px solid #e0e0e0}
+.daCalendar .tdr{border-right:1px solid #e0e0e0}
+.daCalendar .tdb{border-bottom:1px solid #e0e0e0}
+
+.daCalendar .trHead{ background:#fffae0; }
+.daCalendar .trHead td{ text-align:center; height:18px; line-height:18px; font-size:12px; color:#343434;}
+.daCalendar .trHead td.weekend{ color: #ff9933}
+
+.daCalendar .trDate{ background:#fff; }
+.daCalendar .trDate td{font-size:12px; vertical-align:top;cursor:pointer;}
+.daCalendar .trDate td.weekend{ background: #fffff0;}
+.daCalendar .trDate td.no,
+.daCalendar .trDate td.no div.title{ background: #f0f0f0;}
+
+.daCalendar .trDate td div.title{ background:#fafafa;padding:2px;text-align:right;height:16px; line-height:16px;font-size:12px; color:#666666;}
+.daCalendar .trDate td div.title div.tool{ display:none; }
+.daCalendar .trDate td div.list{overflow:hidden;padding:2px;}
+.daCalendar .trDate td div.list ul.item{overflow:hidden; height:14px;line-height:16px; margin:0px 0px 2px 0px; padding:2px; background:#ff9999; color:#fff}
+
+.daCalendar .trDate td.today{ background: #ffffcc; border:1px solid #ffcc66}
+.daCalendar .trDate td.today div.title{ background:#ffcc66;padding:2px;text-align:right;height:16px; line-height:16px;font-size:12px; color:#666666;}
+.daCalendar .trDate td.today div.list{overflow:hidden;padding:2px;}
+.daCalendar .trDate td.today div.list ul.item{overflow:hidden; height:14px;line-height:16px; margin:0px 0px 2px 0px; padding:2px; background:#990000; color:#fff}
+
+.daCalendar .trDate td.focus{ background: #f5f5f5; border:1px solid #555;}
+.daCalendar .trDate td.focus div.title{ background:#d0d0d0;padding:2px;text-align:right;height:16px; line-height:16px;font-size:12px; color:#fff;}
+.daCalendar .trDate td.focus div.title div.tool{ display:block;float:left;height:16px; line-height:16px; text-indent:5px; color:#fff; font-weight:bold; cursor:pointer;}
+.daCalendar .trDate td.focus div.list{overflow:hidden;padding:2px;}
+.daCalendar .trDate td.focus div.list ul.item{overflow:hidden; height:14px;line-height:16px; margin:0px 0px 2px 0px; padding:2px; background:#ff9999; color:#fff;cursor:default;}
+
+.daCalendarBar{ height:18px; background:#fff; }
+.daCalendarBar div a.bt{ display:inline-block; width:50px; height:16px;line-height:16px; margin:1px;font-size:12px; text-align:center;color:#fff; text-decoration:none; background:url(images/daCalendarBt.gif) no-repeat; }
+.daCalendarBar div a.bt:hover{ background-position:0px -16px; color:#000; }
+.daCalendarBar a.bt_slt{ display:inline-block; width:16px; height:16px;line-height:16px; margin:1px;font-size:12px; text-align:center;color:#fff; text-decoration:none; background:url(images/daCalendarBt.gif) no-repeat; }
+.daCalendarBar a.bt_slt:hover{ background-position:0px -48px; color:#000; }
+.daCalendarBar div.barLeft{ float:left; }
+.daCalendarBar div.barLeft a{ display:inline-block; width:50px; height:16px; margin:1px; font-size:12px; background:url(images/daCalendarBt.gif) no-repeat; }
+
+.daCalendarBar div.barLeft a.today{ background-position: -50px 0px; }
+.daCalendarBar div.barLeft a.today:hover{ background-position: -50px -16px; }
+.daCalendarBar div.barLeft a.previous{ background-position: -100px 0px; }
+.daCalendarBar div.barLeft a.previous:hover{ background-position: -100px -16px; }
+.daCalendarBar div.barLeft a.next{ background-position: -150px 0px; }
+.daCalendarBar div.barLeft a.next:hover{ background-position: -150px -16px; }
+
+.daCalendarBar div.barLeft a.today_slt{ width:34px;background-position: -16px -32px; }
+.daCalendarBar div.barLeft a.today_slt:hover{ background-position: -16px -48px; }
+.daCalendarBar div.barLeft a.previous_slt{ width:16px; background-position: -50px -32px; }
+.daCalendarBar div.barLeft a.previous_slt:hover{ background-position: -50px -48px; }
+.daCalendarBar div.barLeft a.next_slt{ width:16px; background-position: -66px -32px; }
+.daCalendarBar div.barLeft a.next_slt:hover{ background-position: -66px -48px; }
+
+.daCalendarBar div.barLeft span.barTitle{ margin:0px 5px; line-height:16px; font-size:14px; color:#333;vertical-align:top; }
+.daCalendarBar div.barRight{ float:right; }
