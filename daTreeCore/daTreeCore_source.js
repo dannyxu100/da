@@ -1,5 +1,4 @@
-﻿
-/**
+﻿/**
 * daNodeCore 基本树节点类
 * @author danny.xu
 * @version daNodeCore v1.0 2011/7/9 14:10:20
@@ -8,83 +7,74 @@
 var doc = win.document;
 
 var daNodeCore = (function(){
-	
-	/**daPopMenu类构造函数
+	/**daNodeCore类构造函数
 	*/
-	var daNodeCore = function( nodeSetting ){
-		return new daNodeCore.fnStruct.init( nodeSetting );
+	var daNodeCore = function( setting ){
+		return new daNodeCore.fnStruct.init( setting );
 	};
 
 	daNodeCore.fnStruct = daNodeCore.prototype = {
-		version: "daNodeCore v1.0 \n author: danny.xu \n date: 2011/7/9 14:56:46",
-		id: "",											//节点id
-		name: "",										//节点名称
-		tree: null,									//节点所属daTreeCore对象
-		parent: null,								//父亲节点对象
-		idx: 0,											//相对父亲节点的索引号
+		tree: null,					//节点所属daTreeCore对象
+		pnode: null,				//父亲节点对象
+		sub: null,					//子节点对象数组
 		
-		level: 0,										//节点所属层级
-		subNode: null,							//子节点对象数组
-		
-		data: null,
+		index: 0,					//相对父亲节点的索引号
+		level: 0,					//节点所属层级
 
-		nodeSetting: {							//配置信息
-			id: "",
-			pid: "",
-			name: "",
-			data: null								//用户数据
+		setting: {					//配置信息
+			id: "",					//节点id
+			pid: "",				
+			name: "",				//节点名称
+			data: null				//用户数据
 		},
 		
 		/**初始化函数
 		*/
-		init: function( nodeSetting ){
-			nodeSetting = this.nodeSetting = da.extend(true, {}, this.nodeSetting, nodeSetting );
-			this.subNode = [];
+		init: function( setting ){
+			setting = this.setting = da.extend( {}, this.setting, setting );
 			
-			this.id = nodeSetting.id;
-			this.name = nodeSetting.name;
-			this.data = nodeSetting.data;
 		},
 		
 		/**添加子节点
 		*/
-		add: function( nodeSetting ){
-			var sub = daNodeCore( nodeSetting );												//生成子节点
-			sub.parent = this;
-			sub.level = this.level + 1;
-			sub.idx = this.subNode.length;
-			sub.tree = this.tree;
-			this.subNode.push( sub );
+		add: function( node ){
+			if( !this.sub ){						//确保子节点缓存区存在
+				this.sub = [];
+			}
 			
-			this.tree.treeNodeMap[ this.id ] = this;
+			node.pnode = this;						//更新节点属性
+			node.level = this.level + 1;
+			node.index = this.sub.length;
+			node.tree = this.tree
 			
-			return sub;
+			this.sub.push( node );
+			
+			return node;
 		},
 		
 		/**删除节点
 		*/
 		remove: function(){
-			for( var i=0, len=this.subNode.length; i<len; i++ ){
-				this.subNode[i].remove();
-				
+			for( var i=0, len=this.sub.length; i<len; i++ ){
+				this.sub[i].remove();
 			}
 			
-			this.subNode = [];
-			delete this.tree.treeNodeMap[ this.id ];										//删除所属树对象的 节点映射
+			this.sub = null;
+			
+			if( this.tree )							//删除所属树对象的 节点映射
+				delete this.tree.map[ this.setting.id ];
 		}
 	
 		
 	};
 
-	
-	daNodeCore.fnStruct.init.prototype = daNodeCore.prototype;			//模块通过原型实现继承属性
+	daNodeCore.fnStruct.init.prototype = daNodeCore.prototype;		//模块通过原型实现继承属性
 
 	return daNodeCore;
 })();
 
 
-
-win.daNodeCore = win.danodecore = win.dnc = daNodeCore;
+win.daNodeCore = daNodeCore;
 
 })(window);
 
@@ -99,49 +89,53 @@ var doc = win.document;
 
 var daTreeCore = (function(){
 	
-	/**daPopMenu类构造函数
+	/**daTreeCore类构造函数
 	*/
-	var daTreeCore = function( treeSetting ){
-		return new daTreeCore.fnStruct.init( treeSetting );
+	var daTreeCore = function( setting ){
+		return new daTreeCore.fnStruct.init( setting );
 	};
 
 	daTreeCore.fnStruct = daTreeCore.prototype = {
 		version: "daTreeCore v1.0 \n author: danny.xu \n date: 2011/7/9 14:56:38",
 		
-		treeRoot: null,
-		treeNodeMap: null,
+		root: null,
+		map: null,
 		
-		treeSetting: {
-			id: "",
-			name: "",
-			cache: null,
-			data: null
+		setting: {
+			id: "",							//树id。
+			name: "",						//树名称。
+			data: null,						//扩展数据。
+			list: null						//待处理节点配置数据。
 		},
 		
 		/**初始化函数
 		*/
-		init: function( treeSetting ){
-			treeSetting = this.treeSetting = da.extend(true, {}, this.treeSetting, treeSetting );
+		init: function( setting ){
+			setting = this.setting = da.extend( {}, this.setting, setting );
 			
-			this.treeNodeMap = {};
+			this.map = {};
 			
-			this.toGroup();
+			// if( setting.list ){				//批量创建节点，需要先矫正为有效数据格式
+				// this.group();
+			// }
+			
+			if( !this.setting.list ) this.setting.list = {};
+			
 			this.createRoot();
-			this.createByBreadth();
 		},
 		
 		/**对缓存数据分组处理
 		*/
-		toGroup: function(){
-			var cache = this.treeSetting.cache,
-					group = {},
-					pid;
+		group: function(){
+			var list = this.setting.list,
+				group = {},
+				pid;
 			
-			for( var i=0, len=cache.length; i<len; i++ ){								//逐个节点缓存数据通过pid分组
-				pid = cache[i].pid || this.treeSetting.id;
+			for( var i=0, len=list.length; i<len; i++ ){			//逐个节点缓存数据通过pid分组。
+				pid = list[i].pid || this.setting.id;
 				if( !group[ pid ] ) group[ pid ] = [];
 				
-				group[ pid ].push( cache[i] );
+				group[ pid ].push( list[i] );
 			}
 			
 			return group;
@@ -150,52 +144,128 @@ var daTreeCore = (function(){
 		/**创建根节点
 		*/
 		createRoot: function(){
-			this.treeRoot = daNodeCore({
-				id: this.treeSetting.id,
+			this.root = daNodeCore({
+				id: this.setting.id,
 				pid: "",
-				name: this.treeSetting.name,
-				data: this.treeSetting.data
+				name: this.setting.name,
+				data: this.setting.data
 			});
 			
-			this.treeRoot.level = 0;
-			this.treeRoot.tree = this;
+			this.root.level = 0;
+			this.root.tree = this;
 			
-			this.treeNodeMap[ this.treeRoot.id ] = this.treeRoot;
+			this.map[ this.root.setting.id ] = this.root;
+		},
+
+		// /**添加节点
+		// */
+		// add2: function( setting ){
+			// var pnode = this.get( setting.pid );
+			// if( !pnode ){
+				// throw new Error( "节点"+ setting.id +"没有找到父节点:"+ setting.pid );
+			// }
+			// else{
+				// var node = daNodeCore( setting );		//生成子节点
+				// pnode.add( node );
+				// this.map[ node.setting.id ] = node;
+			// }
+			
+		// },
+		
+		// /**创建树(广度)
+		// */
+		// createNode: function(){
+			// var group = this.group(),
+				// arrCur = [],
+				// arrSubLevel = [],
+				// arrSubSetting = [],
+				// node;
+			
+			// arrSubLevel.push( this.root );			//将根节点 压入待处理缓存
+
+			// while( 0 < arrSubLevel.length ){
+				// arrCur = arrSubLevel;				//置换子级节点列表 到待处理列表
+				// arrSubLevel = [];					//清空子级节点列表
+				
+				// for( var i=0, len=arrCur.length; i<len; i++ ){					//循环待处理列表
+					// if( !(arrSubSetting = group[ arrCur[i].id ]) ) continue;	//判断是否有子级节点
+					
+					// for( var n=0, lenSub=arrSubSetting.length; n<lenSub; n++  ){
+						// arrSubLevel.push( arrCur[i].add( arrSubSetting[n] ) );	//压入子级节点列表
+						
+					// }
+					
+				// }
+			// }
+		// },
+		
+		add: function( setting ){
+			var node;
+			if( setting && setting.pnode ){			//add(nodeObj) 参数为daNodeCore对象。
+				node = setting;
+			}
+			else{
+				node = daNodeCore( setting );		//生成新节点。
+			};
+			
+			if( !this.setting.list[ node.setting.pid ] ){			//确保新节点 的所属父节点缓存区存在。
+				this.setting.list[ node.setting.pid ] = [];
+			}
+			this.setting.list[ node.setting.pid ].push( node );		//将新节点 压入所属父节点缓存区。
 		},
 		
-		/**创建树(广度)
-		*/
-		createByBreadth: function(){
-			var group = this.toGroup(),
-					arrNode = [],
-					arrNextLevel = [],
-					arrSubSetting = [],
-					node;
+		load: function( isForce ){
+			var tree = this,
+				list = this.setting.list,
+				arrSub = [];
 			
-			arrNextLevel.push( this.treeRoot );																			//将根节点 压入待处理缓存
-
-			while( 0 < arrNextLevel.length ){
-				arrNode = arrNextLevel;
-				arrNextLevel = [];
+			if( isForce ){		//强制方式(建议用于:add单一或少量新节点后立即load,强制要求父节点存在)。
+				var pnode;
 				
-				for( var i=0, len=arrNode.length; i<len; i++ ){
-					if( !(arrSubSetting = group[ arrNode[i].id ]) ) continue;
-					
-					for( var n=0, lenSub=arrSubSetting.length; n<lenSub; n++  ){
-						arrNextLevel.push( arrNode[i].add( arrSubSetting[n] ) );					//将刚刚新建一级的节点 压入待处理缓存
-						
+				for( var item in list ){		//循环所有缓存区。
+					pnode = this.get( setting.pid );
+					if( !pnode ){
+						throw new Error( "节点"+ setting.id +"没有找到父节点:"+ setting.pid );
+						break;
 					}
 					
+					arrSub = list[ this.setting.id ];				//提取新子节点列表。
+					for( var i=0, len=arrSub.length; i<len; i++ ){	//循环待处理新子节点列表。
+						pnode.add( arrSub[i] );
+						tree.map[ arrSub[i].setting.id ] = arrSub[i];
+					}
 				}
+				list = [];						//清空待处理缓存区
+				
 			}
-			
-			
-		},
-		
-		/**创建树(深度)
-		*/
-		createByDepth: function(){
-			//TODO:
+			else{				//遍历方式(建议用于: add批量新节点后load处理,)。
+				this.run( this.root, function( isEnd ){			//遍历树，添加待处理的新节点(this为遍历到当前节点)。
+					if( isEnd ){								//遍历完所有节点，即便list内仍然有新节点缓存，也是配置信息不合法的，直接清空。
+						list = [];
+					}
+					else{
+						arrSub = list[ this.setting.id ];		//提取当前节点下的新子节点。
+						if( !arrSub || 0 >= arrSub.length ){	//没待处理的新子节点。
+							return;
+						}
+						else{
+							for( var i=0, len=arrSub.length; i<len; i++ ){		//循环待处理列表。
+								this.add( arrSub[i] );							//这里刚加入的新子节点，会在下一级被遍历到。
+								tree.map[ arrSub[i].setting.id ] = arrSub[i];
+							}
+							
+							for( var item in list ){		//判断缓存区还有没有待处理新节点。
+								if( undefined == item ){	//已经没有待处理的新子节点了，直接终止遍历树操作。
+									return false;
+								}
+								else{
+									break;
+								}
+							}
+						}
+					}
+				});
+			}
 		},
 		
 		/**遍历节点(Breadth广度)
@@ -205,86 +275,67 @@ var daTreeCore = (function(){
 		*/
 		run: function( node, fn ){
 			if( "string" == typeof node )
-				node = this.getNode( node );
+				node = this.get( node );
 				
 			if( da.isFunction( node ) ){
 				fn = node;
-				node = this.treeRoot;
+				node = this.root;
 			}
 			
 			if( !fn || !da.isFunction( fn ) ) return;
 			
-			var arrNode = [],
-					arrNextLevel = [];
+			var arrCur = [],
+				arrSubLevel = [];
 			
-			arrNextLevel.push( node );
+			arrSubLevel.push( node );
 			
-			while( 0 < arrNextLevel.length ){													//遍历
-				arrNode = arrNextLevel;
-				arrNextLevel = [];
+			while( 0 < arrSubLevel.length ){					//遍历。
+				arrCur = arrSubLevel;
+				arrSubLevel = [];
 				
-				for( var i=0, len=arrNode.length; i<len; i++ ){
-					if( false === fn.call( arrNode[i] ) ){								//每一个节点都回调一次，如果回调函数返回值恒为false，即刻中止遍历
-						arrNextLevel = arrNode = [];
+				for( var i=0, len=arrCur.length; i<len; i++ ){
+					if( false === fn.call( arrCur[i] ) ){		//每一个节点都回调一次，如果回调函数返回值恒为false，即刻中止遍历。
+						arrSubLevel = arrCur = [];
 						break;
 					}
 					
-					if( 0 < arrNode[i].subNode.length )
-						arrNextLevel = arrNextLevel.concat( arrNode[i].subNode );
+					if( arrCur[i].sub && 0 < arrCur[i].sub.length )
+						arrSubLevel = arrSubLevel.concat( arrCur[i].sub );
 				}
 			}
 			
-			fn.call( node, true );																		//最后再通过起始节点 回调一次
+			fn.call( node, true );								//最后再通过起始节点 回调一次。
 			
-		},
-		
-		/**遍历节点(深度)
-		*/
-		runDepth: function(){
-			//TODO:
 		},
 		
 		/**通过节点ID查找节点对象
 		*/
-		getNode: function( id ){
-			return this.treeNodeMap[ id ];
-		},
-		
-		/**添加节点
-		*/
-		addNode: function( nodeSetting ){
-			var pNode = this.getNode( nodeSetting.pid );
-			if( !pNode ) return;
-			
-			pNode.add( nodeSetting );
+		get: function( id ){
+			return this.map[ id ];
 		},
 		
 		/**删除节点
 		* @param {String|daNodeCore} node 需要删除的节点id/节点对象
 		*/
-		removeNode: function( node ){
-			if( !node ) return;
+		remove: function( node ){
+			if( "undefined" === typeof node ){
+				this.root.remove();
+				this.map = null;
+				return;
+			}
 			
 			if( "string" == typeof node )
-				node = this.getNode( node );
+				node = this.get( node );
 			
-			if( node )
+			if( node && node.pnode )
 				node.remove();
 			
-		},
-		
-		/**清除树所有子孙节点
-		*/
-		clear: function(){
-			this.treeRoot.remove();
-			
-			this.treeNodeMap[ this.treeRoot.id ] = this.treeRoot;
 		}
 		
 	};
 
 	
-	daTreeCore.fnStruct.init.prototype = daTreeCore.prototype;			//模块通过原型实现继承属性
+	daTreeCore.fnStruct.init.prototype = daTreeCore.prototype;			//模块通过原型实现继承属性。
 
 	return daTreeCore;
 })();

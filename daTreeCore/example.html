@@ -1,52 +1,54 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.tree1d">
 <html>
 	<head>
 		<script src="da.js" langruage="javascript"></script>
-		<script src="daTreeCore.js" langruage="javascript"></script>
+		<script src="daTreeCore_source.js" langruage="javascript"></script>
 		<script>
 				da(function(){
 					
-					var nodeList = [], pnodeId, nodeId;
+					var list = [], pid, nid;
+da.testA();
+					var tree1 = daTreeCore({
+						id: "0", 
+						name: "tree1"
+					});
 					
 					for( var i=0; i<10; i++ ){
-						nodeId = "node" + i;
-						pnodeId = "0";
-						nodeList.push({ /* pid: "0", */ id: nodeId, name: nodeId, data:null });
+						nid = "node" + i;
+						pid = "0";
 						
 						for( var ii=0; ii<10; ii++ ){
-								nodeId = "node" + i + ii;
-								pnodeId = "node"+i;
-								nodeList.push({ pid: pnodeId, id: "node"+(i + "" + ii), name:"node" + (i + "" + ii), data:null });
+								nid = "node" + i + ii;
+								pid = "node"+i;
+								tree1.add({ pid: pid, id: "node"+(i + "" + ii), name:"node" + (i + "" + ii), data:null });
 								
 								for( var iii=0; iii<100; iii++ ){
-										nodeId = "node"+ i + ii + iii;
-										pnodeId = "node" + i + ii;
-										nodeList.push({ pid: pnodeId, id: nodeId, name: nodeId, data:null });
+										nid = "node"+ i + ii + iii;
+										pid = "node" + i + ii;
+										tree1.add({ pid: pid, id: nid, name: nid, data:null });
 								}
 								
 						}
+						nid = "node" + i;
+						pid = "0";
+						tree1.add({ pid: pid, id: nid, name: nid, data:null });
 						
 					}
 
+					tree1.load();
+da.out(da.testB());
+debugger;
+					/*
 					var arrTmp = [];
-					
-					var dt = daTreeCore({ 
-						id: "0", 
-						name: "daTreeCore", 
-						cache: nodeList
-					});
-					
-					dt.run( function( isEnd ){
-						if( !isEnd )
-							arrTmp.push( this.name );
-						if( isEnd ){
-							alert( arrTmp.length );
+					tree1.run( function( isEnd ){
+						if( !isEnd ){
+							da.out( this.setting.name );
 						}
 					});
 					
-					//dtcObj.removeNode("0");
-					dt.clear();
-					dt.addNode({ 
+					//tree1cObj.removeNode("0");
+					tree1.clear();
+					tree1.addNode({
 						pid: "0", 
 						id: "node"+(i + "" + ii), 
 						name:"node" + (i + "" + ii), 
@@ -54,13 +56,14 @@
 					});
 					
 					arrTmp = [];
-					dt.run( function( isEnd ){
+					tree1.run( function( isEnd ){
 						if( !isEnd )
 							arrTmp.push( this.data );
 						if( isEnd ){
-							alert( arrTmp );
+							da.out( arrTmp );
 						}
 					});
+					*/
 				});
 		</script>
 		
