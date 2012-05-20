@@ -1,5 +1,5 @@
 ﻿/**daLoader
-*鼠标滚轮事件处理类
+*前端资源颗粒化管理
 * @author danny.xu
 * @version daLoader1.0 2012-4-26
 */
@@ -13,6 +13,11 @@ var daLoader = (function(){
 	/**daLoader类构造函数
 	*/
 	var daLoader = function( setting ){
+		if( setting instanceof String || setting instanceof Function ){
+			daLoader.ready.apply( this, arguments );
+			return;
+		}
+	
 		return new daLoader.fnStruct.init( setting );
 	};
 
@@ -102,7 +107,7 @@ var daLoader = (function(){
 
 		nodeObj.onerror = function() {			//可能路径有误，错误结束加载
 			daLoader.waiting[path] = false;
-			
+			throw new Error( path+ "加载失败" );
 			fn && fn();
 			
 			nodeObj.onerror = null;
@@ -125,7 +130,7 @@ var daLoader = (function(){
 			setting = daLoader.mapfile[ queue[i] ];
 			
 			if( !setting )
-				alert("错误: 无法引用"+ queue[i] +" 模块，"+ queue[i] +"未定义。");
+				throw new Error( "错误: 无法引用"+ queue[i] +" 模块，"+ queue[i] +"未定义。" );
 			
 			if( setting.need ) {											//需要依赖关系文件
 				arrNeed = setting.need.split(",");
@@ -189,7 +194,7 @@ win.daLoader = daLoader;
 //模块定义
 //-------------------------------------
 daLoader.class('da_CSS', {path:'package/da.css' });
-daLoader.class('da', {path:'package/da_source_1.3.2.js', type:'js', charset:'utf-8', need:"da_CSS" });			//核心库
+daLoader.class('da', {path:'/package/da_source_1.3.2.js', type:'js', charset:'utf-8', need:"da_CSS" });			//核心库
 //-------------------------------------
 daLoader.class('daTreeCore', {path:'package/daTreeCore/daTreeCore.js', need:"da" });							//内存树类
 daLoader.class('daDrag', {path:'package/daDrag/daDrag_source.js', need:"da" });									//拖拽操作类
