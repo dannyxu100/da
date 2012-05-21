@@ -6,40 +6,16 @@
 		<script src="js/daTreeCore_source.js" langruage="javascript"></script>
 		<script src="daTreeView_source.js" langruage="javascript"></script>
 		
-		<link href="../daTip(2011-06-29)/daTip_v2.0/daTip.css" rel="stylesheet" />
-		<script src="../daTip(2011-06-29)/daTip_v2.0/daTip.js" langruage="javascript"></script>
 		<script>
 				var dt;
 				
 				da(function(){
-					
-					var nodeList = [], pnodeId, nodeId;
-					
-					for( var i=0; i<20; i++ ){
-						nodeId = "node" + i;
-						pnodeId = "0";
-						nodeList.push({ /* pid: "0", */ id: nodeId, name: "<span style='color:#f33;'>第一级节点</span>", data:null });
-						
-						for( var ii=0; ii<20; ii++ ){
-								nodeId = "node" + i + ii;
-								pnodeId = "node"+i;
-								nodeList.push({ pid: pnodeId, id: "node"+(i + "" + ii), name:"第二级" + nodeId, data:null });
-								
-								for( var iii=0; iii<20; iii++ ){
-										nodeId = "node"+ i + ii + iii;
-										pnodeId = "node" + i + ii;
-										nodeList.push({ pid: pnodeId, id: nodeId, name: "最后一级节点", data:null });
-								}
-								
-						}
-						
-					}
-					
+
 					dt = daTreeView({
 						id: "0", 
 						parent: "#mydatree",
 						name: "自定义树", 
-						cache: nodeList,
+						list: nodeList,
 						event: {
 							click: function( node, nodeObj ){
 								//alert(" 节点id: "+ node.id );debugger;
@@ -60,8 +36,31 @@
 						}
 					});
 					
+					
+					var nodeList = [], pid, nid;
+					
+					for( var i=0; i<20; i++ ){
+						nid = "node" + i;
+						pid = "0";
+						nodeList.push({ pid: pid, id: nid, name: "<span style='color:#f33;'>第一级节点</span>", data:null });
+						
+						for( var ii=0; ii<20; ii++ ){
+								nid = "node" + i + ii;
+								pid = "node"+i;
+								nodeList.push({ pid: pid, id: "node"+(i + "" + ii), name:"第二级" + nid, data:null });
+								
+								for( var iii=0; iii<20; iii++ ){
+										nid = "node"+ i + ii + iii;
+										pid = "node" + i + ii;
+										nodeList.push({ pid: pid, id: nid, name: "最后一级节点", data:null });
+								}
+								
+						}
+						
+					}
+					
 					// dt.expandAll(function(){
-						alert("展开完毕");
+						//alert("展开完毕");
 					// });
 
 					dt.expandLevel(1, function(){
