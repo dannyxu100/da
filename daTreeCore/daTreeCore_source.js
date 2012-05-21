@@ -294,7 +294,7 @@ var daTreeCore = (function(){
 				arrSubLevel = [];
 				
 				for( var i=0, len=arrCur.length; i<len; i++ ){
-					if( false === fn.call( arrCur[i] ) ){		//每一个节点都回调一次，如果回调函数返回值恒为false，即刻中止遍历。
+					if( false === fn.call( arrCur[i], false, (len-1)==i ) ){	//每一个节点都回调一次，如果回调函数返回值恒为false，即刻中止遍历。
 						arrSubLevel = arrCur = [];
 						break;
 					}
@@ -304,7 +304,7 @@ var daTreeCore = (function(){
 				}
 			}
 			
-			fn.call( node, true );								//最后再通过起始节点 回调一次。
+			fn.call( node, true, true );						//最后再通过起始节点 回调一次。
 			
 		},
 		
