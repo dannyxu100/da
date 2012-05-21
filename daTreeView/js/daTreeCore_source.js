@@ -211,6 +211,7 @@ var daTreeCore = (function(){
 			if( !this.setting.list[ node.setting.pid ] ){			//确保新节点 的所属父节点缓存区存在。
 				this.setting.list[ node.setting.pid ] = [];
 			}
+			
 			this.setting.list[ node.setting.pid ].push( node );		//将新节点 压入所属父节点缓存区。
 		},
 		
@@ -218,6 +219,8 @@ var daTreeCore = (function(){
 			var tree = this,
 				list = this.setting.list,
 				arrSub = [];
+			
+			if( da.isEmptyObj( list ) ) return;
 			
 			if( isForce ){		//强制方式(建议用于:add单一或少量新节点后立即load,强制要求父节点存在)。
 				var pnode;
@@ -235,15 +238,12 @@ var daTreeCore = (function(){
 						tree.map[ arrSub[i].setting.id ] = arrSub[i];
 					}
 				}
-				list = [];						//清空待处理缓存区
+				tree.setting.list = {};						//清空待处理缓存区
 				
 			}
 			else{				//遍历方式(建议用于: add批量新节点后load处理,)。
-				this.run( this.root, function( isEnd ){			//遍历树，添加待处理的新节点(this为遍历到当前节点)。
-					if( isEnd ){								//遍历完所有节点，即便list内仍然有新节点缓存，也是配置信息不合法的，直接清空。
-						list = [];
-					}
-					else{
+				this.run( this.root, function( isEnd, isLevelEnd ){			//遍历树，添加待处理的新节点(this为遍历到当前节点)。
+					if( !isEnd && !isLevelEnd ){
 						arrSub = list[ this.setting.id ];		//提取当前节点下的新子节点。
 						if( !arrSub || 0 >= arrSub.length ){	//没待处理的新子节点。
 							return;
@@ -263,6 +263,10 @@ var daTreeCore = (function(){
 								}
 							}
 						}
+					}
+					
+					if( isEnd ){							//遍历完所有节点，即便list内仍然有新节点缓存，也是配置信息不合法的，直接清空。
+						tree.setting.list = {};
 					}
 				});
 			}
@@ -285,26 +289,32 @@ var daTreeCore = (function(){
 			if( !fn || !da.isFunction( fn ) ) return;
 			
 			var arrCur = [],
-				arrSubLevel = [];
+				arrSubLevel = [],
+				curNode;
 			
 			arrSubLevel.push( node );
-			
+
 			while( 0 < arrSubLevel.length ){					//遍历。
 				arrCur = arrSubLevel;
 				arrSubLevel = [];
 				
 				for( var i=0, len=arrCur.length; i<len; i++ ){
-					if( false === fn.call( arrCur[i], false, (len-1)==i ) ){	//每一个节点都回调一次，如果回调函数返回值恒为false，即刻中止遍历。
-						arrSubLevel = arrCur = [];
+					curNode = arrCur[i];
+				
+					if( false === fn.call( curNode, false, false ) ){	//每一个节点都回调一次，如果回调函数返回值恒为false，即刻中止遍历。
+						arrSubLevel = arrCur = [];				//要中止遍历，先清空待处理列表
 						break;
 					}
 					
-					if( arrCur[i].sub && 0 < arrCur[i].sub.length )
-						arrSubLevel = arrSubLevel.concat( arrCur[i].sub );
+					if( curNode.sub && 0 < curNode.sub.length ){
+						// da.out(arrCur[i].setting.id +":"+ arrCur[i].sub.length);
+						arrSubLevel = arrSubLevel.concat( curNode.sub );
+					}
 				}
+				fn.call( curNode, false, true );				//遍历到树的每一级别最后一个节点 回调一次。
 			}
 			
-			fn.call( node, true, true );						//最后再通过起始节点 回调一次。
+			fn.call( curNode, true, true );						//任何条件造成遍历操作停止后，最终还要回调一次。
 			
 		},
 		
