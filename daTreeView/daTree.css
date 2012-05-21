@@ -20,7 +20,7 @@
 
 .daNodeHover,
 .daNodeSelect{
-	background: #f0f0f0;
+	background: #f2f2f2;
 	color: #222;
 	-moz-border-radius: 8px;
 	-khtml-border-radius: 8px;
@@ -28,8 +28,8 @@
 	border-radius: 8px;
 }
 .daNodeSelect{
-	background: #dedede;
-	color: #222;
+	background: #222;
+	color: #f7f7f7;
 	border:0px solid #999;
 }
 
