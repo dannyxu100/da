@@ -145,14 +145,13 @@ var daTreeView = (function(){
 				data: setting.data
 			});
 
-			this.core.load( setting.isForece );
-			
 			this.obj = doc.createElement( "div" );
 			this.obj.id = this.id;
 			this.obj.className = this.setting.css.tree;
 			
 			this.parent.insertBefore( this.obj, null );
 			
+			this.bind();
 		},
 		
 		add: function( setting ){
@@ -164,10 +163,10 @@ var daTreeView = (function(){
 		/**创建连接 对象集
 		*/
 		createLine: function( iconUlObj, node, nodeObj ){
-			var nodeId = "daNode_" + node.id,
-				len = ( node.parent && pObj.parent.sub && node.parent.sub.length ) || 0,
-				idx = node.idx,
-				pObj = node.parent,
+			var nodeId = node.setting.id,
+				len = ( node.pnode && node.pnode.sub && node.pnode.sub.length ) || 0,
+				index = node.index,
+				pObj = node.pnode,
 				jointObj, jointCSS,
 				ulObj;
 			
@@ -175,31 +174,31 @@ var daTreeView = (function(){
 			jointObj.id = nodeId + "_joint";
 			jointObj.className = this.setting.css.joint;
 			
-			while( pObj ){																				//祖父节点连接线对象集
-				if( !pObj.parent ) break;
+			while( pObj ){							//与祖父节点的连接线对象集
+				if( !pObj.pnode ) break;
 				
-				var lenParent = ( pObj.parent && pObj.parent.sub && pObj.parent.sub.length ) || 0,
-					idxParent = pObj.idx;
+				var lenParent = ( pObj.pnode && pObj.pnode.sub && pObj.pnode.sub.length ) || 0,
+					idxParent = pObj.index;
 				
 				ulObj = doc.createElement( "ul" );
 				ulObj.id = nodeId + "_line" + pObj.level;
-				if( lenParent-1 ===  idxParent )										//某级祖父节点是同级最后一个节点
+				if( lenParent-1 ===  idxParent )				//某级祖父节点是同级最后一个节点
 					ulObj.className = this.setting.css.noline;
 				else
 					ulObj.className = this.setting.css.line
 				jointObj.insertBefore( ulObj, jointObj.firstChild );
 				
-				pObj = pObj.parent;
+				pObj = pObj.pnode;
 			}
-			
-			if( len-1 ===  idx ){																	//最后一个子节点
+
+			if( len-1 ===  index ){					//最后一个子节点
 				if( node.sub && 0 < node.sub.length )
 					jointCSS = this.setting.css.plusbottom;
 				else
 					jointCSS = this.setting.css.joinbottom;
 					
 			}
-			else{																									//非最后一个子节点
+			else{									//非最后一个子节点
 				if( node.sub && 0 < node.sub.length )
 					jointCSS = this.setting.css.plus;
 				else
@@ -207,11 +206,11 @@ var daTreeView = (function(){
 					
 			}
 			
-			if( 0 < node.level ){															//非根节点
+			if( 0 < node.level ){					//非根节点
 				ulObj = doc.createElement( "ul" );
 				ulObj.id = nodeId + "_bend";
 				ulObj.className = jointCSS;
-				this.bindLine( ulObj, iconUlObj, node );
+				// this.bindLine( ulObj, iconUlObj, node );
 				jointObj.insertBefore( ulObj, null );
 				
 			}
@@ -228,10 +227,10 @@ var daTreeView = (function(){
 		
 		createNode: function( node ){
 			var context = this,
-				nodeId = "daNode_" + node.id,
+				nodeId = node.setting.id,
 				nodeObj = doc.createElement( "div" );
 			
-			nodeObj.id = nodeId;
+			nodeObj.id = nodeId + "_node";
 			nodeObj.className = this.setting.css.node;
 			
 			var iconObj = doc.createElement( "div" ),
@@ -245,7 +244,11 @@ var daTreeView = (function(){
 			
 			ulObj = doc.createElement( "ul" );
 			ulObj.id = nodeId + "_icon_0";
-			ulObj.className = ( 0 < node.level ) ? ( node.sub && 0 < node.sub.length ? this.setting.css.folder : this.setting.css.newfile ) : this.setting.css.root;
+			ulObj.className = ( 0 < node.level ) ? 
+				( node.sub && 0 < node.sub.length ? 
+					this.setting.css.folder : 
+					this.setting.css.newfile ) : 
+				this.setting.css.root;
 			
 			//关节对象
 			nodeObj.insertBefore( this.createLine( ulObj, node, nodeObj ), null );
@@ -253,10 +256,10 @@ var daTreeView = (function(){
 			iconObj.insertBefore( ulObj, null );
 			nodeObj.insertBefore( iconObj, null );
 			
-			//名称对象
+			//节点名称对象
 			textObj.id = nodeId + "_text";
 			textObj.className = this.setting.css.text;
-			textObj.innerHTML = node.name;
+			textObj.innerHTML = node.setting.name;
 			nodeObj.insertBefore( textObj, null );
 			
 			//功能按钮对象
@@ -264,7 +267,7 @@ var daTreeView = (function(){
 			toolsObj.className = this.setting.css.tools;
 			
 			if ( 0 == node.level ){
-				ulObj = doc.createElement( "ul" );												//设置
+				ulObj = doc.createElement( "ul" );				//功能锁
 				ulObj.id = nodeId + "_tool_0";
 				ulObj.className = this.setting.css.locked;
 				da( ulObj ).bind("click", function(){
@@ -281,7 +284,7 @@ var daTreeView = (function(){
 			}
 			else if ( 0 < node.level ){
 				
-				ulObj = doc.createElement( "ul" );												//编辑
+				ulObj = doc.createElement( "ul" );				//编辑
 				ulObj.id = nodeId + "_tool_0";
 				ulObj.className = this.setting.css.edit;
 				(function( node ){
@@ -292,7 +295,7 @@ var daTreeView = (function(){
 				})( node );
 				toolsObj.insertBefore( ulObj, null );
 				
-				ulObj = doc.createElement( "ul" );												//添加
+				ulObj = doc.createElement( "ul" );				//添加
 				ulObj.id = nodeId + "_tool_1";
 				ulObj.className = this.setting.css.add;
 				(function( node ){
@@ -302,7 +305,7 @@ var daTreeView = (function(){
 				})( node );
 				toolsObj.insertBefore( ulObj, null );
 				
-				ulObj = doc.createElement( "ul" );												//移除
+				ulObj = doc.createElement( "ul" );				//移除
 				ulObj.id = nodeId + "_tool_2";
 				ulObj.className = this.setting.css.del;
 				(function( node ){
@@ -314,15 +317,15 @@ var daTreeView = (function(){
 			}
 				
 			nodeObj.insertBefore( toolsObj, null );
-			this.bindNode( node, nodeObj, textObj, toolsObj );
+			//this.bindNode( node, nodeObj, textObj, toolsObj );
 			
 			//放入父亲的子节点容器
-			if( 0 == node.level ){																							//根节点
+			if( 0 == node.level ){			//根节点
 				pSubObj = this.obj;
 			}
-			else{																																//非根节点
-				var pNode = node.parent, 
-					pNodeId = "daNode_" + pNode.id;
+			else{							//非根节点
+				var pNode = node.pnode,
+					pNodeId = pNode.setting.id;
 
 				pSubObj = doc.getElementById( pNodeId + "_sub" );
 						
@@ -331,7 +334,7 @@ var daTreeView = (function(){
 					pSubObj.id = pNodeId + "_sub";
 					pSubObj.className = this.setting.css.sub;
 					
-					var pObj = doc.getElementById( pNodeId ),
+					var pObj = doc.getElementById( pNodeId + "_node" ),
 						ppObj = pObj.parentNode;
 					
 					ppObj.insertBefore( pSubObj, pObj.nextSibling );
@@ -342,16 +345,15 @@ var daTreeView = (function(){
 			
 			pSubObj.insertBefore( nodeObj, null );
 			
-			if( 0 < node.level && 0 == node.idx ){															//非根节点，并且是父亲的第一个子节点
-				node = node.parent;
-				
-				var pBendObj = doc.getElementById( "daNode_" + node.id + "_bend" );
-				
-				if( pBendObj ){																										//改变拐点样式
-					var len = ( node.parent && node.parent.sub && node.parent.sub.length ) || 0,
-						idx = node.idx;
+			if( 0 < node.level && 0 == node.index ){				//非根节点，并且是父亲的第一个子节点
+				node = node.pnode;
+				var pBendObj = doc.getElementById( node.setting.id + "_bend" );
+
+				if( pBendObj ){										//改变拐点样式
+					var len = ( node.pnode && node.pnode.sub && node.pnode.sub.length ) || 0,
+						index = node.index;
 							
-					if( len-1 ===  idx )																						//最后一个子节点
+					if( len-1 === index )							//最后一个子节点
 						pBendObj.className = this.setting.css.minusbottom;
 					else																														//非最后一个子节点
 						pBendObj.className = this.setting.css.minus;
@@ -359,58 +361,123 @@ var daTreeView = (function(){
 				}
 				
 				if( 0 < node.level )
-					doc.getElementById( "daNode_" + node.id + "_icon_0" ).className = this.setting.css.openfolder;
+					doc.getElementById( node.setting.id + "_icon_0" ).className = this.setting.css.openfolder;
 			}
 			
 
 		},
 		
+		/**绑定事件
+		*/
+		bind: function(){
+			this.bindLine();
+			this.bindNode();
+		},
+		
 		/**拐点bend绑定事件
 		*/
-		bindLine: function( bendObj, iconUlObj, node ){
-			var cssSetting = this.setting.css;
+		bindLine: function(){
+			var css = this.setting.css;
 				context = this;
-			
-			da( bendObj ).bind("click", function(){
-				var	nodeId = "daNode_" + node.id,
-					subObj = doc.getElementById( nodeId + "_sub" );
-				
+
+			da( this.obj ).delegate( "[id$='_bend']", "click", function(){
+				var	nodeId = this.id.replace("_bend",""),
+					jointObj = doc.getElementById( 	nodeId + "_joint" ),	//节点连线对象集容器元素。
+					iconObj = doc.getElementById( nodeId + "_icon_0" ),		//默认图标元素
+					subObj = doc.getElementById( nodeId + "_sub" ),			//子节点容器元素
+					node = context.core.get( nodeId );						//找到daNodeCore节点对象。
+
 				switch( this.className ){
-					case cssSetting.plus:
+					case css.plus:
 						if( subObj )
 							subObj.style.display = "block";
 						else
 							context.expandNode( node, function(){
 								//alert("展开子节点完毕");
 							});
-						this.className = cssSetting.minus;
-						iconUlObj.className = cssSetting.openfolder;
+						this.className = css.minus;
+						iconObj.className = css.openfolder;
 						break;
 						
-					case cssSetting.minus:
+					case css.minus:
 						if( subObj ){
 							subObj.style.display = "none";
-							this.className = cssSetting.plus;
-							iconUlObj.className = cssSetting.folder;
+							this.className = css.plus;
+							iconObj.className = css.folder;
 						}
 						break;
 						
-					case cssSetting.plusbottom:
+					case css.plusbottom:
 						if( subObj )
 							subObj.style.display = "block";
 						else
 							context.expandNode( node, function(){
 								//alert("展开子节点完毕");
 							});
-						this.className = cssSetting.minusbottom;
-						iconUlObj.className = cssSetting.openfolder;
+						this.className = css.minusbottom;
+						iconObj.className = css.openfolder;
 						break;
 						
-					case cssSetting.minusbottom:
+					case css.minusbottom:
 						if( subObj ){
 							subObj.style.display = "none";
-							this.className = cssSetting.plusbottom;
-							iconUlObj.className = cssSetting.folder;
+							this.className = css.plusbottom;
+							iconObj.className = css.folder;
+						}
+						break;
+					
+				}
+				
+			});
+		},
+		
+		
+		/**拐点bend绑定事件
+		*/
+		bindLine2: function( bendObj, iconUlObj, node ){
+			var css = this.setting.css;
+				context = this;
+				
+			da( bendObj ).bind("click", function(){
+				var	nodeId = node.setting.id,
+					subObj = doc.getElementById( nodeId + "_sub" );
+
+				switch( this.className ){
+					case css.plus:
+						if( subObj )
+							subObj.style.display = "block";
+						else
+							context.expandNode( node, function(){
+								//alert("展开子节点完毕");
+							});
+						this.className = css.minus;
+						iconUlObj.className = css.openfolder;
+						break;
+						
+					case css.minus:
+						if( subObj ){
+							subObj.style.display = "none";
+							this.className = css.plus;
+							iconUlObj.className = css.folder;
+						}
+						break;
+						
+					case css.plusbottom:
+						if( subObj )
+							subObj.style.display = "block";
+						else
+							context.expandNode( node, function(){
+								//alert("展开子节点完毕");
+							});
+						this.className = css.minusbottom;
+						iconUlObj.className = css.openfolder;
+						break;
+						
+					case css.minusbottom:
+						if( subObj ){
+							subObj.style.display = "none";
+							this.className = css.plusbottom;
+							iconUlObj.className = css.folder;
 						}
 						break;
 					
@@ -421,13 +488,24 @@ var daTreeView = (function(){
 		
 		/**节点Node绑定事件
 		*/
-		bindNode: function( node, nodeObj, textObj, toolsObj ){
+		bindNode: function(){
 			var context = this,
 				fnOver = context.setting.event.over,
 				fnOut = context.setting.event.out,
 				fnClick = context.setting.event.click;
-			
-			da( nodeObj ).bind("mouseover", function(){
+
+			var	nodeId, toolsObj, textObj, node;
+					
+			var getObjs = function ( nodeObj ){
+					nodeId = nodeObj.id.replace("_node",""),
+					toolsObj = doc.getElementById( nodeId + "_tools" ),		//节点编辑工具容器元素
+					textObj = doc.getElementById( nodeId + "_text" ),		//节点名称对象元素
+					node = context.core.get( nodeId );						//找到daNodeCore节点对象。
+				};
+					
+			da( this.obj ).delegate( "[id$='_node']", "mouseover", function(){	//节点鼠标移上高亮。
+				getObjs( this );			//获取相关元素、对象
+				
 				if( !this.getAttribute( "daNodeSelect" ) ){
 					this.className = context.setting.css.hover;
 				}
@@ -439,7 +517,9 @@ var daTreeView = (function(){
 					fnOver.call( node, this, textObj );
 				}
 				
-			}).bind("mouseout", function(){
+			}).delegate( "[id$='_node']", "mouseout", function(){		//节点鼠标移出取消高亮。
+				getObjs( this );			//获取相关元素、对象
+				
 				if( !this.getAttribute( "daNodeSelect" ) ){
 					this.className = context.setting.css.node;
 				}
@@ -451,7 +531,85 @@ var daTreeView = (function(){
 					fnOut.call( node, this, textObj );
 				}
 				
-			}).bind("click", function(){
+			}).delegate( "[id$='_node']", "click", function(){			//节点点击事件。
+				getObjs( this );			//获取相关元素、对象
+				
+				if( !this.getAttribute( "daNodeSelect" ) ){
+					this.className = context.setting.css.select;
+					this.setAttribute( "daNodeSelect", "true" );
+					
+					if( context.selectObj && this.id !== context.selectObj.id ){
+						context.selectObj.className = context.setting.css.node;
+						context.selectObj.removeAttribute( "daNodeSelect" );
+					}
+
+					context.selectObj = this;
+				}
+				
+				if( fnClick ){
+					fnClick.call( node, this, textObj );
+				}
+				
+			}).delegate( "[id$='_node']", "mouseup", function(evt){
+				if ( 2 !== evt.button ) return;
+				
+				getObjs( this );
+				
+				daTip.hide( "daNodePopMenu" );
+				
+				if( !this.getAttribute( "daNodeSelect" ) ){
+					this.className = context.setting.css.select;
+					this.setAttribute( "daNodeSelect", "true" );
+					
+					if( context.selectObj && this.id !== context.selectObj.id ){
+						context.selectObj.className = context.setting.css.node;
+						context.selectObj.removeAttribute( "daNodeSelect" );
+					}
+
+					context.selectObj = this;
+				}
+				
+//				if( fnClick ){
+//					fnClick.call( this, node, nodeObj );
+//				}
+				
+			});
+			
+		},
+		
+		/**节点Node绑定事件
+		*/
+		bindNode2: function( node, nodeObj, textObj, toolsObj ){
+			var context = this,
+				fnOver = context.setting.event.over,
+				fnOut = context.setting.event.out,
+				fnClick = context.setting.event.click;
+			
+			da( nodeObj ).bind("mouseover", function(){				//节点鼠标移上高亮。
+				if( !this.getAttribute( "daNodeSelect" ) ){
+					this.className = context.setting.css.hover;
+				}
+				
+				if( 0 === node.level || !context.treeLocked )
+					toolsObj.style.display = "block";
+				
+				if( fnOver ){
+					fnOver.call( node, this, textObj );
+				}
+				
+			}).bind("mouseout", function(){							//节点鼠标移出取消高亮。
+				if( !this.getAttribute( "daNodeSelect" ) ){
+					this.className = context.setting.css.node;
+				}
+				
+				if( 0 === node.level || !context.treeLocked )
+					toolsObj.style.display = "none";
+				
+				if( fnOut ){
+					fnOut.call( node, this, textObj );
+				}
+				
+			}).bind("click", function(){							//节点点击事件。
 				if( !this.getAttribute( "daNodeSelect" ) ){
 					this.className = context.setting.css.select;
 					this.setAttribute( "daNodeSelect", "true" );
@@ -498,17 +656,19 @@ var daTreeView = (function(){
 		expandAll: function( fn ){
 			var context = this;
 			
+			this.core.load( this.setting.isForece );
+			
 			setTimeout(function(){
-				context.core.run(function( isEnd, isLevelEnd ){		//遍历树节点
+				context.core.run(function( isEnd, isLevelEnd ){		//遍历树节点。
 					if( !isEnd ){
 						context.createNode( this );
 					}
-					else if( isEnd && da.isFunction( fn ) ){		//展开操作完毕，回调
+					else if( isEnd && da.isFunction( fn ) ){		//展开操作完毕，回调。
 						fn.call( context );
 					}
 				});
 			
-			},13);
+			},1);
 			
 		},
 		
@@ -519,38 +679,52 @@ var daTreeView = (function(){
 			
 			var context = this;
 			
+			this.core.load( this.setting.isForece );
+
 			setTimeout(function(){
-				context.core.run(function( isEnd, isLevelEnd ){			//遍历树节点
-					if( !isEnd && maxLevel >= this.level ){
-						context.createNode( this );							//绘制节点
-						
-						if( maxLevel===this.level && isLevelEnd ) return false;		//展开到需要最大级别,并且是最后一个，停止遍历
+				context.core.run(function( isEnd, isLevelEnd ){			//遍历树节点。
+					if( !isEnd && !isLevelEnd && maxLevel >= this.level ){
+						//da.out( isEnd +"-"+ isLevelEnd +"-"+ this.level );
+						context.createNode( this );						//绘制节点。
 					}
-					else if( isEnd && da.isFunction( fn ) ){			//展开操作完毕，回调
+					else if( isLevelEnd && maxLevel===this.level){		//展开到需要最大级别,并且是最后一个，停止遍历。
+						//da.out("isLevelEnd")
+						return false;
+					}
+					else if( isEnd && da.isFunction( fn ) ){			//展开操作完毕，回调。
+						//da.out("isEnd")
 						fn.call( context );
 					}
 				});
 			
-			},13);
+			},1);
 			
 		},
 		
 		/**展开节点
 		*/
 		expandNode: function( node, fn ){
-			var nodeId = ( "string" === typeof node ) ? node : node.id;
+			var nodeId = ( "string" === typeof node ) ? node : node.setting.id;
 				context = this;
 
+			this.core.load( this.setting.isForece );
+			
 			setTimeout(function(){
-				context.core.run( node, function( isEnd, isLevelEnd ){			//遍历树节点
-					if( !isEnd && nodeId !== this.id )
-						context.createNode( this );																		//绘制节点
-					else if( isEnd && da.isFunction( fn ) )													//展开操作完毕，回调
-						fn.call( context );
-
+				context.core.run( node, function( isEnd, isLevelEnd ){			//遍历树节点。
+					if( ( node.level+1 ) === this.level ){		//子节点级别。
+						if( !isLevelEnd ){
+							context.createNode( this );			//绘制节点。
+						}
+						else if( isLevelEnd ){					//子节点展开操作完毕，回调，停止遍历。
+							if( da.isFunction( fn ) ){
+								fn.call( context );
+							}
+							return false;
+						}
+					}
 				});
 			
-			},13);
+			},1);
 			
 		},
 		
@@ -586,8 +760,8 @@ var daTreeView = (function(){
 		/**清除节点对象
 		*/
 		clearNode: function( node ){
-			var nodeId = "daNode_" + node.id,
-				nodeObj = doc.getElementById( nodeId),
+			var nodeId = node.id,
+				nodeObj = doc.getElementById( nodeId + "_node"),
 				subObj = doc.getElementById( nodeId + "_sub" );
 			
 //			if( nodeObj )
@@ -600,7 +774,7 @@ var daTreeView = (function(){
 		
 		/**移除节点
 		*/
-		removeNode: function( node, nodeObj, textObj ){debugger;
+		removeNode: function( node, nodeObj, textObj ){
 			node.remove();
 			this.clearNode( node.parent );
 			this.expandNode( node.parent );
@@ -613,7 +787,7 @@ var daTreeView = (function(){
 //			
 //			da.out( node.parent.sub.length )
 //			if( 0 >= node.parent.sub.length )
-//				doc.getElementById( "daNode_" + node.parent.id + "_icon_0" ).className = this.setting.css.newfile;
+//				doc.getElementById( node.parent.id + "_icon_0" ).className = this.setting.css.newfile;
 			
 		}
 	};

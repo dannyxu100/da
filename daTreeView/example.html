@@ -2,20 +2,20 @@
 <html>
 	<head>
 		<link href="daTree.css" rel="stylesheet" />
-		<script src="js/da.js" langruage="javascript"></script>
+		<script src="js/da_source_1.3.5.js" langruage="javascript"></script>
 		<script src="js/daTreeCore_source.js" langruage="javascript"></script>
 		<script src="daTreeView_source.js" langruage="javascript"></script>
 		
 		<script>
-				var dt;
+				var tree1;
 				
 				da(function(){
 
-					dt = daTreeView({
+					tree1 = daTreeView({
 						id: "0", 
 						parent: "#mydatree",
 						name: "自定义树", 
-						list: nodeList,
+						//list: nodeList,
 						event: {
 							click: function( node, nodeObj ){
 								//alert(" 节点id: "+ node.id );debugger;
@@ -37,22 +37,29 @@
 					});
 					
 					
-					var nodeList = [], pid, nid;
+					var pid, nid;
 					
-					for( var i=0; i<20; i++ ){
+					for( var i=0; i<100; i++ ){
 						nid = "node" + i;
 						pid = "0";
-						nodeList.push({ pid: pid, id: nid, name: "<span style='color:#f33;'>第一级节点</span>", data:null });
+						tree1.add({ 
+							pid: pid, 
+							id: nid, 
+							name: "第一级" + nid, 
+							data:{
+								
+							}
+						});
 						
-						for( var ii=0; ii<20; ii++ ){
+						for( var ii=0; ii<10; ii++ ){
 								nid = "node" + i + ii;
 								pid = "node"+i;
-								nodeList.push({ pid: pid, id: "node"+(i + "" + ii), name:"第二级" + nid, data:null });
+								tree1.add({ pid: pid, id: "node"+(i + "" + ii), name:"第二级" + nid, data:null });
 								
-								for( var iii=0; iii<20; iii++ ){
+								for( var iii=0; iii<10; iii++ ){
 										nid = "node"+ i + ii + iii;
 										pid = "node" + i + ii;
-										nodeList.push({ pid: pid, id: nid, name: "最后一级节点", data:null });
+										tree1.add({ pid: pid, id: nid, name: "最后一级节点", data:null });
 								}
 								
 						}
@@ -63,7 +70,7 @@
 						//alert("展开完毕");
 					// });
 
-					dt.expandLevel(1, function(){
+					tree1.expandLevel(2, function(){
 //						da.copy( this.treeObj.outerHTML );
 						
 					});
