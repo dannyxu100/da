@@ -82,11 +82,15 @@
 .daIcon,
 .daTools{ height:18px; }
 
-.daIcon .icoRoot{background-position:-54px 0px;}
-.daIcon .iconewfile{background-position:-54px -18px;}
+.daIcon .root{background-position:-54px 0px;}
+.daIcon .newFile{background-position:-54px -18px;}
 
-.daIcon .icoFolder{background-position:-54px -36px;}
-.daIcon .icoOpenFolder{background-position:-54px -54px;}
+.daIcon .folder{background-position:-54px -36px;}
+.daIcon .openFolder{background-position:-54px -54px;}
+
+.daIcon .unChecked{background-position:-90px -0px; cursor:pointer;}
+.daIcon .hasChecked{background-position:-90px -18px; cursor:pointer;}
+.daIcon .checked{background-position:-90px -36px; cursor:pointer;}
 
 .daTools .locked{background-position:-72px 0px; cursor:pointer;}
 .daTools .unlocked{background-position:-72px -18px; cursor:pointer;}

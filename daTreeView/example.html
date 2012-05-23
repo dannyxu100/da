@@ -12,34 +12,33 @@
 				da(function(){
 
 					tree1 = daTreeView({
-						id: "0", 
 						parent: "#mydatree",
+						id: "0", 
 						name: "自定义树", 
+						/*
+						mouseover: function( node, nodeObj ){
+
+						},
+						
+						mouseout: function( node, nodeObj ){
+
+						},
+						*/
 						//list: nodeList,
-						event: {
-							click: function( node, nodeObj ){
-								//alert(" 节点id: "+ node.id );debugger;
-								
-//								daTip({
-//									target: nodeObj,
-//									pointer: "47"
-//								});
-							},
-							
-							over: function( node, nodeObj ){
-
-							},
-							
-							out: function( node, nodeObj ){
-
-							}
+						click: function( node, nodeObj ){
+							da.out( node.setting.id )
+						},
+						
+						checkbox: function( node, nodeObj ){
+							//da.out( node.setting.id )
 						}
+						
 					});
 					
 					
 					var pid, nid;
 					
-					for( var i=0; i<100; i++ ){
+					for( var i=0; i<3; i++ ){
 						nid = "node" + i;
 						pid = "0";
 						tree1.add({ 
@@ -65,28 +64,35 @@
 						}
 						
 					}
-					
-					// dt.expandAll(function(){
+					/*
+					tree1.expandAll(function(){
 						//alert("展开完毕");
-					// });
-
+					});
+					*/
 					tree1.expandLevel(2, function(){
-//						da.copy( this.treeObj.outerHTML );
-						
+						//alert("展开完毕");
 					});
 					
 					
 					
 				});
 				
+				function checkedNode(){
+					var arr = tree1.getChecked();
+					
+					for( var i=0; i<arr.length; i++ ){
+						da.out( arr[i].setting.id );
+					}
+				}
 		</script>
 		
 	</head>
 	
 	
 	<body>
-		<div id="mydatree" style="height:500px;width:200px;border:1px solid #f0f0f0;overflow:auto;"></div>
-		<input type="button" value="source" onclick="da.copy( dt.treeObj.outerHTML);" />
+		<input type="button" value="source" onclick="da.copy( tree1.treeObj.innerHTML);" />
+		<input type="button" value="getChecked()" onclick="checkedNode();" />
+		<div id="mydatree" style="height:500px;width:300px;border:1px solid #f0f0f0;overflow:auto;"></div>
 	</body>
 
 </html>
