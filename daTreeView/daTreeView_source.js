@@ -121,10 +121,13 @@ var daTreeView = (function(){
 				del: "delete"
 			},
 			
-			checkbox: null,
 			mouseover: null,
 			mouseout: null,
-			click: null
+			click: null,
+			checkbox: null,
+			edit: null,
+			append: null,
+			delete: null
 			
 		},
 		
@@ -302,34 +305,37 @@ var daTreeView = (function(){
 			else if ( 0 < node.level ){
 				
 				ulObj = doc.createElement( "ul" );				//编辑
-				ulObj.id = nodeId + "_tool_0";
+				ulObj.id = nodeId + "_t_edit";
+				ulObj.title = "编辑";
 				ulObj.className = this.setting.css.edit;
-				(function( node ){
-					da( ulObj ).bind("click", function(){
-						context.editNode( node, nodeObj, textObj );
-						toolsObj.style.display = "none";
-					});
-				})( node );
+				// (function( node ){
+					// da( ulObj ).bind("click", function(){
+						// context.editNode( node, nodeObj, textObj );
+						// toolsObj.style.display = "none";
+					// });
+				// })( node );
 				toolsObj.insertBefore( ulObj, null );
 				
 				ulObj = doc.createElement( "ul" );				//添加
-				ulObj.id = nodeId + "_tool_1";
+				ulObj.id = nodeId + "_t_append";
+				ulObj.title = "添加";
 				ulObj.className = this.setting.css.add;
-				(function( node ){
-					da( ulObj ).bind("click", function(){
-						//TODO:
-					});
-				})( node );
+				// (function( node ){
+					// da( ulObj ).bind("click", function(){
+						TODO:
+					// });
+				// })( node );
 				toolsObj.insertBefore( ulObj, null );
 				
 				ulObj = doc.createElement( "ul" );				//移除
-				ulObj.id = nodeId + "_tool_2";
+				ulObj.id = nodeId + "_t_delete";
+				ulObj.title = "删除";
 				ulObj.className = this.setting.css.del;
-				(function( node ){
-					da( ulObj ).bind("click", function(){
-						context.removeNode( node, nodeObj, textObj );
-					});
-				})( node );
+				// (function( node ){
+					// da( ulObj ).bind("click", function(){
+						// context.removeNode( node, nodeObj, textObj );
+					// });
+				// })( node );
 				toolsObj.insertBefore( ulObj, null );
 			}
 				
@@ -535,7 +541,10 @@ var daTreeView = (function(){
 			var context = this,
 				fnOver = context.setting.mouseover,
 				fnOut = context.setting.mouseout,
-				fnClick = context.setting.click;
+				fnClick = context.setting.click,
+				fnAppend = context.setting.append,
+				fnDelete = context.setting.delete,
+				fnEdit = context.setting.edit;
 
 			var	nodeId, toolsObj, textObj, node;
 					
@@ -591,33 +600,67 @@ var daTreeView = (function(){
 				}
 				
 				if( fnClick ){
-					fnClick.call( context, node, this, textObj );
+					fnClick.call( context, node, nodeObj, textObj );
 				}
 				
-			}).delegate( "[id$='_node']", "mouseup", function(evt){
-				if ( 2 !== evt.button ) return;
-				
-				getObjs( this );
-				
-				daTip.hide( "daNodePopMenu" );
-				
-				if( !this.getAttribute( "daNodeSelect" ) ){
-					this.className = context.setting.css.select;
-					this.setAttribute( "daNodeSelect", "true" );
-					
-					if( context.selectObj && this.id !== context.selectObj.id ){
-						context.selectObj.className = context.setting.css.node;
-						context.selectObj.removeAttribute( "daNodeSelect" );
-					}
+			}).delegate( "[id$='_t_append']", "click", function(){			//节点添加事件。
+				var nodeObj = this.parentNode.parentNode;
+				getObjs( nodeObj );				//获取相关元素、对象
 
-					context.selectObj = this;
+				if( fnAppend ){
+					if( true === fnAppend.call( context, node, nodeObj, textObj ) ){
+						
+						
+					}
 				}
 				
-//				if( fnClick ){
-//					fnClick.call( this, node, nodeObj );
-//				}
+			}).delegate( "[id$='_t_delete']", "click", function(){			//节点删除事件。
+				var nodeObj = this.parentNode.parentNode;
+				getObjs( nodeObj );				//获取相关元素、对象
+
+				if( fnDelete ){
+					if( true === fnDelete.call( context, node, nodeObj, textObj ) ){
+						context.removeNode( node, nodeObj );
+						
+					}
+				}
 				
-			});
+			}).delegate( "[id$='_t_edit']", "click", function(){			//节点编辑事件。
+				var nodeObj = this.parentNode.parentNode;
+				getObjs( nodeObj );				//获取相关元素、对象
+
+				if( fnEdit ){
+					if( true === fnEdit.call( context, node, nodeObj, textObj ) ){
+						
+						
+					}
+				}
+				
+			})
+			// .delegate( "[id$='_node']", "mouseup", function(evt){
+				// if ( 2 !== evt.button ) return;
+				
+				// getObjs( this );
+				
+				// daTip.hide( "daNodePopMenu" );
+				
+				// if( !this.getAttribute( "daNodeSelect" ) ){
+					// this.className = context.setting.css.select;
+					// this.setAttribute( "daNodeSelect", "true" );
+					
+					// if( context.selectObj && this.id !== context.selectObj.id ){
+						// context.selectObj.className = context.setting.css.node;
+						// context.selectObj.removeAttribute( "daNodeSelect" );
+					// }
+
+					// context.selectObj = this;
+				// }
+				
+				// if( fnClick ){
+					// fnClick.call( this, node, nodeObj );
+				// }
+				
+			// });
 			
 		},
 		
@@ -740,38 +783,32 @@ var daTreeView = (function(){
 			editObj.focus();
 		},
 		
-		/**清除节点对象
-		*/
-		clearNode: function( node ){
-			var nodeId = node.id,
-				nodeObj = doc.getElementById( nodeId + "_node"),
-				subObj = doc.getElementById( nodeId + "_sub" );
-			
-//			if( nodeObj )
-//				nodeObj.parentNode.removeChild( nodeObj );
-			
-			if( subObj )
-				nodeObj.parentNode.removeChild( subObj );
-			//alert( nodeObj.id );
-		},
-		
 		/**移除节点
 		*/
-		removeNode: function( node, nodeObj, textObj ){
-			node.remove();
-			this.clearNode( node.parent );
-			this.expandNode( node.parent );
+		removeNode: function( node, nodeObj ){
+			if( node.sub && 0 < node.sub.length ){		//清空子节点
+				if( !confirm("所有子节点也一起删除吗?") ) {
+					return;
+				}
+				
+				var subObj = doc.getElementById( node.setting.id + "_sub" );
+				subObj.parentNode.removeChild( subObj );
+			}
 			
-//			var subObj = doc.getElementById( nodeObj.id + "_sub" );
-//			if( subObj )
-//				nodeObj.parentNode.removeChild( subObj );
-//			//alert( nodeObj.id );
-//			nodeObj.parentNode.removeChild( nodeObj );
-//			
-//			da.out( node.parent.sub.length )
-//			if( 0 >= node.parent.sub.length )
-//				doc.getElementById( node.parent.id + "_folder" ).className = this.setting.css.newfile;
+			var pNode = node.pnode;
+			if( pNode ){
+				var pNodeId = pNode.setting.id,
+					pBendObj = doc.getElementById( pNodeId + "_bend" );
+					pIconObj = doc.getElementById( pNodeId + "_folder" );
+
+				if( 1 == pNode.sub.length ){
+					pIconObj.className = this.setting.css.newfile;
+				}
+			}
 			
+			nodeObj.parentNode.removeChild( nodeObj );
+			
+			node.remove();							//删除当前节点
 		}
 	};
 

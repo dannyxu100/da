@@ -55,10 +55,11 @@ var daNodeCore = (function(){
 		/**删除节点
 		*/
 		remove: function(){
-			for( var i=0, len=this.sub.length; i<len; i++ ){
-				this.sub[i].remove();
+			if( this.sub ){
+				for( var i=0, len=this.sub.length; i<len; i++ ){
+					this.sub[i].remove();
+				}
 			}
-			
 			this.sub = null;
 			
 			if( this.tree )							//删除所属树对象的 节点映射
