@@ -211,6 +211,10 @@ daLoader.class('daVML', {path: _p+'/daCanvas/daVML_source_1.1.2.js', need:"da" }
 daLoader.class('daCanvas', {path: _p+'/daCanvas/daCanvas_source.js', need:"da,daVML,daSVG" });				//绘图类
 daLoader.class('daGuide', {path: _p+'/daGuide/daGuide_source.js', need:"da,daCanvas" });					//向导类
 //-------------------------------------
+daLoader.class('daTreeCore', {path: _p+'/daTreeCore/daTreeCore_source.js', need:"da" });							//内存树类
+daLoader.class('daTreeView_CSS', {path: _p+'/daTreeView/daTreeView.css'});
+daLoader.class('daTreeView', {path: _p+'/daTreeView/daTreeView_source.js', need:"da,daTreeCore,daTreeView_CSS" });	//视图树类
+//-------------------------------------
 daLoader.class('daLoading_CSS', {path: _p+'/daLoading/daLoading.css'});
 daLoader.class('daLoading', {path: _p+'/daLoading/daLoading_source.js', need:"da,daLoading_CSS" });				//Loading类
 //-------------------------------------
@@ -220,13 +224,16 @@ daLoader.class('daMsg', {path: _p+'/daMsg/daMsg_source.js', need:"da,daFx,daMsg_
 daLoader.class('daIframe', {path: _p+'/daIframe/daIframe_source.js', need:"da,daFx,daLoading" });				//缓存框架类
 //-------------------------------------
 daLoader.class('daFrame_CSS', {path: _p+'/daFrame/daFrame.css'});
-daLoader.class('daFrame', {path: _p+'/daFrame/daFrame_source.js', need:"da,daDrag,daWheel,daFrame_CSS" });		//容器框架类
+daLoader.class('daFrame', {path: _p+'/daFrame/daFrame_source.js', need:"da,daFx,daDrag,daWheel,daLoading,daFrame_CSS" });		//容器框架类
 //-------------------------------------
 daLoader.class('daWin_CSS', {path: _p+'/daWin/daWin.css' });
 daLoader.class('daWin', {path: _p+'/daWin/daWin_source_1.2.js', need:"da,daFrame,daWin_CSS" });					//窗口 控件类
 //-------------------------------------
 daLoader.class('daButton_CSS', {path: _p+'/daButton/daButton.css' });
 daLoader.class('daButton', {path: _p+'/daButton/daButton_source.js', need:"da,daButton_CSS" });					//按钮 控件类
+//-------------------------------------
+daLoader.class('daToolbar_CSS', {path: _p+'/daToolbar/daToolbar.css' });
+daLoader.class('daToolbar', {path: _p+'/daToolbar/daToolbar_source.js', need:"da,daToolbar_CSS" });				//工具条(分组按钮) 控件类
 //-------------------------------------
 daLoader.class('daOption_CSS', {path: _p+'/daOption/daOption.css' });
 daLoader.class('daOption', {path: _p+'/daOption/daOption_source.js', need:"da,daGif,daOption_CSS" });			//可选项 控件类
