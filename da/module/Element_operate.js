@@ -262,6 +262,13 @@
 		}
 	});
 
+	function root( elem, cur ) {
+		return da.isNodeName(elem, "table") ?
+			(elem.getElementsByTagName("tbody")[0] ||
+			elem.appendChild(elem.ownerDocument.createElement("tbody"))) :
+			elem;
+	}
+	
 	/*
 	function findOrAppend( elem, tag ) {
 		return elem.getElementsByTagName( tag )[0] || elem.appendChild( elem.ownerDocument.createElement( tag ) );
