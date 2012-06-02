@@ -7,14 +7,15 @@
 *{ font: 12px/1.5 arial, tahoma, helvetica, "\5b8b\4f53", sans-serif; }
 
 /* 小图标样式 */
-/*动态图标 - logo*/
-span.daIco_title{display:inline-block; margin-left:10px;margin-right:5px;width:16px;height:16px;background:url(images/hm.png) no-repeat;display:inline-block; } /*hock：   *vertical-align:-8px;  */
-span.daIco2_title{display:inline-block; margin-left:10px;width:16px;height:16px;background:url(images/hm.png) no-repeat; display:inline-block;} /*hock：   *vertical-align:-8px;  */
-
 /*静态图标 - 带外间距*/
 span.daIco{display:inline-block; vertical-align:middle; margin-left:10px;margin-right:5px;width:16px;height:16px;background:url(images/daIcons.png) no-repeat; display:inline-block;} /*hock：   *vertical-align:-8px;  */
 /*无外间距*/
 span.daIco2{display:inline-block; vertical-align:middle; width:16px;height:16px;background:url(images/daIcons.png) no-repeat; display:inline-block;margin-right:2px;} /*hock：   *vertical-align:-8px;  */
+
+/*logo*/
+span.logo{background:url(images/logo.png) no-repeat;}
+span.logo2{background:url(images/logo2.png) no-repeat;}
+
 span.user {background-position:0px 0px;}span.user2 {background-position:-80px 0px;}span.user3 {background-position:-128px -16px;}span.user4 {background-position:-112px -16px;}
 span.file {background-position:-16px 0px;}
 span.add {background-position:-32px 0px;}span.add2 {background-position:-112px -48px;}
