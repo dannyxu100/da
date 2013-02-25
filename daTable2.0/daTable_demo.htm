@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>daTable测试页面</title>
+	<link rel="shortcut icon" type="image/ico" href="/images/ico.png">
+	
+	<LINK href="/css/mps.css" type="text/css" rel="stylesheet">
+	<LINK href="/plugins/daTip/daTip.css" type="text/css" rel="stylesheet" >
+	
+	<script language="JavaScript" src="/js/jquery.js"></script>
+	<script language="JavaScript" src="/js/ebs_public_min.js"></script>
+	<script language="JavaScript" src="/js/ebs_min3.js"></script>
+
+</head>
+<body style="padding:10px;">
+
+	<LINK href="/plugins/daPage/daPage.css" type="text/css" rel="stylesheet">
+	<script language="JavaScript" src="/plugins/daPage/daPage.js"></script>
+	
+	<LINK href="/plugins/daExcel/daExcel.css" type="text/css" rel="stylesheet">
+	<script language="JavaScript" src="/plugins/daExcel/daExcel.js"></script>
+	
+	<LINK href="/plugins/daTable.css" type="text/css" rel="stylesheet">
+	<script language="JavaScript" src="/plugins/daTable_source_2.0.js"></script>
+	
+	<table id="tb_list" style="width:100%;">
+		<tbody name="head">
+			<tr>
+				<td>序</td>
+				<td>名称</td>
+				<td>日期</td>
+				<td>备注</td>
+				<td>排序</td>
+				<td>状态</td>
+			</tr>
+		</tbody>
+		<tbody name="body" style="display:none">
+			<tr>
+				<td colspan="6" name="order">{order}</td>
+			</tr>
+			<tr value="{sql_menuid}">
+				<td name="order">{order}</td>
+				<td name="sql_menuid" >{sql_menuid}</td>
+				<td fmt="yyyy-mm-dd/p" edit="1">{sql_cfgdate}</td>
+				<td name="sql_remark" edit="1">{sql_remark}</td>
+				<td name="sql_order" fmt="money" edit="1">{sql_order}</td>
+				<td name="sql_isautopage" edit="1">{sql_isautopage_org}</td>
+			</tr>
+		</tbody>
+		<tbody name="foot">
+			<tr>
+				<td colspan="6" name="sum_order">{sum_order}</td>
+			</tr>
+			<tr>
+				<td  colspan="6" name="sum_order">
+					共<span id="tb_list_recordcount2" style="color:#c26220;">0</span>&nbsp;条，
+					共<span id="tb_list_pagecount2" style="color:#c26220">0</span>&nbsp;页，
+					当前在第<span id="tb_list_pageindex2" style="color:#c26220">0</span>&nbsp;页　
+					<span id="tb_list_pageinfo">&nbsp;</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div style="margin:5px;">
+		<input id="addItemIdx" type="text" value="0" />
+		<input type="button" value="adddetail" onclick="add()" />
+	</div>
+	<script>
+			function fldv1(fld,val){
+				return val
+			}
+			
+			function toExcel(){
+				daExcel({
+					id: "tb_list",
+					editTag: "edit",
+					after: function( obj, tdObj, trObj ){
+		//				alert( obj.outerHTML )
+		//				alert( td.outerHTML )
+						
+						var params = {
+							sqlcmd: "pub_sqllist",
+							opt: "edt",
+							sql_menuid: da(trObj).attr("value")
+						};
+						daExcel.update( "/sys/aspx/execcmd.aspx", params, trObj );
+					}
+				});
+			}
+			
+			function add(){
+				runsql4xml( "/sys/aspx/execcmd.aspx", {
+					sqlcmd: "pub_sqllist",
+					opt: "qry"
+				}, 
+				function(iseof,data1,ds1)
+				{
+					//if ((iseof) && (ds1)) 
+					if( !ds1 )
+					{
+						//mytablebyds(data1, fldv1, "tb_list", 1000, "", "0" );
+
+						daTable({
+							id: "tb_list",
+							dataset: data1,
+							field: fldv1,
+							pagesize: 10,
+							opt: "append",
+							optIndex: da("#addItemIdx").val()
+							
+						}).load();
+							
+					} ;
+				});
+			}
+	
+			da(function(){
+				daTable({
+					id: "tb_list",
+					url: "/sys/aspx/execcmd.aspx",
+					data: {
+						sqlcmd: "pub_sqllist",
+						opt: "qry"
+					},
+					//loading: false,
+					//page: false,
+					pageSize: 20,
+					
+					field: function( fld, val, row, ds ){
+						//da.out($v[_sql_remark]);
+						if( "sql_isautopage" == fld )
+							return 0==val?"完整SQL":"不完整SQL";
+						
+						return val;
+					},
+					loaded: function( idx, xml, json, ds ){
+						//da.out($v[_sql_menuid]);
+						//alert( json.ds11[3].sql_menuid )
+						//daTable.itemHover("#tb_list tbody[name=details_auto] tr");
+						link_click("#tb_list tbody[name=details_auto] tr");
+						
+						toExcel();
+					}
+				}).load();
+				
+			});
+	</script>
+
+
+
+</body>
+</html>
+
+

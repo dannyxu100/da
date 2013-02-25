@@ -8157,12 +8157,12 @@ da.extend({
 	
 	/**数据交互
 	*/
-	getData: function( url, data, fnLoaded, fnError ) {
+	rundb: function( url, data, fnLoaded, fnError ) {
 		if( !url ) return;
 		
-		if (url.toLowerCase().indexOf(".asp") < 0) {					//修正url参数
-			url = "/sys/aspx/execsqllist.aspx?sqlname=" + url;
-		}
+		// if (url.toLowerCase().indexOf(".asp") < 0) {		//修正url参数
+			// url = "/sys/aspx/execsqllist.aspx?sqlname=" + url;
+		// }
 		if (url.indexOf("?") < 0) {
 			url += "?";
 		}
@@ -8265,7 +8265,7 @@ da.extend({
 			// }
 		});
 	
-		da.getData( url, data, 
+		da.rundb( url, data, 
 		function( iseof, data, dsname, idx){
 			if( !dsname ){
 				tmpHTML = tmpHTML.replace(/\{[^\}]+\}/g, function( res, i, target ){
@@ -8306,6 +8306,6 @@ da.extend({
 /*********为兼容过去的 ebs函数库用法定义的一些全局函数。*********/
 var $value = da.setValue,
 	$value2 = da.setValue,
-	runsql = da.getData,
-	runsql4text = da.getData,
-	runsql4xml = da.getData;
+	runsql = da.rundb,
+	runsql4text = da.rundb,
+	runsql4xml = da.rundb;

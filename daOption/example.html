@@ -1,11 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-	<script src="js/da.js"></script>
-	<script src="js/daFx.js"></script>
-	<script src="js/daGif.js"></script>
+	<script src="../da/da_source_1.3.5.js"></script>
+	<script src="../daFx/daFx_source.js"></script>
+	<script src="../daFx/daGif_source.js"></script>
+	
+	
 	<link href="daOption.css" rel="stylesheet" />
-	<script src="daOption.js"></script>
+	<script src="daOption_source.js"></script>
 	
 
 	<script langruage="javascript">
@@ -94,7 +96,7 @@
 		<input type="button" value="获取复选选中颜色" onclick="getColor2()" />
 		<input type="button" value="全选" onclick="daOption.check( 'color2', true );" />
 		<input type="button" value="清空" onclick="daOption.check( 'color2', false );" />
-		<input type="button" value="反选" onclick="daOption.inverse( 'color2' );" />
+		<input type="button" value="反选" onclick="daOption.reverse( 'color2' );" />
 		<input type="button" value="隐藏" onclick="checkbox4.hide();" />
 		<input type="button" value="显示" onclick="checkbox4.show();" />
 		<input type="button" value="查找red1" onclick="findOption()" />

@@ -8,7 +8,7 @@
 .daButton table.tb_daButton{background-color:#c2c2c2;}
 .tb_daButton .mid{ background:url(images/daBt_highlight.png) 0px 0px repeat-x; }
 .tb_daButton .mid .container{ position:relative; left:0px; top:0px; }
-.tb_daButton .mid .container .client{padding:3px 0px;line-height:18px; text-align:center;font-size:12px;color:#555;}
+.tb_daButton .mid .container .client{position:absolute; left:0px; top:0px;line-height:18px; text-align:center;font-size:12px;color:#555;}
 
 .tb_daButton .top{ height:2px; background:url(images/daBt_H.png) 0px 0px repeat-x;}
 .tb_daButton .bottom{ height:2px; background:url(images/daBt_H.png) 0px -2px repeat-x;}
@@ -29,7 +29,7 @@
 .daButton table.tb_daButton2{background-color:#949494;}
 .tb_daButton2 .mid{ background:url(images/daBt_highlight.png) 0px -100px repeat-x;}
 .tb_daButton2 .mid .container{ position:relative; left:0px; top:0px;}
-.tb_daButton2 .mid .container .client{padding:3px 0px; line-height:18px; text-align:center;font-size:12px;color:#000;}
+.tb_daButton2 .mid .container .client{position:absolute; left:0px; top:0px;line-height:18px; text-align:center;font-size:12px;color:#000;}
 
 .tb_daButton2 .top{ height:2px; background:url(images/daBt_H.png) 0px -4px repeat-x;}
 .tb_daButton2 .bottom{ height:2px; background:url(images/daBt_H.png) 0px -6px repeat-x;}
@@ -50,7 +50,7 @@
 .daButton table.tb_daButton3{background-color:#fff;}
 .tb_daButton3 .mid{position:relative;}
 .tb_daButton3 .mid .container{ position:relative;left:0px;top:0px;background:url(images/daBt_highlight.png) 0px -200px repeat-x;}
-.tb_daButton3 .mid .container .client{ position:absolute; left:0px; top:0px;padding:3px 0px; line-height:18px; text-align:center;font-size:12px;color:#f7f7f7;}
+.tb_daButton3 .mid .container .client{ position:absolute; left:0px; top:0px; line-height:18px; text-align:center;font-size:12px;color:#f7f7f7;}
 
 .tb_daButton3 .top{ height:2px; background:url(images/daBt_H.png) 0px -8px repeat-x;}
 .tb_daButton3 .bottom{ height:2px; background:url(images/daBt_H.png) 0px -10px repeat-x;}

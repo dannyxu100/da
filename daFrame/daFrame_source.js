@@ -93,28 +93,29 @@ var daFrame = (function(){
 			this.cntScale = {w: 1, h: 1};
 
 			this.create();
-			this.setSize();
 			if( "" != setting.url || "" != setting.src )
-				this.loading();																								//启动loading动画
+				this.loading();								//启动loading动画
 			
-			da.timer.call( this, 30, function(){														//防止看不见loading
+			// da.timer.call( this, 30, function(){			//防止看不见loading
 				this.setCnt();
 				this.bindEvent();
-			});
+			// },);
 			
-			if( setting.shandow )																		//内阴影
+			this.setSize();
+			
+			if( setting.shandow )							//内阴影
 				daFrame.shandowborder( this.cntMainObj, setting.shandow );
 		},
 		
 		create: function(){
 			var cntObj = doc.createElement("div"),
-					mainObj = doc.createElement("div"),
-					overObj = doc.createElement("div"),
-					boxObj = doc.createElement("div"),
-//					barVObj = doc.createElement("div"),
-//					barHObj = doc.createElement("div"),
-					scrollVObj = doc.createElement("a"),
-					scrollHObj = doc.createElement("a");
+				mainObj = doc.createElement("div"),
+				overObj = doc.createElement("div"),
+				boxObj = doc.createElement("div"),
+				// barVObj = doc.createElement("div"),
+				// barHObj = doc.createElement("div"),
+				scrollVObj = doc.createElement("a"),
+				scrollHObj = doc.createElement("a");
 					
 			cntObj.id = this.cntId;
 			cntObj.className = this.setting.css.cnt;
@@ -256,24 +257,23 @@ var daFrame = (function(){
 			
 			da( objPad ).bind("mousemove",function( evt ){								//滚动条显示隐藏
 				var wCnt = da( context.cntObj).width(),
-						hCnt = da( context.cntObj).height(),
-						leftBox = context.cntBoxObj.offsetLeft,
-						topBox = context.cntBoxObj.offsetTop,
-						vRect = {
-							minX: wCnt + ( -leftBox ) -50,
-//							maxX: wCnt + ( -leftBox ),
-							minY: hCnt + ( -topBox ) -50
-//							maxY: hCnt + ( -topBox )
-						};
+					hCnt = da( context.cntObj).height(),
+					pos = da( context.cntObj).offset(),
+					rect = {
+						minX: ( pos.left + wCnt ) -50,
+//						maxX: wCnt + ( -leftBox ),
+						minY: ( pos.top + hCnt ) -50
+//						maxY: hCnt + ( -topBox )
+					};
 				
-				if( vRect.minX < evt.pageX ){
+				if( rect.minX < evt.pageX ){
 					context.showScrollBarV();
 				}
 				else{
 					context.hideScrollBarV();
 				}
 				
-				if( vRect.minY < evt.pageY ){
+				if( rect.minY < evt.pageY ){
 					context.showScrollBarH();
 				}
 				else{
@@ -298,10 +298,10 @@ var daFrame = (function(){
 					nTop = nTop - nWheelDeltaStep;
 				},
 				after: function(){//alert("after");
-	        nTop = ( 0 < nTop ) ? 0 : ( -maxY > nTop ) ? -maxY : nTop;
+					nTop = ( 0 < nTop ) ? 0 : ( -maxY > nTop ) ? -maxY : nTop;
 
 					context.cntBoxObj.style.top = nTop +"px";			//更新位置
-	        context.cntScrollV.style.top = -( nTop * context.cntScale.h ) + "px";
+					context.cntScrollV.style.top = -( nTop * context.cntScale.h ) + "px";
 					
 					context.hideScrollBarV();
 				}
@@ -334,7 +334,7 @@ var daFrame = (function(){
 			imageObj.src = this.setting.src;
 			da.loadImage( this.setting.src, function(){
 				context.setSize();
-				context.loading(true);																											//终止loading动画
+				context.loading(true);					//终止loading动画
 			});
 			
 			return imageObj;
@@ -345,15 +345,18 @@ var daFrame = (function(){
 					setting = this.setting,
 					iframeObj = doc.createElement("iframe");
 
-			var isRemote = function( targetURL ){																						//正则表达式判断是否跨域访问
+			var isRemote = function( targetURL ){							//正则表达式判断是否跨域访问
 					var parts = /^(\w+:)?\/\/([^\/?#]+)/.exec( targetURL ); 
-					return parts && (parts[1] && parts[1].toLowerCase() !== location.protocol || parts[2].toLowerCase() !== location.host);		//location是当前window的属性，与url地址比较，判断是否远程跨域
+					return parts && 
+						( parts[1] && 
+							parts[1].toLowerCase() !== location.protocol || 
+							parts[2].toLowerCase() !== location.host );		//location是当前window的属性，与url地址比较，判断是否远程跨域
 			};
 
 			//内页加载完毕后，重置iframe大小
 			var fnAutoSize = function( iframeObj, contentWin ){
-					var contentW = Math.max(																										//不知道为什么contentWindow.document.body.offsetHeight第一次获取的值偏大
-						context.setting.width,																										//iframe设置一次大小后，再次获取内页尺寸，相对准确了，所以这里暂时处理两次
+					var contentW = Math.max(			//不知道为什么contentWindow.document.body.offsetHeight第一次获取的值偏大
+						context.setting.width,			//iframe设置一次大小后，再次获取内页尺寸，相对准确了，所以这里暂时处理两次
 						da( contentWin ).width(),
 						contentWin.document.body.scrollWidth,
 						contentWin.document.documentElement.scrollWidth
@@ -620,7 +623,7 @@ var daFrame = (function(){
 		showScrollBarV: function(){
 			if( this.isShowScrollV ){
 				if( this.TimerScrollV ) da.clearTimer( this.TimerScrollV );
-				da( this.cntScrollV ).stop(true,true).fadeIn();
+				da( this.cntScrollV ).stop().fadeIn();
 			}
 		},
 		
@@ -629,9 +632,9 @@ var daFrame = (function(){
 		hideScrollBarV: function(){
 			if( this.isShowScrollV ){
 				if( this.TimerScrollV ) da.clearTimer( this.TimerScrollV );
-				this.TimerScrollV = da.timer.call( this, 200, function(){
-					da( this.cntScrollV ).stop(true,true).fadeOut();
-				});
+				this.TimerScrollV = da.timer( 200, function(frameObj){
+					da( frameObj.cntScrollV ).stop().fadeOut();
+				}, this);
 			}
 		},
 		
@@ -640,7 +643,7 @@ var daFrame = (function(){
 		showScrollBarH: function(){
 			if( this.isShowScrollH ){
 				if( this.TimerScrollH ) da.clearTimer( this.TimerScrollH );
-				da( this.cntScrollH ).stop(true,true).fadeIn();
+				da( this.cntScrollH ).stop().fadeIn();
 			}
 		},
 		
@@ -649,9 +652,9 @@ var daFrame = (function(){
 		hideScrollBarH: function(){
 			if( this.isShowScrollH ){
 				if( this.TimerScrollH ) da.clearTimer( this.TimerScrollH );
-				this.TimerScrollH = da.timer.call( this, 150, function(){
-					da( this.cntScrollH ).stop(true,true).fadeOut();
-				});
+				this.TimerScrollH = da.timer( 150, function(frameObj){
+					da( frameObj.cntScrollH ).stop().fadeOut();
+				}, this);
 			}
 		},
 		
@@ -686,12 +689,12 @@ var daFrame = (function(){
 		
 		setSize: function( nWidth, nHeight ){
 			var da_parentObj = da( this.cntParentObj ),
-					da_boxObj = da( this.cntBoxObj ),
-					wBox = da_boxObj.width(), 
-					hBox = da_boxObj.height(),
-					wCnt = ( nWidth && 0 <= nWidth ) ? nWidth : this.setting.width || da_parentObj.width(),
-					hCnt = ( nHeight && 0 <= nHeight ) ? nHeight : this.setting.height || da_parentObj.height();
-
+				da_boxObj = da( this.cntBoxObj ),
+				wBox = da_boxObj.width(), 
+				hBox = da_boxObj.height(),
+				wCnt = ( nWidth && 0 <= nWidth ) ? nWidth : this.setting.width || da_parentObj.width(),
+				hCnt = ( nHeight && 0 <= nHeight ) ? nHeight : this.setting.height || da_parentObj.height();
+			
 			wCnt = parseInt( wCnt, 10 );
 			hCnt = parseInt( hCnt, 10 );
 			
@@ -763,19 +766,19 @@ var daFrame = (function(){
 				da( this.cntScrollH ).css( "left", scrollLeft );
 			}
 			else{
-				da( this.cntBoxObj ).stop(true,true).act({
+				da( this.cntBoxObj ).stop().act({
 					top: -boxTop,
 					left: -boxLeft
 				});
 				
-				da( this.cntScrollV ).stop(true,true).act({
+				da( this.cntScrollV ).stop().act({
 					top: scrollTop
 				},{
 						complete: function(){
 							if( context.isShowScrollV ) context.hideScrollBarV();
 					}
 				});
-				da( this.cntScrollH ).stop(true,true).act({
+				da( this.cntScrollH ).stop().act({
 					left: scrollLeft
 				},{
 						complete: function(){
@@ -795,7 +798,8 @@ var daFrame = (function(){
 			if( bHide ){
 				this.cntOverObj.style.display = "none";
 			}
-			if( !this.setting.loading ) return;
+			if( !this.setting.loading || "undefined" == typeof daLoading ) return;
+			
 			if( bHide ){
 				this.cntLoadingObj.finished();		//结束loading动画
 			}

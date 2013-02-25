@@ -78,7 +78,7 @@ var daTreeView = (function(){
 			checkbox: null,
 			edit: null,
 			append: null,
-			delete: null
+			remove: null
 			
 		},
 		
@@ -261,7 +261,7 @@ var daTreeView = (function(){
 				toolsObj.insertBefore( ulObj, null );
 				
 				ulObj = doc.createElement( "ul" );				//移除
-				ulObj.id = nodeId + "_t_delete";
+				ulObj.id = nodeId + "_t_remove";
 				ulObj.title = "删除";
 				ulObj.className = this.setting.css.del;
 				// (function( node ){
@@ -476,7 +476,7 @@ var daTreeView = (function(){
 				fnOut = context.setting.mouseout,
 				fnClick = context.setting.click,
 				fnAppend = context.setting.append,
-				fnDelete = context.setting.delete,
+				fnRemove = context.setting.remove,
 				fnEdit = context.setting.edit;
 
 			var	nodeId, toolsObj, textObj, node;
@@ -544,26 +544,45 @@ var daTreeView = (function(){
 					});
 				}
 				
-			}).delegate( "[id$='_t_delete']", "click", function(){			//节点删除事件。
+			}).delegate( "[id$='_t_remove']", "click", function(){			//节点删除事件。
 				var nodeObj = this.parentNode.parentNode;
 				getObjs( nodeObj );				//获取相关元素、对象
 
 				if( node.sub && 0 < node.sub.length ){		//有子节点
-					if( !window.confirm("还有下级，确定要删除("+ node.setting.name +") 吗?") ) {
-						return;
+					if( "undefined" == typeof daWin ){
+						if( !confirm("还有下级，确定要删除("+ node.setting.name +")吗?") ) {
+							return;
+						}
+					}
+					else{
+						confirm("还有下级，确定要删除("+ node.setting.name +")吗?",
+						function(){
+							if( fnRemove ){
+								fnRemove.call( context, node, nodeObj, textObj, function(){
+									context.removeNode( node, nodeObj );
+								});
+							}
+						});
 					}
 				}
 				else{
-					if( !window.confirm("确定要删除("+ node.setting.name +") 吗?") ) {
-						return;
+					if( "undefined" == typeof daWin ){
+						if( !confirm("确定要删除 ("+ node.setting.name +") 吗?") ) {
+							return;
+						}
+					}
+					else{
+						confirm("确定要删除 ("+ node.setting.name +") 吗?",
+						function(){
+							if( fnRemove ){
+								fnRemove.call( context, node, nodeObj, textObj, function(){
+									context.removeNode( node, nodeObj );
+								});
+							}
+						});
 					}
 				}
 				
-				if( fnDelete ){
-					fnDelete.call( context, node, nodeObj, textObj, function(){
-						context.removeNode( node, nodeObj );
-					});
-				}
 				
 			}).delegate( "[id$='_t_edit']", "click", function(){			//节点编辑事件。
 				var nodeObj = this.parentNode.parentNode;
@@ -760,6 +779,15 @@ var daTreeView = (function(){
 					btEditObj.style.display = "block";
 					textObj.style.display = "block";
 					this.style.display = "none";
+					
+				}).bind("keydown",function(evt){
+					if( 13 == evt.keyCode){
+						fn( node, nodeObj, textObj, this);
+						
+						btEditObj.style.display = "block";
+						textObj.style.display = "block";
+						this.style.display = "none";
+					}
 				});
 				
 				nodeObj.insertBefore( editObj, textObj );

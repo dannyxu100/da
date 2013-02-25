@@ -30,7 +30,7 @@ da.extend({
 				da.data( elem, key, count, true );
 			} 
 			else {
-				da.undata( elem, key, true );
+				da.removeData( elem, key, true );
 				handleQueueMarkDefer( elem, type, "mark" );
 			}
 		}
@@ -87,7 +87,7 @@ da.extend({
 		}
 
 		if ( !queue.length ) {																		//如果队列长度为0，清除队列缓存区
-			da.undata( elem, type + "queue", true );
+			da.removeData( elem, type + "queue", true );
 			handleQueueMarkDefer( elem, type, "queue" );
 		}
 	}
@@ -197,7 +197,7 @@ var deferDataKey = type + "defer",
 		setTimeout( function() {
 			if ( !da.data( elem, queueDataKey, undefined, true ) &&
 				!da.data( elem, markDataKey, undefined, true ) ) {
-				da.undata( elem, deferDataKey, true );
+				da.removeData( elem, deferDataKey, true );
 				defer.resolve();
 			}
 		}, 0 );

@@ -6,7 +6,8 @@
 	version: 1.0.0
 */
 (function(da){
-	var daRe_typenamespace = /^([^\.]*)?(?:\.(.+))?$/,
+	var daRe_formElems = /^(?:textarea|input|select)$/i,
+		daRe_typenamespace = /^([^\.]*)?(?:\.(.+))?$/,
 		// daRe_namespaces = /\.(.*)$/,
 		daRe_hoverHack = /(?:^|\s)hover(\.\S+)?\b/,
 		daRe_keyEvent = /^key/,
@@ -833,7 +834,7 @@
 	if ( !da.support.changeBubbles ) {
 		da.event.special.change = {
 			setup: function() {
-				if ( rformElems.test( this.nodeName ) ) {
+				if ( daRe_formElems.test( this.nodeName ) ) {
 					// IE doesn't fire change on a check/radio until blur; trigger it on click
 					// after a propertychange. Eat the blur-change in special.change.handle.
 					// This still fires onchange a second time for check/radio after blur.
@@ -856,7 +857,7 @@
 				da.event.add( this, "beforeactivate._change", function( e ) {
 					var elem = e.target;
 
-					if ( rformElems.test( elem.nodeName ) && !elem._change_attached ) {
+					if ( daRe_formElems.test( elem.nodeName ) && !elem._change_attached ) {
 						da.event.add( elem, "change._change", function( event ) {
 							if ( this.parentNode && !event.isSimulated && !event.isTrigger ) {
 								da.event.simulate( "change", this.parentNode, event, true );
@@ -879,7 +880,7 @@
 			teardown: function() {
 				da.event.remove( this, "._change" );
 
-				return rformElems.test( this.nodeName );
+				return daRe_formElems.test( this.nodeName );
 			}
 		};
 	}

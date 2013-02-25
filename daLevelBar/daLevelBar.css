@@ -1,0 +1,28 @@
+﻿/*
+	author: danny.xu
+	date: 2012-6-3
+	discription: daLevelBar层级导航条样式表
+*/
+.daLevelBar{ height:30px;padding:1px 14px;}
+.daLevelBar .item,
+.daLevelBar .current { display:block; text-decoration:none; float:left; margin-left:-14px;line-height:30px; font-size:12px; font-weight:bold;color:#666;cursor:pointer;}
+
+.daLevelBar .l,
+.daLevelBar .r,
+.daLevelBar .text { height:30px; float:left; background-image:url(images/daLevelBar.png); list-item-style:none;}
+
+.daLevelBar .text { padding:0px 5px;}
+
+.daLevelBar .item .l { width:15px;background-position:0px 0px}
+.daLevelBar .item .r { width:15px;background-position:-15px 0px}
+.daLevelBar .item .text { background-position:0px -90px}
+
+.daLevelBar .item:hover { color:#222; }
+.daLevelBar .item:hover .l { width:15px;background-position:0px -30px}
+.daLevelBar .item:hover .r { width:15px;background-position:-15px -30px}
+.daLevelBar .item:hover .text { background-position:0px -120px}
+
+.daLevelBar .current { color:#f0f0f0;cursor:default;}
+.daLevelBar .current .l { width:15px;background-position:0px -60px}
+.daLevelBar .current .r { width:15px;background-position:-15px -60px}
+.daLevelBar .current .text { background-position:0px -150px}

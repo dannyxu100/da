@@ -1,7 +1,7 @@
 <html>
 	<head>
-	<script src="js/da.js" language="javascript"></script>
-	<script src="js/daLunar.js" language="javascript"></script>
+	<link href="../da/da.css" rel="stylesheet" />
+	<script src="../da/da_source_1.3.5.js" language="javascript"></script>
 	
 	<!--
 	<link href="daTip/daTip.css" rel="stylesheet" />
@@ -9,14 +9,15 @@
 	-->
 	
 	<link href="daDate.css" rel="stylesheet" />
-	<script src="daDate.js" language="javascript"></script>
+	<script src="daLunar_source.js" language="javascript"></script>
+	<script src="daDate_source.js" language="javascript"></script>
 	
 	<script>
 		var d2;
 		da(function(){
 			d2= daDate({
 				target: "#mydate",
-				count: 4,
+				count: 2,
 				selectTime: true
 				/*,
 				click: function( data ){

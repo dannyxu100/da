@@ -16,6 +16,10 @@
 		
 		daRe_nocache = /<(?:script|object|embed|option|style)/i,	//?????????
 		daRe_checked = /checked\s*(?:[^=]|=\s*.checked.)/i,
+		
+		nodeNames = "abbr|article|aside|audio|bdi|canvas|data|datalist|details|figcaption|figure|footer|" +
+		"header|hgroup|mark|meter|nav|output|progress|section|summary|time|video",
+		daRe_noshimcache = new RegExp("<(?:" + nodeNames + ")[\\s/>]", "i"),
 
 		
 		daWrapMap = {												//元素包裹映射表
@@ -224,7 +228,7 @@
 					results = { fragment: parent };
 	
 				} else {
-					results = da.buildFragment( args, this, scripts );
+					results = da.buildFragment( args, this.dom, scripts );
 				}
 	
 				fragment = results.fragment;
@@ -269,20 +273,19 @@
 			elem;
 	}
 	
-	/*
 	function findOrAppend( elem, tag ) {
 		return elem.getElementsByTagName( tag )[0] || elem.appendChild( elem.ownerDocument.createElement( tag ) );
 	}
 
 	function cloneCopyEvent( src, dest ) {
 
-		if ( dest.nodeType !== 1 || !jQuery.hasData( src ) ) {
+		if ( dest.nodeType !== 1 || !da.hasData( src ) ) {
 			return;
 		}
 
 		var type, i, l,
-			oldData = jQuery._data( src ),
-			curData = jQuery._data( dest, oldData ),
+			oldData = da._data( src ),
+			curData = da._data( dest, oldData ),
 			events = oldData.events;
 
 		if ( events ) {
@@ -291,14 +294,14 @@
 
 			for ( type in events ) {
 				for ( i = 0, l = events[ type ].length; i < l; i++ ) {
-					jQuery.event.add( dest, type, events[ type ][ i ] );
+					da.event.add( dest, type, events[ type ][ i ] );
 				}
 			}
 		}
 
 		// make the cloned public data object a copy from the original
 		if ( curData.data ) {
-			curData.data = jQuery.extend( {}, curData.data );
+			curData.data = da.extend( {}, curData.data );
 		}
 	}
 
@@ -330,15 +333,7 @@
 		if ( nodeName === "object" ) {
 			dest.outerHTML = src.outerHTML;
 
-			// This path appears unavoidable for IE9. When cloning an object
-			// element in IE9, the outerHTML strategy above is not sufficient.
-			// If the src has innerHTML and the destination does not,
-			// copy the src.innerHTML into the dest.innerHTML. #10324
-			if ( jQuery.support.html5Clone && (src.innerHTML && !jQuery.trim(dest.innerHTML)) ) {
-				dest.innerHTML = src.innerHTML;
-			}
-
-		} else if ( nodeName === "input" && rcheckableType.test( src.type ) ) {
+		} else if ( nodeName === "input" && (src.type === "checkbox" || src.type === "radio") ) {
 			// IE6-8 fails to persist the checked state of a cloned checkbox
 			// or radio button. Worse, IE6-7 fail to give the cloned element
 			// a checked appearance if the defaultChecked value isn't also set
@@ -369,14 +364,13 @@
 
 		// Event data gets referenced instead of copied if the expando
 		// gets copied too
-		dest.removeAttribute( jQuery.expando );
+		dest.removeAttribute( da.expando );
 
 		// Clear flags for bubbling special change/submit events, they must
 		// be reattached when the newly cloned events are first activated
 		dest.removeAttribute( "_submit_attached" );
 		dest.removeAttribute( "_change_attached" );
 	}
-	*/
 	
 	//文档片段缓存区
 	da.fragments = {};
@@ -388,34 +382,43 @@
 		scripts: 脚本片段
 	*/
 	da.buildFragment = function( args, nodes, scripts ) {
-		var fragment, cacheAble, cacheResults,
-			docTmp = (nodes && nodes[0] ? nodes[0].ownerDocument || nodes[0] : doc);
-	
-		if ( args.length === 1 
-		&& typeof args[0] === "string" 
-		&& args[0].length < 512 																							//只缓存0.5KB 的HTML代码片段
-		&& docTmp === doc 																										//只缓存与当前Document相关的HTML代码片段
-		&& args[0].charAt(0) === "<" 
-		&& !daRe_nocache.test( args[0] ) 																			//IE6 不能正确的克隆文档片段中option元素的selected选中状态属性，object和embed也会出问题，所以不缓存了。
-		&& (da.support.checkClone || !daRe_checked.test( args[0] )) ) {				//WebKit浏览器在文档片段中，克隆元素时，不能正确的复制checked状态属性，所以不缓存了。
-			cacheAble = true;
-	
-			cacheResults = da.fragments[ args[0] ];															//查找文档片段缓存区，返回缓存
-			if ( cacheResults && cacheResults !== 1 ) {
-				fragment = cacheResults;
+		var fragment, cacheable, cacheresults, doc,
+			first = args[ 0 ];
+
+		if ( nodes && nodes[0] ) {
+			doc = nodes[0].ownerDocument || nodes[0];
+		}
+
+		if ( !doc.createDocumentFragment ) {
+			doc = document;
+		}
+
+		if ( args.length === 1 && 
+			typeof first === "string" && 
+			first.length < 512 && 										//只缓存0.5KB 的HTML代码片段
+			doc === document &&											//只缓存与当前Document相关的HTML代码片段
+			first.charAt(0) === "<" && !daRe_nocache.test( first ) &&	//IE6 不能正确的克隆文档片段中option元素的selected选中状态属性，object和embed也会出问题，所以不缓存了。
+			(da.support.checkClone || !daRe_checked.test( first )) &&	//WebKit浏览器在文档片段中，克隆元素时，不能正确的复制checked状态属性，所以不缓存了。
+			(da.support.html5Clone || !daRe_noshimcache.test( first )) ) {
+
+			cacheable = true;
+
+			cacheresults = da.fragments[ first ];
+			if ( cacheresults && cacheresults !== 1 ) {
+				fragment = cacheresults;
 			}
 		}
-	
-		if ( !fragment ) {																										//没有缓存过文档片段，就生产文档片段
-			fragment = docTmp.createDocumentFragment();
-			da.clean( args, docTmp, fragment, scripts );												//生产出来的文档片段需要通过da.clean()函数修正清理一下
+
+		if ( !fragment ) {				//没有缓存过文档片段，就生产文档片段
+			fragment = doc.createDocumentFragment();
+			da.clean( args, doc, fragment, scripts );			//生产出来的文档片段需要通过da.clean()函数修正清理一下
 		}
-	
-		if ( cacheAble ) {																									  //对文档片段缓存set操作
-			da.fragments[ args[0] ] = cacheResults ? fragment : 1;
+
+		if ( cacheable ) {				//对文档片段缓存set操作
+			da.fragments[ first ] = cacheresults ? fragment : 1;
 		}
-	
-		return { fragment: fragment, cacheAble: cacheAble };									//返回文档片段
+
+		return { fragment: fragment, cacheable: cacheable };	//返回文档片段
 	};
 
 	//扩展部分添加、插入等特殊功能的DOM对象操作函数

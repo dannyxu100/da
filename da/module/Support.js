@@ -48,6 +48,10 @@
 			
 			getSetAttribute: div.className !== "t",			//如果是IE，可以通过驼峰格式值设置属性,这时候在今后的属性操作时就要进行兼容处理了。
 			
+			// Makes sure cloning an html5 element does not cause problems
+			// Where outerHTML is undefined, this still works
+			html5Clone: document.createElement("nav").cloneNode( true ).outerHTML !== "<:nav></:nav>",
+			
 			boxModel: null,									//盒子模型支持
 			inlineBlockNeedsLayout: false,					//inline-block支持
 			shrinkWrapBlocks: false,						//拆封块支持

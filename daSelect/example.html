@@ -1,17 +1,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
-		 <link href="daSelect.css" rel="stylesheet" />
-		 <script src="js/da.js" ></script>
-		 <script src="js/daDrag.js" ></script>
-		 <script src="js/daWheel.js" ></script>
-		 <script src="js/daFrame.js" ></script>
-		 <script src="js/daKey.js" ></script>
-		 <script src="js/daFx.js" ></script>
-		 <script src="js/daGif.js" ></script>
-		 <script src="js/daList.js" ></script>
+		 <link href="../da/da.css" rel="stylesheet" />
+		 <script src="../da/da_source_1.3.5.js" ></script>
+		 <script src="../daDrag/daDrag_source.js" ></script>
+		 <script src="../daWheel/daWheel_source.js" ></script>
+		 <script src="../daKey/daKey_source.js" ></script>
+		 <script src="../daFx/daFx_source.js" ></script>
+		 <script src="../daFx/daGif_source.js" ></script>
+		 <link href="../daButton/daButton.css" rel="stylesheet" />
+		 <link href="../daList/daList.css" rel="stylesheet" />
+		 <script src="../daList/daList_source.js" ></script>
+		 <link href="../daFrame/daFrame.css" rel="stylesheet" />
+		 <script src="../daFrame/daFrame_source.js" ></script>
 		 
-		 <script src="daSelect2.0.js" ></script>
+		 <link href="daSelect.css" rel="stylesheet" />
+		 <script src="daSelect_source_2.0.js" ></script>
 		 
 
 			<script>
@@ -33,7 +37,7 @@
 					
 					//异步加载list
 //					da.timer( 3000, function(){
-//						daSelect.getSelect("#cstname5").setList( {北京:1,上海:2,天津:3,四川省成都市汉默地理资讯科技有限公司:4,山东:5,云南:6,广东:7,香港:8,海南:9,深圳:10} );
+//						daSelect.get("#cstname5").setList( {北京:1,上海:2,天津:3,四川省成都市汉默地理资讯科技有限公司:4,山东:5,云南:6,广东:7,香港:8,海南:9,深圳:10} );
 //					});
 					
 					
@@ -65,18 +69,18 @@
 			
 				//动态加载list
 				function updateList(){
-					daSelect.getSelect("#cstname5").setList( {设计部:001,市场部:002,市场部:032,香港:8,市场部:032102} );
+					daSelect.get("#cstname5").setList( {设计部:001,市场部:002,市场部:032,香港:8,市场部:032102} );
 				}
 				
 				//动态设置text
 				function setText(){
-					daSelect.getSelect("#cstname5").text( da("#v1").dom[0].value );
+					daSelect.get("#cstname5").text( da("#v1").dom[0].value );
 					
 				}
 				
 				//动态设置value
 				function setValue(){
-					daSelect.getSelect("#cstname5").value( da("#t1").dom[0].value );
+					daSelect.get("#cstname5").value( da("#t1").dom[0].value );
 					
 				}
 				

@@ -34,7 +34,6 @@ var daDate = (function(){
 	//TODO: 静态成员
 	
 	
-	
 	return daDate;
 })();
 

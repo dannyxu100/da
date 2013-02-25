@@ -55,14 +55,20 @@ var daNodeCore = (function(){
 		/**删除节点
 		*/
 		remove: function(){
-			for( var i=0, len=this.sub.length; i<len; i++ ){
-				this.sub[i].remove();
+			if( this.sub ){							//删除所有子节点
+				for( var i=0, len=this.sub.length; i<len; i++ ){
+					this.sub[i] && this.sub[i].remove();	//有效节点就递归删除
+				}
 			}
-			
 			this.sub = null;
 			
-			if( this.tree )							//删除所属树对象的 节点映射
+			if( this.pnode ){						//删除所属父节点的索引
+				this.pnode.sub[ this.index ] = null;
+			}
+			
+			if( this.tree ){						//删除所属树对象的 节点映射
 				delete this.tree.map[ this.setting.id ];
+			}
 		}
 	
 		
@@ -294,21 +300,23 @@ var daTreeCore = (function(){
 			
 			arrSubLevel.push( node );
 
-			while( 0 < arrSubLevel.length ){					//遍历。
+			while( 0 < arrSubLevel.length ){			//遍历。
 				arrCur = arrSubLevel;
 				arrSubLevel = [];
 				
 				for( var i=0, len=arrCur.length; i<len; i++ ){
 					curNode = arrCur[i];
-				
-					if( false === fn.call( curNode, false, false ) ){	//每一个节点都回调一次，如果回调函数返回值恒为false，即刻中止遍历。
-						arrSubLevel = arrCur = [];				//要中止遍历，先清空待处理列表
-						break;
-					}
 					
-					if( curNode.sub && 0 < curNode.sub.length ){
-						// da.out(arrCur[i].setting.id +":"+ arrCur[i].sub.length);
-						arrSubLevel = arrSubLevel.concat( curNode.sub );
+					if( curNode ){						//判断节点的有效性(有可能已经被移除了)
+						if( false === fn.call( curNode, false, false ) ){	//每一个节点都回调一次，如果回调函数返回值恒为false，即刻中止遍历。
+							arrSubLevel = arrCur = [];				//要中止遍历，先清空待处理列表
+							break;
+						}
+						
+						if( curNode.sub && 0 < curNode.sub.length ){
+							// da.out(arrCur[i].setting.id +":"+ arrCur[i].sub.length);
+							arrSubLevel = arrSubLevel.concat( curNode.sub );
+						}
 					}
 				}
 				fn.call( curNode, false, true );				//遍历到树的每一级别最后一个节点 回调一次。

@@ -9,40 +9,41 @@ var doc = win.document;
 var daOption = (function(){
 
 	var daOption = function( setting ){
-		if( da.isFunction( setting ) || "string" === typeof setting )						//遍历和查找daOption控件的高级快捷用法
-			return daOption.getOption( setting );
+		if( da.isFunction( setting ) || "string" === typeof setting )		//遍历和查找daOption控件的高级快捷用法
+			return daOption.get( setting );
 		
 		return new daOption.fnStruct.init( setting );
 	};
 	
 	daOption.fnStruct = daOption.prototype = {
 		
-		oId: 0,										//唯一序号
-		oObj: null,
-		oParentObj: null,
+		id: 0,			//唯一序号
+		obj: null,
+		parentObj: null,
 		
-		oInput: null,
-		oIcon: null,
-		oText: null,
+		inputObj: null,
+		iconObj: null,
+		textObj: null,
 		
 		setting: {
-			parent: "",												//daOption 父元素id
+			parent: "",			//daOption 父元素id
 			id: "",
 			
 			type: "radio",
 			name: "",
-			checked: false,										//是否为选中状态
-			value: "",												//可选项对应的值
-			text: "",													//默认提示项
+			checked: false,		//是否为选中状态
+			value: "",			//可选项对应的值
+			text: "",			//默认提示项
 			
-			color: "#fff",										//用户自定义风格颜色RGB
+			color: "#fff",		//用户自定义风格颜色RGB
 			bg: "#09c",
-			unRadio: false,										//是否允许取消选中单选按钮
+			unRadio: false,		//是否允许取消选中单选按钮
 			
 			css: {
 				daOption: "daOption",
-				daOptionHover: "daOption2",
-				daOptionChecked: "daOption3",
+				hover: "daOption2",
+				checked: "daOption3",
+				
 				checkbox: "checkbox",
 				radio: "radio",
 				text: "text"
@@ -60,14 +61,14 @@ var daOption = (function(){
 		init: function( setting ){
 			setting = this.setting = da.extend( {}, this.setting, setting );
 
-			this.oParentObj = da( setting.parent );
-			this.oParentObj = 0 < this.oParentObj.dom.length ? this.oParentObj.dom[0] : doc.body;
+			this.parentObj = da( setting.parent );
+			this.parentObj = 0 < this.parentObj.dom.length ? this.parentObj.dom[0] : doc.body;
 			
 			if( setting.id )
-				this.oId = setting.id;
+				this.id = setting.id;
 			else 
-				//this.daBtId = da.nowId();					//在ie里面好像不怎么行啊~
-				while( null !== doc.getElementById( "daOption_" + this.oId ) ) this.oId++;						//保证id 唯一性
+				//this.daBtId = da.nowId();			//在ie里面好像不怎么行啊~
+				while( null !== doc.getElementById( "daOption_" + this.id ) ) this.id++;	//保证id 唯一性
 			
 			setting.type = "radio" === setting.type ? "radio" : "checkbox";													//校正type,checked值
 			setting.checked = !!setting.checked;
@@ -77,9 +78,9 @@ var daOption = (function(){
 			
 			this.create();
 			this.bindEvent();
-			this.check( setting.checked );												//设置原始控件选中状态
+			this.check( setting.checked );			//设置原始控件选中状态
 			
-			daOption.pushCache( this );
+			daOption.cache( this );
 		},
 		
 		
@@ -87,42 +88,45 @@ var daOption = (function(){
 		*/
 		create: function(){
 			var setting = this.setting,
-					oId = this.oId,
-					oObj, oInput, oIcon, oText;
+					id = this.id,
+					obj, inputObj, iconObj, textObj;
 			
-			oObj = doc.createElement("span");											//daOption控件容器
-			oObj.id = "daOption_" + oId;
-			oObj.className = setting.css.daOption;
-//			oObj.style.backgroundColor = setting.color;
-			oObj.style.display = "inline-block";
-			this.oObj = oObj;
-			this.oParentObj.insertBefore( oObj );
+			obj = doc.createElement("span");			//daOption控件容器
+			obj.id = "daOption_" + id;
+			obj.className = setting.css.daOption;
+//			obj.style.backgroundColor = setting.color;
+			obj.style.display = "inline-block";
+			this.obj = obj;
+			this.parentObj.insertBefore( obj );
 			
-			oText = doc.createElement("span");										//可选项提示信息标签
-			oText.className = setting.css.text;
-			oText.innerHTML = setting.text;
-			this.oText = oText;
-			this.oObj.insertBefore( oText );
+			textObj = doc.createElement("span");		//可选项提示信息标签
+			textObj.className = setting.css.text;
+			textObj.innerHTML = setting.text;
+			this.textObj = textObj;
+			this.obj.insertBefore( textObj );
 			
-			if( da.browser.ie )																		//创建浏览器原始控件
-				oInput = doc.createElement('<input type="'+ setting.type +'" name="'+ (setting.name||oId) +'" />');
+			if( da.browser.ie )							//创建浏览器原始控件
+				inputObj = doc.createElement('<input type="'+ setting.type +'" name="'+ setting.name +'" />');
 			else{
-				oInput = doc.createElement('input');
-				oInput.type = setting.type;
-				oInput.name = setting.name||oId;
+				inputObj = doc.createElement('input');
+				inputObj.type = setting.type;
+				inputObj.name = setting.name;
 			}
-			oInput.id = oId;
-			oInput.value = setting.value;
-			this.oInput = oInput;
-			this.oObj.insertBefore( oInput );
-			oInput.style.display = "none";												//隐藏原始控件
-//			oInput.checked = setting.checked;											//设置原始控件选中状态
 			
-			oIcon = doc.createElement("span");										//创建daOption控件UI小图标
-			oIcon.className = setting.css[setting.type];
-			oIcon.style.display = "inline-block";
-			this.oIcon = oIcon;
-			this.oObj.insertBefore( oIcon );
+			if( setting.id ){
+				inputObj.id = id;
+			}
+			inputObj.value = setting.value;
+			this.inputObj = inputObj;
+			this.obj.insertBefore( inputObj );
+			inputObj.style.display = "none";			//隐藏原始控件
+//			inputObj.checked = setting.checked;			//设置原始控件选中状态
+			
+			iconObj = doc.createElement("span");		//创建daOption控件UI小图标
+			iconObj.className = setting.css[setting.type];
+			iconObj.style.display = "inline-block";
+			this.iconObj = iconObj;
+			this.obj.insertBefore( iconObj );
 			
 			this.reSize();
 		},
@@ -130,7 +134,7 @@ var daOption = (function(){
 		/**重置daOption控件尺寸
 		*/
 		reSize: function(){
-			da( this.oObj ).width( da( this.oText ).width() + da( this.oIcon ).width()+3 );						//padding-left +3
+			da( this.obj ).width( da( this.textObj ).width() + da( this.iconObj ).width()+3 );	//padding-left +3
 		},
 		
 		/**绑定事件
@@ -139,21 +143,21 @@ var daOption = (function(){
 			var setting = this.setting,
 					context = this;
 			
-			da( this.oObj ).bind("mouseover",function(){
+			da( this.obj ).bind("mouseover",function(){
 				if( setting.css.daOption === this.className ){
-					this.className = setting.css.daOptionHover;
+					this.className = setting.css.hover;
 					this.style.backgroundColor = setting.bg;
-					context.oText.style.color = setting.color;
+					context.textObj.style.color = setting.color;
 				}
 				
 			}).bind("mouseout",function(){
-				if( setting.css.daOptionHover === this.className ){
+				if( setting.css.hover === this.className ){
 					this.className = setting.css.daOption;
 					this.style.backgroundColor = "";
-					context.oText.style.color = "";
+					context.textObj.style.color = "";
 				}
 			}).bind("click",function(){
-				if( !context.oInput.checked ){
+				if( !context.inputObj.checked ){
 					context.check( true );
 				}
 				else{
@@ -168,9 +172,9 @@ var daOption = (function(){
 		*/
 		show: function( fn ){
 			if( "undefined" !== typeof daFx )
-				da( this.oObj ).fadeIn( 300 ,fn );
+				da( this.obj ).fadeIn( 300 ,fn );
 			else
-				this.oObj.style.display = "block";
+				this.obj.style.display = "block";
 		},
 		
 		/**隐藏daOption控件
@@ -178,23 +182,9 @@ var daOption = (function(){
 		*/
 		hide: function( fn ){
 			if( "undefined" !== typeof daFx )
-				da( this.oObj ).fadeOut( 300 ,fn );
+				da( this.obj ).fadeOut( 300 ,fn );
 			else
-				this.oObj.style.display = "none";
-		},
-		
-		/**移除daOption控件
-		*/
-		remove: function(){
-			daOption.popCache( this );
-			
-			if( this.oObj ){
-				var context = this;
-				this.hide(function(){
-					context.oParentObj.removeChild( context.oObj );
-					context.oObj = null;
-				});
-			}
+				this.obj.style.display = "none";
 		},
 		
 		/**重置daOption控件的提示信息
@@ -209,9 +199,9 @@ var daOption = (function(){
 			if( undefined !== bg )	this.setting.bg = bg;
 			if( undefined !== sColor )	this.setting.color = sColor;
 			
-			if( obj.oInput.checked ){
-				this.oObj.style.backgroundColor = bg;
-				this.oText.style.color = sColor;
+			if( obj.inputObj.checked ){
+				this.obj.style.backgroundColor = bg;
+				this.textObj.style.color = sColor;
 			}
 		},
 		
@@ -220,27 +210,31 @@ var daOption = (function(){
 		* params {boolean} toChecked 是否为选中
 		*/
 		check: function( toChecked ){
-			toChecked = !!toChecked;								//校正toChecked值
+			if( "undefined" === typeof toChecked ){			//get模式
+				return this.inputObj.checked;
+			}
+		
+			toChecked = !!toChecked;						//set模式，校正toChecked值
 			var setting = this.setting,
-					context = this;
+				context = this;
 			
 			var checkAct = function( obj, type, status ){
 				if( "undefined" === typeof daGif ) return;
 				
-				obj.oInput.checked = status;
+				obj.inputObj.checked = status;
 				if( status ){
-					obj.oObj.className = setting.css.daOptionChecked;
-					obj.oObj.style.backgroundColor = setting.bg;
-					obj.oText.style.color = setting.color;
+					obj.obj.className = setting.css.checked;
+					obj.obj.style.backgroundColor = setting.bg;
+					obj.textObj.style.color = setting.color;
 				}
 				else{
-					obj.oObj.className = setting.css.daOption;
-					obj.oObj.style.backgroundColor = "";
-					obj.oText.style.color = "";
+					obj.obj.className = setting.css.daOption;
+					obj.obj.style.backgroundColor = "";
+					obj.textObj.style.color = "";
 				}
 				
 	 			daGif({
-	 				target: obj.oIcon,
+	 				target: obj.iconObj,
 //	 				src: "images/daOption.png",
 	 				all: 6,
 	 				speed: 25,
@@ -252,31 +246,48 @@ var daOption = (function(){
 	 			});
 			};
 			
-			if( "radio" === setting.type ){															//radio单选控件处理
+			if( "radio" === setting.type ){					//radio单选控件处理
 				var theName = setting.name;
 				
-				if( toChecked && !context.oInput.checked ){								//单选控件，所以如果已经是选中状态，就不必管他了
-					daOption.getOption(function( id ){											//找到所有同组的单选控件，并取消选中状态
-						if( "radio" === this.setting.type 										//是单选控件
-						&& theName === this.setting.name 											//是同组
-						&& this.oInput.checked 																//是选中状态
-						&& id !== context.oId ){															//并且不是当前控件
-							checkAct( this, "radio", false );
+				if( toChecked && !context.inputObj.checked ){		//单选控件，所以如果已经是选中状态，就不必管他了
+					da("input:radio[name="+ theName +"]").each(function(){	//找到所有同组的单选控件，并取消选中状态
+						var obj = daOption.get(this.id);
+						
+						if( context.id != obj.id && this.checked ){			//排除当前控件
+							checkAct( obj, "radio", false );
 						}
 					});
+				
+					// daOption.get(function( id ){					//找到所有同组的单选控件，并取消选中状态
+						// if( "radio" === this.setting.type			//是单选控件
+						// && theName === this.setting.name			//是同组
+						// && this.inputObj.checked					//是选中状态
+						// && id !== context.id ){						//并且不是当前控件
+							// checkAct( this, "radio", false );
+						// }
+					// });
 					
-					checkAct( context, "radio", true );											//设置当前控件
+					checkAct( context, "radio", true );				//设置当前控件
 				}
-				else if( setting.unRadio && !toChecked && context.oInput.checked )					//允许取消单选的情况下
+				else if( setting.unRadio && !toChecked && context.inputObj.checked )		//允许取消单选的情况下
 					checkAct( context, "radio", false );
 					
 			}
 			else{																												//checkbox复选控件处理
-				if( toChecked && !context.oInput.checked )
+				if( toChecked && !context.inputObj.checked )
 					checkAct( context, "checkbox", true);
-				else if( !toChecked && context.oInput.checked )
+				else if( !toChecked && context.inputObj.checked )
 					checkAct( context, "checkbox", false);
 			}
+			
+			return this.inputObj.checked;
+		},
+		
+		/**删除控件
+		*/
+		remove: function(){
+			da(this.obj).remove();
+			this.obj = null;
 		}
 		
 	};
@@ -287,7 +298,7 @@ var daOption = (function(){
 	/*
 		inputObj: 用户传入的按钮对象
 	*/
-	daOption.toOption = function( inputObj ){
+	daOption.convert = function( inputObj ){
 		var params = {
 			parent: inputObj.parentNode,
 			id: inputObj.id,
@@ -300,62 +311,28 @@ var daOption = (function(){
 		};
 		daOptionObj = daOption( params );																						//生成daOption对象并替换input控件
 		
-		inputObj.parentNode.replaceChild( daOptionObj.oObj, inputObj );							//替换被封装的旧的dom对象
+		inputObj.parentNode.replaceChild( daOptionObj.obj, inputObj );		//替换被封装的旧的dom对象
 		
 	};
 
-	/**daOption全局缓存
-	*/
-	daOption.daOptionCache = [];
 	
 	/**缓存daOption控件对象
 	* params {daOption} obj 下拉控件daOption对象
 	*/
-	daOption.pushCache = function( obj ){
-		var cache = daOption.daOptionCache;
-		cache.push({
-			id: obj.oId,
-			obj: obj
-		});
-		
-	};
-	
-	/**弹出daOption控件对象
-	* params {daOption} obj 下拉控件daOption对象
-	*/
-	daOption.popCache = function( obj ){
-		var cache = daOption.daOptionCache;
-		for( var i=0,len=cache.length; i<len; i++ ){
-			if( obj.oId == cache[i].id ){ 
-				cache.splice( i, 1 );
-				return cache[i];
-			}
-		}
+	daOption.cache = function( obj ){
+		da._data( obj.inputObj, "daOption", obj );
 		
 	};
 	
 	/**查找相应id的daOption控件对象
 	* params {string} id 下拉控件对象id
 	*/
-	daOption.getOption = function( id ){
-		var cache = daOption.daOptionCache;
+	daOption.get = function( id ){
+		if( "string" === typeof id && 0 !== id.indexOf("#") ) id = "#" + id;				//修正id未加"#"
 		
-		if( "string" === typeof id ){
-			id = id.replace( "#", "" );
-			
-			for( var i=0,len=cache.length; i<len; i++ ){
-				if( id == cache[i].id ) return cache[i].obj;
-			}
-			
-		}
-		else if ( da.isFunction( id ) ){
-			da.each(cache, function( idx, obj ){
-				return id.call( this.obj, this.id );
-			});
-			return cache;
-		}
-		
-		return null;
+		var obj = da(id);
+		if( 0 >= obj.dom.length ) return null;
+		return da._data( obj.dom[0], "daOption" );
 		
 	};
 	
@@ -367,25 +344,29 @@ var daOption = (function(){
 	daOption.check = function( name, values, toChecked ){
 		if( !name ) return;
 		var isFn = da.isFunction( values ),
-				isAll = "boolean" === typeof values, 								//全选 或清空[ values === true,values === false ]
+				isAll = "boolean" === typeof values,		//全选 或清空[ values === true,values === false ]
 				arrObj=[], arrChecked=[], reList;
 		
-		daOption.getOption(function( id ){											//找到所有同组的目标控件
-			if( name === this.setting.name ){
-				arrObj.push( this );																//记录所有同组项
-				if( this.oInput.checked ) arrChecked.push( this );	//记录选中项
+		da("input[name="+ name +"]").each(function(){		//找到所有同组的目标控件
+			var obj = daOption.get(this.id);
+			
+			if( obj ){
+				arrObj.push( obj );							//记录所有同组项
+				if( this.checked ){							//记录选中项
+					arrChecked.push( obj );
+				}
 			}
 		});
 		
-		if( "undefined" === typeof values || isFn ){						//get模式 (只需要返回选中项的值即可)
-			if( 0 == arrChecked.length )													//初始化状态，未选中任何值
+		if( "undefined" === typeof values || isFn ){		//get模式 (只需要返回选中项的值即可)
+			if( 0 == arrChecked.length )					//初始化状态，未选中任何值
 				reList = null;
-			else if( 1 == arrChecked.length 
-				&& "radio" === arrChecked[0].setting.type ){				//单选
+			else if( 1 == arrChecked.length && 
+			"radio" === arrChecked[0].setting.type ){		//单选
 				reList = arrChecked[0];
 				if( isFn ) values.call( reList, reList.value, reList.text, 0 );
 			}
-			else{																									//复选
+			else{											//复选
 				reList = [];
 				da.each( arrChecked, function( idx, obj ){
 					reList.push( this );
@@ -398,40 +379,40 @@ var daOption = (function(){
 		else{																													//set模式
 			if( 0 >= arrObj.length ) return null;
 			
-			if( "undefined" === typeof toChecked ) 												//矫正toChecked参数，不传入默认为true;
+			if( "undefined" === typeof toChecked )			//矫正toChecked参数，不传入默认为true;
 				toChecked = true;
 			toChecked = !!toChecked;
-			if( isAll ) toChecked = values; 															//全选 或清空
-			if( "string" === typeof values ) values = [ values ];					//矫正values匹配值格式
+			if( isAll ) toChecked = values;					//全选 或清空
+			if( "string" === typeof values ) values = [ values ];		//矫正values匹配值格式
 			if( da.isArray( values ) || isAll ){
 				var obj, v1, v2, type;
 				
-				type = arrObj[0].setting.type;															//获取该组控件的类型
+				type = arrObj[0].setting.type;				//获取该组控件的类型
 				reList= isAll ? arrObj : [];
 				
-				if( "redio" === type && isAll ) return reList;							//单选不支持 全选 或清空
+				if( "redio" === type && isAll ) return reList;			//单选不支持 全选 或清空
 				
 				for( var i=0,len=arrObj.length; i<len; i++ ){
 					obj = arrObj[i];
 					
-					if( "checkbox" === type ){																//复选类型有更复杂的组合情况，需要矫正处理
+					if( "checkbox" === type ){				//复选类型有更复杂的组合情况，需要矫正处理
 						if( isAll ){																						//全选 或清空操作
-							if( toChecked && obj.oInput.checked 
-							|| !toChecked && !obj.oInput.checked ) continue;
+							if( toChecked && obj.inputObj.checked 
+							|| !toChecked && !obj.inputObj.checked ) continue;
 							else 
 								toChecked ? obj.check( true ) : obj.check( false );	//若是取消操作,就取消选中状态;相反就设置为选中
 						}
 						else{																										
-							if( !toChecked && !obj.oInput.checked ) continue;			//若是取消操作,且该控件并非选中状态。就不需要任何操作了,继续下一个
-							if( toChecked && obj.oInput.checked  )								//若是选中操作，且控件已经为选中状态; 先取消选中，为下面匹配做准备；只有匹配成功了，才能再次设置为选中状态
+							if( !toChecked && !obj.inputObj.checked ) continue;		//若是取消操作,且该控件并非选中状态。就不需要任何操作了,继续下一个
+							if( toChecked && obj.inputObj.checked  )				//若是选中操作，且控件已经为选中状态; 先取消选中，为下面匹配做准备；只有匹配成功了，才能再次设置为选中状态
 								obj.check( false );																	
 						}
 					}
 					
-					v1 = obj.oInput.value;
+					v1 = obj.inputObj.value;
 					for( var n=0,len2=values.length; n<len2; n++ ){					//循环匹配value列表
 						v2 = values[n];
-						if( v1 == v2 ){																				//找到了匹配值
+						if( v1 == v2 ){						//找到了匹配值
 							toChecked ? obj.check( true ) : obj.check( false );	//若是取消操作,就取消选中状态;相反就设置为选中
 							reList.push( obj );
 						}
@@ -450,14 +431,14 @@ var daOption = (function(){
 	/**反选
 	* params {String} name 同组的daOption控件的name组名
 	*/
-	daOption.inverse = function( name ){
+	daOption.reverse = function( name ){
 		var vList = [];
-		daOption.check( name, function( value, text ){								//获取当前选中的
+		daOption.check( name, function( value, text ){		//获取当前选中的
 			vList.push( value );
 		});
 		
-		daOption.check( name, true );												//先全选
-		daOption.check( name, vList, false );										//然后取消掉之前被选中的
+		daOption.check( name, true );						//先全选
+		daOption.check( name, vList, false );				//然后取消掉之前被选中的
 	};
 	
 	return daOption;
@@ -473,7 +454,7 @@ win.daOption = daOption;
 //da(function(){
 //	da("input").each(function( idx, obj ){
 //		if( "checkbox" === this.type || "radio" === this.type ){
-//				daOption.toOption( this );
+//				daOption.convert( this );
 //		}
 //	});
 //	

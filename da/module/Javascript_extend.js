@@ -70,7 +70,7 @@
 				arrTmp.push( res.substr(idx-3) );
 			};
 			
-			res = arrTmp.join("?");
+			res = arrTmp.join(",");
 		};
 			
 		return da.isNull( res, 0.00);

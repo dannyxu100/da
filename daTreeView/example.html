@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
-		<link href="daTree.css" rel="stylesheet" />
+		<link href="daTreeView.css" rel="stylesheet" />
 		<script src="js/da_source_1.3.5.js" langruage="javascript"></script>
 		<script src="js/daTreeCore_source.js" langruage="javascript"></script>
 		<script src="daTreeView_source.js" langruage="javascript"></script>
@@ -10,16 +10,16 @@
 				var tree1;
 				
 				da(function(){
-
+					
 					tree1 = daTreeView({
 						parent: "#mydatree",
 						id: "0", 
 						name: "自定义树", 
+						isLocked: false,
 						/*
 						mouseover: function( node, nodeObj ){
 
 						},
-						
 						mouseout: function( node, nodeObj ){
 
 						},
@@ -31,6 +31,43 @@
 						
 						checkbox: function( node, nodeObj ){
 							//da.out( node.setting.id )
+						},
+						
+						append: function(pNode, pNodeObj, pTextObj, fn){
+							//alert("添加完成")
+							this.add({ 
+								pid: pNode.setting.id, 
+								id: "node"+(pNode.setting.id + "" + da.random()), 
+								name:"新节点", 
+								data:null
+							});
+							
+							/*
+							this.add({ 
+								pid: pNode.setting.id, 
+								id: "node"+(pNode.setting.id + "" + da.random()), 
+								name:"新节点", 
+								data:null
+							});
+							
+							this.add({ 
+								pid: pNode.setting.id, 
+								id: "node"+(pNode.setting.id + "" + da.random()), 
+								name:"新节点", 
+								data:null
+							});
+							*/
+							fn();
+						},
+						
+						delete: function(node, nodeObj, textObj, fn){
+							//alert("确定删除")
+							fn();
+						},
+						
+						edit: function(node, nodeObj, textObj, fn){
+							//alert("编辑完成")
+							fn();
 						}
 						
 					});
@@ -77,6 +114,13 @@
 					
 				});
 				
+				function selectedNode(){
+					var obj = tree1.getSelected();
+					
+					if( obj )
+						da.out( obj.node.setting.id );
+				}
+				
 				function checkedNode(){
 					var arr = tree1.getChecked();
 					
@@ -84,14 +128,25 @@
 						da.out( arr[i].setting.id );
 					}
 				}
+				
+				function reloadTree(){
+					da("#0_sub").empty();
+					
+					tree1.expandLevel(2, function(){
+						//alert("展开完毕");
+					});
+				}
 		</script>
 		
 	</head>
 	
 	
 	<body>
+	<br/><br/><br/><br/>
+		<input type="button" value="reload" onclick="reloadTree();" />
 		<input type="button" value="source" onclick="da.copy( tree1.treeObj.innerHTML);" />
 		<input type="button" value="getChecked()" onclick="checkedNode();" />
+		<input type="button" value="getSelected()" onclick="selectedNode();" />
 		<div id="mydatree" style="height:500px;width:300px;border:1px solid #f0f0f0;overflow:auto;"></div>
 	</body>
 

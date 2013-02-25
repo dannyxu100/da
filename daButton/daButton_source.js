@@ -9,10 +9,10 @@ var doc = win.document;
 
 //daButtong构造函数
 var daButton = function( setting ){
-		if( da.isFunction( setting ) || "string" === typeof setting )						//遍历和查找daOption控件的高级快捷用法
-			return daButton.getButton( setting );
-		
-		return new daButton.fnStruct.init( setting );
+	if( da.isFunction( setting ) || "string" === typeof setting )						//遍历和查找daOption控件的高级快捷用法
+		return daButton.get( setting );
+	
+	return new daButton.fnStruct.init( setting );
 };
 
 
@@ -20,18 +20,17 @@ var daButton = function( setting ){
 daButton.fnStruct = daButton.prototype = {
 		version: "daButton 1.0 \n\nauthor: danny.xu\n\ndate: 2011-5-9 21:18:27\n\n Thanks!",
 		
-		bId: 0,										//唯一序号
-		bObj: null,								//daButton中button 元素
-		bParentObj: null,					//daButton 父元素
+		id: 0,						//唯一序号
+		obj: null,					//daButton中button 元素
+		parentObj: null,			//daButton 父元素
 		
-		bTableObj: null,					//daButton中table 元素
-		bContainerObj: null,			//daButton中containerDiv 元素
-//		bOverObj: null,						//daButton中overDiv 模拟高亮元素
-		bClientObj: null,					//daButton中clientDiv 客户自定义区域元素
+		tableObj: null,				//daButton中table 元素
+		containerObj: null,			//daButton中containerDiv 元素
+		clientObj: null,			//daButton中clientDiv 客户自定义区域元素
 		
-		setting: {								//用户参数列表
-			parent: null,								//daButton 父元素id
-			id: null,										//daButton 用户自定义button id
+		setting: {					//用户参数列表
+			parent: null,			//daButton 父元素id
+			id: null,				//daButton 用户自定义button id
 			width: 0,
 			height: 0,
 			color: "#c2c2c2,#949494,#999",									//用户自定义风格颜色[ 正常，鼠标移上，按下 ]RGB用逗号分隔
@@ -68,13 +67,13 @@ daButton.fnStruct = daButton.prototype = {
 			this.setting = setting = da.extend( true, {}, this.setting, setting);
 			
 			if( setting.id )
-				this.bId = setting.id;
+				this.id = setting.id;
 			else 
-				//this.bId = da.nowId();					//在ie里面好像不怎么行啊~
-				while( null !== doc.getElementById( "daBtButton_" + this.bId ) ) this.bId++;						//保证id 唯一性
+				//this.id = da.nowId();					//在ie里面好像不怎么行啊~
+				while( null !== doc.getElementById( "daButton_" + this.id ) ) this.id++;						//保证id 唯一性
 			
-			this.bParentObj = da( setting.parent );
-			this.bParentObj = 0 < this.bParentObj.dom.length ? this.bParentObj.dom[0] : doc.body;
+			this.parentObj = da( setting.parent );
+			this.parentObj = 0 < this.parentObj.dom.length ? this.parentObj.dom[0] : doc.body;
 			
 			this.daBtArrColor = setting.color.split(",");
 
@@ -82,83 +81,82 @@ daButton.fnStruct = daButton.prototype = {
 			
 			if( !this.setting.width || !this.setting.height ) {
 				var tmp = doc.createElement("DIV");
-				tmp.style.cssText = "position:absolute;padding:3px;";
+				tmp.style.cssText = "position:absolute;";
 				doc.body.insertBefore( tmp );
 				
 				tmp.innerHTML = this.setting.html;
-				this.setting.width = da(tmp).width();
-				this.setting.height = da(tmp).height();
+				this.setting.width = da(tmp).outerWidth();
+				this.setting.height = da(tmp).outerHeight();
 				
 				da( tmp ).remove();
 			}
 			
-			this.reSize();																																//设置按钮尺寸
+			this.reSize();																																				//设置按钮尺寸
 			this.html( this.setting.html );																												//设置用户自定内容
-			this.bindEvent();																															//绑定按钮事件
+			this.bindEvent();																																			//绑定按钮事件
 			
-			daButton.pushCache( this );						//压入缓存
+			daButton.cache( this );						//压入缓存
 				
 			return this;
 		},
 		
 		//创建HTML对象集
 		create: function(){
-			var bObj, sType;
+			var obj, sType;
 			
 			try {																																					//for IE
-					sType = ( this.setting.name ? (' name="' + this.setting.name+'" '): '' ) + ( this.setting.type ? (' type="' + this.setting.type+'" '): '' );
-			    bObj = doc.createElement('<button '+ sType +' ></button>');
+				sType = ( this.setting.name ? (' name="' + this.setting.name+'" '): '' ) + ( this.setting.type ? (' type="' + this.setting.type+'" '): '' );
+			    obj = doc.createElement('<button '+ sType +' ></button>');
 			} catch(e){}
 			 
-			if( !bObj ) {																																	//for W3C
-			    bObj = doc.createElement('button');
+			if( !obj ) {																																	//for W3C
+			    obj = doc.createElement('button');
 			 
-			    bObj.setAttribute( 'type', 'button');
+			    obj.setAttribute( 'type', 'button');
 			    if( this.setting.name )
-			    	bObj.setAttribute( 'name', this.setting.name );
+			    	obj.setAttribute( 'name', this.setting.name );
 			}
 			 
 			
-//      var bObj = doc.createElement('<button type="'+ this.setting.type +'"></button>');							//for IE
-//      bObj.setAttribute( "type", this.setting.type );																								//for webkit
+//      var obj = doc.createElement('<button type="'+ this.setting.type +'"></button>');							//for IE
+//      obj.setAttribute( "type", this.setting.type );																								//for webkit
 //					
-			bObj.className = this.setting.css.button;
-			bObj.id = this.setting.id || "daBtButton_" + this.bId;
-			da(bObj).attr( "daButton", 0 );
-			bObj.innerHTML = [
-					'<table id="daBtTable_', this.bId,'" class="tb_daButton" border="0" cellspacing="0" cellpadding="0">',
-						'<tr>',
-							'<td class="tl"></td>',
-							'<td class="top"></td>',
-							'<td class="tr"></td>',
-						'</tr>',
-						'<tr>',
-							'<td class="left"></td>',
-							'<td class="mid">',
-								'<div id="daBtContainer_', this.bId,'" class="container" >',
-										'<div id="daBtClient_', this.bId,'" class="client" ></div>',
-								'</div>',
-							'</td>',
-							'<td class="right"></td>',
-						'</tr>',
-						'<tr>',
-							'<td class="bl"></td>',
-							'<td class="bottom"></td>',
-							'<td class="br"></td>',
-						'</tr>',
-					'</table>',
+			obj.className = this.setting.css.button;
+			obj.id = this.setting.id || "daButton_" + this.id;
+			obj.innerHTML = [
+				'<table id="daBtTable_', this.id,'" class="tb_daButton" border="0" cellspacing="0" cellpadding="0">',
+					'<tr>',
+						'<td class="tl"></td>',
+						'<td class="top"></td>',
+						'<td class="tr"></td>',
+					'</tr>',
+					'<tr>',
+						'<td class="left"></td>',
+						'<td class="mid">',
+							'<div id="daBtContainer_', this.id,'" class="container" >',
+									'<div id="daBtClient_', this.id,'" class="client" ></div>',
+							'</div>',
+						'</td>',
+						'<td class="right"></td>',
+					'</tr>',
+					'<tr>',
+						'<td class="bl"></td>',
+						'<td class="bottom"></td>',
+						'<td class="br"></td>',
+					'</tr>',
+				'</table>',
 			].join("");
 			
-			this.bParentObj.insertBefore( bObj );
-			this.bObj = bObj;
-			bObj = null;
+			this.parentObj.insertBefore( obj );
+			this.obj = obj;
+			obj = null;
 			
-			this.bTableObj = doc.getElementById( "daBtTable_" + this.bId );									//获得对象集
-			this.bContainerObj = doc.getElementById( "daBtContainer_" + this.bId );
-			this.bClientObj = doc.getElementById( "daBtClient_" + this.bId );
+			this.tableObj = doc.getElementById( "daBtTable_" + this.id );									//获得对象集
+			this.containerObj = doc.getElementById( "daBtContainer_" + this.id );
+			this.clientObj = doc.getElementById( "daBtClient_" + this.id );
 
 			if( "7.0" === da.browser.ie )
-				this.bContainerObj.style.top = "2px";
+				this.containerObj.style.top = "2px";
 			
 		},
 		
@@ -170,23 +168,23 @@ daButton.fnStruct = daButton.prototype = {
 			da.each( ["mouseover","mouseout","mousedown","mouseup","click","dblclick"], function( idx, name ){
 				if( !setting[name] || !da.isFunction( setting[name] ) ) return;
 				
-				da( context.bObj ).bind( name, function( evt ){
+				da( context.obj ).bind( name, function( evt ){
 					if( false === setting[name].call( this, evt, context  ) || context.isStopDefault ) return;						//如果用户自定义事件函数返回 false 或 daButton对象阻止默认事件冒泡，就不执行下面的默认事件处理了
 					
 					switch( name ){																							//按钮默认高亮特效事件处理
-							case "mouseover":
-								context.over();
-								break;
-							case "mouseout":
-								context.out();
-								break;
-							case "mousedown":
-								context.down();
-								break;
-							case "mouseup":
-								context.up();
-								context.blur();
-								break;
+						case "mouseover":
+							context.over();
+							break;
+						case "mouseout":
+							context.out();
+							break;
+						case "mousedown":
+							context.down();
+							break;
+						case "mouseup":
+							context.up();
+							context.blur();
+							break;
 					}
 					
 				});
@@ -216,11 +214,11 @@ daButton.fnStruct = daButton.prototype = {
 
 			height = parseInt( this.maxheight < height ? this.maxheight : height, 10 );							//纠正高度，不能高于样式最大支持高度
 			
-			this.bContainerObj.style.width = width + "px";
-			this.bClientObj.style.width = width + "px";
+			this.containerObj.style.width = width + "px";
+			this.clientObj.style.width = width + "px";
 			
-			this.bContainerObj.style.height = height + "px";
-			this.bClientObj.style.height = height + "px";
+			this.containerObj.style.height = height + "px";
+			this.clientObj.style.height = height + "px";
 		},
 		
 		//设置按钮用户自定义内容
@@ -229,11 +227,11 @@ daButton.fnStruct = daButton.prototype = {
 		*/
 		html: function( sHTML ){
 			if( sHTML ){
-				this.bClientObj.innerHTML = sHTML;
+				this.clientObj.innerHTML = sHTML;
 				return this;
 			}
 			
-			return this.bClientObj.innerHTML;
+			return this.clientObj.innerHTML;
 		},
 		
 		//设置按钮颜色风格
@@ -250,9 +248,9 @@ daButton.fnStruct = daButton.prototype = {
 		*/
 		hide: function(){
 			if( "undefined" !== daFx )
-				da(this.bObj).fadeOut( 300 );
+				da(this.obj).fadeOut( 300 );
 			else
-				this.bObj.style.display = "none";
+				this.obj.style.display = "none";
 		},
 		
 		
@@ -260,48 +258,55 @@ daButton.fnStruct = daButton.prototype = {
 		*/
 		show: function(){
 			if( "undefined" !== daFx )
-				da(this.bObj).fadeIn( 300 );
+				da(this.obj).fadeIn( 300 );
 			else
-				this.bObj.style.display = "block";
+				this.obj.style.display = "block";
 		},
 		
 		//设置按钮为按下状态
 		down: function(){
-			this.bTableObj.className = this.setting.css.tb3;
-			this.bTableObj.style.backgroundColor = this.daBtArrColor[2];
+			this.tableObj.className = this.setting.css.tb3;
+			this.tableObj.style.backgroundColor = this.daBtArrColor[2];
 			
 		},
 		
 		//设置按钮为弹起状态
 		up: function(){
-			this.bTableObj.className = this.setting.css.tb;
-			this.bTableObj.style.backgroundColor = this.daBtArrColor[0];
+			this.tableObj.className = this.setting.css.tb;
+			this.tableObj.style.backgroundColor = this.daBtArrColor[0];
 			
 		},
 		
 		//设置按钮为指向状态
 		over: function(){
-			this.bTableObj.className = this.setting.css.tb2;
-			this.bTableObj.style.backgroundColor = this.daBtArrColor[1];
+			this.tableObj.className = this.setting.css.tb2;
+			this.tableObj.style.backgroundColor = this.daBtArrColor[1];
 			
 		},
 		
 		
 		//设置按钮为离开状态
 		out: function(){
-			this.bTableObj.className = this.setting.css.tb;
-			this.bTableObj.style.backgroundColor = this.daBtArrColor[0];
+			this.tableObj.className = this.setting.css.tb;
+			this.tableObj.style.backgroundColor = this.daBtArrColor[0];
 			
 		},
 		
 		//设置为失去焦点状态
 		blur: function(){
-			this.bObj.blur();
+			this.obj.blur();
 		},
 		
 		//设置为获取焦点状态
 		focus: function(){
-			this.bObj.focus();
+			this.obj.focus();
+		},
+		
+		/**删除控件
+		*/
+		remove: function(){
+			da(this.obj).remove();
+			this.obj = null;
 		}
 		
 };
@@ -309,57 +314,35 @@ daButton.fnStruct = daButton.prototype = {
 daButton.fnStruct.init.prototype = daButton.prototype;
 
 
-/**全局缓存
-*/
-//daButton.daButtonCache = {};
-
 /**压入缓存
 */
-daButton.pushCache = function( obj ){
-	da.data( obj.bObj, "daButtonObj", obj );
+daButton.cache = function( obj ){
+	da._data( obj.obj, "daButton", obj );
 
-//	var cache = daButton.daButtonCache;
-//	cache[ obj.bId ] = obj;
-	
 };
 
 /**通过id获取daButton对象
 */
-daButton.getButton = function( id ){
+daButton.get = function( id ){
 	if( "string" === typeof id && 0 !== id.indexOf("#") ) id = "#" + id;				//修正id未加"#"
 	
-	var btObj = da(id);
-	if( 0 >= btObj.dom.length ) return null;
-	return da.data( btObj.dom[0], "daButtonObj" );
-	
-//	var cache = daButton.daButtonCache;
-//
-//	if( "string" === typeof id ){
-//		id = id.replace( "#", "" );
-//		return cache[id];
-//		
-//	}
-//	else if( da.isFunction( id ) ){
-//		da.each( cache, function( id, obj ){
-//			return id.call( this, id );
-//		});
-//		
-//		return cache;
-//	}
+	var obj = da(id);
+	if( 0 >= obj.dom.length ) return null;
+	return da._data( obj.dom[0], "daButton" );
 	
 };
 
 /**更改按钮对象尺寸
-*	@param {String|DOM} obj 用户传入的按钮对象 或id
+* @param {String|DOM} obj 用户传入的按钮对象 或id
 * @param {int|String} width 按钮宽度
 * @param {int|String} width 按钮高度
 */
 daButton.reSize = function( obj, width, height ){
 	if( "string" == typeof obj ){
-		obj = daButton.getButton( obj );
+		obj = daButton.get( obj );
 	}
 	else if( obj.nodeType ){
-		obj = daButton.getButton( obj.id );
+		obj = daButton.get( obj.id );
 	}
 	
 	if( null === obj )	return null;
@@ -375,10 +358,10 @@ daButton.reSize = function( obj, width, height ){
 */
 daButton.html = function( obj, html ){
 	if( "string" == typeof obj ){
-		obj = daButton.getButton( obj );
+		obj = daButton.get( obj );
 	}
 	else if( obj.nodeType ){
-		obj = daButton.getButton( obj.id );
+		obj = daButton.get( obj.id );
 	}
 
 	if( !obj ) return null;
@@ -395,14 +378,12 @@ inlineEvents = ["mouseover","mouseout","mousedown","mouseup","click","dblclick"]
 /*
 	btObjs: 用户传入的按钮对象
 */
-daButton.toButton = function( btObjs ){
+daButton.convert = function( btObjs ){
 	var da_btObjs = da( btObjs );
 	
 	da_btObjs.each(function(){
-		if( 0 == da(this).attr( "daButton" ) ) return;
-	
 		var eventObjs = {}, eventType = "",
-				bObj = null;
+				obj = null;
 				
 		for( var n=0,len=inlineEvents.length; n<len; n++ ){						//copy写在input HTML代码上的内嵌事件定义
 				eventType = "on" + inlineEvents[n];
@@ -414,16 +395,17 @@ daButton.toButton = function( btObjs ){
 		var params = {
 			id: this.id,
 			parent: this.parentNode.id || null,
-			width: da( this ).width(),
-			height: da( this ).height(),
+			width: da( this ).outerWidth(),
+			height: da( this ).outerHeight(),
+			name: this.getAttribute("name"),
 			html: ( this.value || this.innerHTML )
 		};
 		
 		params = da.extend( {}, params, eventObjs );
 		
-		bObj = daButton( params );																	//生成daButton对象并替换input控件
+		obj = daButton( params );																	//生成daButton对象并替换input控件
 		
-		this.parentNode.replaceChild( bObj.bObj, this );
+		this.parentNode.replaceChild( obj.obj, this );
 	});
 	
 };
@@ -440,10 +422,10 @@ win.daButton = win.dadaBt = daButton;
 //	da("input,button").each(function( idx, obj ){
 //		if( "INPUT" === this.tagName ){
 //			if( "button" === this.type )															//过滤出属于button类型的input控件
-//				daButton.toButton( this );															//转换
+//				daButton.convert( this );															//转换
 //		}
 //		else{
-//			daButton.toButton( this );																//转换
+//			daButton.convert( this );																//转换
 //			
 //		}
 //	});
@@ -452,5 +434,5 @@ win.daButton = win.dadaBt = daButton;
 
 
 function convertbutton(btObjs){
-	daButton.toButton( btObjs );									//转换
+	daButton.convert( btObjs );									//转换
 }

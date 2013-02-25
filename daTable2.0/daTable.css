@@ -1,0 +1,34 @@
+﻿/*
+	author: danny.xu
+	date: 2012-4-30
+	description: daTable 2.0样式
+*/
+
+.daTable {
+	border-left: 1px solid #d0dfdf;
+	border-top: 1px solid #ddd;
+	border-right: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+}
+
+.daTable>thead>tr>td,
+.daTable>tbody>tr>td,
+.daTable>tfoot>tr>td {
+	border: 1px solid #d0d7d7;
+	border-width: 0px 1px 1px 0px;
+}
+
+.daTable>thead>tr>td,
+.daTable>tbody[name=head]>tr>td {
+	background: #eee;
+	color: #666;
+	font-size: 14px;
+	font-family: "黑体";
+}
+
+.daTable>tbody>tr.itemHover {
+	background:#f7f7f7;
+}
+.daTable>tbody>tr.itemSelect {
+	background:#f7ffcc;
+}
